@@ -1,0 +1,3 @@
+[submodule "vendor/70rubyonrails/rinari"]
+	path = vendor/70rubyonrails/rinari
+	url = git://github.com/crazycode/rinari.git
