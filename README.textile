@@ -1,0 +1,21 @@
+h1. PreInstall
+You must install braid to maintain the vender elisp lib.
+Braid is a simple tool to help track git and svn vendor branches in a git repository.
+
+h2. Requirements
+
+* git 1.6+ (and git-svn if you want to mirror svn repositories)
+* main >= 2.8.0
+* open4 >= 0.9.6
+
+h2. Installing using rubygems - official releases
+
+  gem install braid
+
+If further down the line, you want to bring new changes from rails in your repository, just update the mirror:
+
+  braid update vendor/70rubyonrails/rinari
+
+Or, if you want all mirrors updated:
+
+  braid update
