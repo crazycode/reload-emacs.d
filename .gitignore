@@ -1,0 +1,9 @@
+#*#
+*~
+/auto-save-list
+/backups
+*.elc
+/**/*.elc
+**/*.elc
+.svn
+tramp
