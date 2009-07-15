@@ -3,4 +3,4 @@
                                (turn-off-auto-fill)
                                ))
 
-(require 'blog)
+;;(require 'blog)

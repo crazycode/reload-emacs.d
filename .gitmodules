@@ -1,3 +1,24 @@
 [submodule "vendor/70rubyonrails/rinari"]
 	path = vendor/70rubyonrails/rinari
 	url = git://github.com/crazycode/rinari.git
+[submodule "vendor/70rubyonrails/emacs-rails-reloaded"]
+	path = vendor/70rubyonrails/emacs-rails-reloaded
+	url = git://github.com/crazycode/emacs-rails-reloaded.git
+[submodule "vendor/70rubyonrails/util/jump"]
+	path = vendor/70rubyonrails/util/jump
+	url = git://github.com/eschulte/jump.el.git
+[submodule "vendor/70rubyonrails/util/test/ert"]
+	path = vendor/70rubyonrails/util/test/ert
+	url = git://github.com/nex3/ert.git
+[submodule "vendor/70rubyonrails/yaml-mode"]
+	path = vendor/70rubyonrails/yaml-mode
+	url = git://github.com/crazycode/yaml-mode.git
+[submodule "vendor/01base/yasnippet"]
+	path = vendor/01base/yasnippet
+	url = git://github.com/crazycode/yasnippet.git
+[submodule "vendor/01base/git-emacs"]
+	path = vendor/01base/git-emacs
+	url = git://github.com/crazycode/git-emacs.git
+[submodule "vendor/70rubyonrails/ruby-test-mode"]
+	path = vendor/70rubyonrails/ruby-test-mode
+	url = git://github.com/crazycode/ruby-test-mode.git
