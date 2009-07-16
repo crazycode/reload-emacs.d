@@ -13,9 +13,6 @@
 [submodule "vendor/70rubyonrails/yaml-mode"]
 	path = vendor/70rubyonrails/yaml-mode
 	url = git://github.com/crazycode/yaml-mode.git
-[submodule "vendor/01base/yasnippet"]
-	path = vendor/01base/yasnippet
-	url = git://github.com/crazycode/yasnippet.git
 [submodule "vendor/01base/git-emacs"]
 	path = vendor/01base/git-emacs
 	url = git://github.com/crazycode/git-emacs.git
