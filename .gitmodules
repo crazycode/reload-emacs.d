@@ -22,3 +22,6 @@
 [submodule "vendor/70rubyonrails/textmate"]
 	path = vendor/70rubyonrails/textmate
 	url = git://github.com/defunkt/textmate.el.git
+[submodule "vendor/70rubyonrails/rhtml"]
+	path = vendor/70rubyonrails/rhtml
+	url = git://github.com/crazycode/rhtml.git

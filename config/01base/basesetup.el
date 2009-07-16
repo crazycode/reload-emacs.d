@@ -173,3 +173,7 @@ scroll-conservatively 10000)
 (require 'ido)                        ; ido readline
 (ido-mode t)
 (setq ido-enable-flex-matching t) ; fuzzy matching is a must have
+
+;; ;; make #! scripts executable after saving them
+(add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
+

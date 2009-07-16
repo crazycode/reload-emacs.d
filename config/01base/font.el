@@ -1,7 +1,7 @@
 ;; 设置字体的函数
 ;;(defun my-default-font ()
 ;;  (interactive)
-  (set-default-font "Yahei Consolas Hybrid-11")
+  (set-default-font "Yahei Consolas Hybrid-10")
   (set-fontset-font (frame-parameter nil 'font)
                     'han '("Yahei Consolas Hybrid"."unicode-bmp"))
 ;;)
