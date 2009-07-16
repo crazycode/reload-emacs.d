@@ -1,9 +1,6 @@
 [submodule "vendor/70rubyonrails/rinari"]
 	path = vendor/70rubyonrails/rinari
 	url = git://github.com/crazycode/rinari.git
-[submodule "vendor/70rubyonrails/emacs-rails-reloaded"]
-	path = vendor/70rubyonrails/emacs-rails-reloaded
-	url = git://github.com/crazycode/emacs-rails-reloaded.git
 [submodule "vendor/70rubyonrails/util/jump"]
 	path = vendor/70rubyonrails/util/jump
 	url = git://github.com/eschulte/jump.el.git
@@ -28,3 +25,6 @@
 [submodule "vendor/90yasnippet/snippets"]
 	path = vendor/90yasnippet/snippets
 	url = git://github.com/crazycode/snippets.git
+[submodule "vendor/70rubyonrails/emacs-rails-lite"]
+	path = vendor/70rubyonrails/emacs-rails-lite
+	url = git://github.com/crazycode/emacs-rails-lite.git
