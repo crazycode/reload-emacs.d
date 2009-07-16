@@ -19,6 +19,8 @@
 (setq auto-mode-alist  (cons '("\\.rjs$" . ruby-mode) auto-mode-alist))  
 (setq auto-mode-alist  (cons '("\\.rake$" . ruby-mode) auto-mode-alist))  
 
+(setq rails-always-use-text-menus t)
+
 (modify-coding-system-alist 'file "\\.rhtml$" 'utf-8)
 (modify-coding-system-alist 'file "\\.erb$" 'utf-8)
 
