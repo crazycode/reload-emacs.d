@@ -139,9 +139,6 @@ scroll-conservatively 10000)
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
 
-(split-window-horizontally)
-(enlarge-window-horizontally 15)
-
 ;;(auto-revert-mode t)
 (global-auto-revert-mode)
 
@@ -177,3 +174,20 @@ scroll-conservatively 10000)
 ;; ;; make #! scripts executable after saving them
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
+
+;; 有关界面和字体的配置
+(add-hook 'after-make-frame-functions
+          (lambda (new-frame)
+            (select-frame new-frame)
+            (scroll-bar-mode 0)
+            (tool-bar-mode 0)
+            (if (window-system frame)
+                (progn
+                  (split-window-horizontally)
+                  (enlarge-window-horizontally 15)
+                  )
+                (progn
+                  (menu-bar-mode 0)  ;; 终端模式下关闭菜单条
+                  )
+              )
+            ))

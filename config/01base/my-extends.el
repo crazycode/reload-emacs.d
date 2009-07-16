@@ -58,12 +58,16 @@
 ;最大化
 (defun my-maximized ()
   (interactive)
-  (x-send-client-message
-   nil 0 nil "_NET_WM_STATE" 32
-   '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
-  (x-send-client-message
-   nil 0 nil "_NET_WM_STATE" 32
-   '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
+  (if (window-system (selected-frame))
+      (progn
+       (x-send-client-message
+        nil 0 nil "_NET_WM_STATE" 32
+        '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
+       (x-send-client-message
+        nil 0 nil "_NET_WM_STATE" 32
+        '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
+       )
+    )
 )
 
 ;; author: pluskid
@@ -108,7 +112,14 @@
 (global-set-key "\C-c\C-t" 'my-insert-time)
 
 ;启动时最大化
+
 (my-maximized) 
+(add-hook 'after-make-frame-functions
+          (lambda (new-frame)
+            (select-frame new-frame)
+            (my-maximized)
+            ))
+
 (global-set-key [\C-f11] 'my-fullscreen)
 
 (global-set-key (quote [M-up]) (quote move-region-up))
