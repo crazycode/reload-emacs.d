@@ -185,9 +185,10 @@ scroll-conservatively 10000)
                 (progn
                   (split-window-horizontally)
                   (enlarge-window-horizontally 15)
+                  (menu-bar-mode 1)  ;; 图形模式下打开菜单条
                   )
                 (progn
-                  (menu-bar-mode 0)  ;; 终端模式下关闭菜单条
+                  (menu-bar-mode 1)  ;; 终端模式下open菜单条
                   )
               )
             ))
