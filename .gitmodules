@@ -19,3 +19,6 @@
 [submodule "vendor/70rubyonrails/ruby-test-mode"]
 	path = vendor/70rubyonrails/ruby-test-mode
 	url = git://github.com/crazycode/ruby-test-mode.git
+[submodule "vendor/70rubyonrails/textmate"]
+	path = vendor/70rubyonrails/textmate
+	url = git://github.com/defunkt/textmate.el.git
