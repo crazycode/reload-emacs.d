@@ -25,3 +25,6 @@
 [submodule "vendor/70rubyonrails/rhtml"]
 	path = vendor/70rubyonrails/rhtml
 	url = git://github.com/crazycode/rhtml.git
+[submodule "vendor/90yasnippet/snippets"]
+	path = vendor/90yasnippet/snippets
+	url = git://github.com/crazycode/snippets.git

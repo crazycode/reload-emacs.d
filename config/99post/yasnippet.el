@@ -3,5 +3,5 @@
              'ruby-mode-hook)
 (yas/initialize)
 (yas/load-directory "~/.emacs.d/vendor/01base/yasnippet/snippets")
-(yas/load-directory "~/.emacs.d/vendor/70rubyonrails/emacs-rails-reloaded/snippets")
+(yas/load-directory "~/.emacs.d/vendor/90yasnippet/snippets")
 ;;(setq yas/root-directory "~/.emacs.d/snippets")
