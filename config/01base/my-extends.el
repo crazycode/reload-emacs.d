@@ -120,6 +120,7 @@
             (my-maximized)
             ))
 
+(global-set-key [\C-f10] 'toggle-menu-bar-mode-from-frame)
 (global-set-key [\C-f11] 'my-fullscreen)
 
 (global-set-key (quote [M-up]) (quote move-region-up))
