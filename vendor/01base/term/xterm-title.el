@@ -98,7 +98,8 @@ titles will be restored."
 (defun xterm-title-update ()
   "Update xterm window and icon titles with the selected Emacs tty frame."
   (unless (and xterm-title-mode
-               (eq (selected-window) xterm-title-update-last-window))
+               (or (window-system (selected-frame))
+                   (eq (selected-window) xterm-title-update-last-window)))
     (xterm-set-window-title
      (format-mode-line (or xterm-title-frame-title-format
                            (frame-parameter nil 'title)
