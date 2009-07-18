@@ -1,8 +1,8 @@
-(require 'xterm-title)
 (add-hook 'after-make-frame-functions
           (lambda (new-frame)
-            (when (and (not window-system)
+            (select-frame new-frame)
+            (when (and (not (window-system frame))
                        (string-match "^xterm" (getenv "TERM")))
-              ;;(require 'xterm-title)
+              (require 'xterm-title)
               (xterm-title-mode 1))
             ))
