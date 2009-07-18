@@ -43,6 +43,7 @@
             (ruby-electric-mode t)
             (local-set-key (kbd "<tab") 'crazycode/indent-and-complete)
             (local-set-key (kbd "<return>") 'ruby-reindent-then-newline-and-indent)
+            (local-set-key (kbd "RET") 'ruby-reindent-then-newline-and-indent)
             ;;(local-set-key "\C-h" 'ri)
             (local-set-key "\M-\C-i" 'ri-ruby-complete-symbol)
             (local-set-key "\C-c\C-h" 'ri-ruby-show-args)
