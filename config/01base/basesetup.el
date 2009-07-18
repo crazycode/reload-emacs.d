@@ -189,3 +189,6 @@ scroll-conservatively 10000)
                   )
               )
             ))
+
+;; 保存时自动把TAB换成空格，同时清除掉尾部空格（除Makefile之类的文件外，见untabify-file.el)
+(require 'untabify-file)
