@@ -47,8 +47,8 @@ scroll-conservatively 10000)
 (setq gnus-inhibit-startup-message t)
 ;;当指针移到另一行，不要新增这一行？d
 (setq next-line-add-newlines nil)
-;;在文档最后自动插入空白一行，好像某些系统配置文件是需要这样的
-(setq require-final-newline t)
+;;不在文档最后自动插入空白一行，因为yasnippet有最后个空行回显示到最终文件中
+(setq require-final-newline nil)  ;; t
 (setq track-eol t)
 ;;使用C-k删掉指针到改行末的所有东西
 (setq-default kill-whole-line t)
@@ -195,3 +195,8 @@ scroll-conservatively 10000)
 
 ;; 所有类型中回车到新行时，都自动进行一下缩进.
 (global-set-key (kbd "RET") 'newline-and-indent)
+
+
+;; 代替M-x的快捷键，据说这样手舒服一点.
+(global-set-key "\C-x\C-m" 'execute-extended-command)
+(global-set-key "\C-c\C-m" 'execute-extended-command)
