@@ -1,5 +1,5 @@
 ;;; jde.el -- Integrated Development Environment for Java.
-;; $Revision: 1.357.2.4 $ $Date: 2006/03/09 04:19:37 $ 
+;; $Revision: 1.357.2.4 $ $Date: 2006/03/09 04:19:37 $
 
 ;; Author: Paul Kinnucan <pkinnucan@attbi.com>
 ;; Maintainer: Paul Kinnucan
@@ -24,7 +24,7 @@
 
 ;;; Commentary:
 
-;; This is one of a set of packages that make up the 
+;; This is one of a set of packages that make up the
 ;; Java Development Environment (JDE) for Emacs. See the
 ;; JDE User's Guide for more information.
 
@@ -40,7 +40,7 @@
 (defconst jde-version "2.3.6"
   "JDE version number.")
 
-(defconst jde-cedet-min-version "1.0beta2"
+(defconst jde-cedet-min-version "1.0pre2"
   "Cedet minimum version")
 (defconst jde-cedet-max-version "1.0"
   "Cedet maximum version")
@@ -49,15 +49,15 @@
   "Non-nil if we are running in the XEmacs environment.")
 
 (defconst jde-xemacs20p (and jde-xemacsp (>= emacs-major-version 20)))
- 
+
 (defconst jde-emacs21p (and (string-match "\\bEmacs\\b" (emacs-version))
-			    (>= emacs-major-version 21)))
+                            (>= emacs-major-version 21)))
 
 (defconst jde-emacs22p (and (string-match "\\bEmacs\\b" (emacs-version))
-			    (>= emacs-major-version 22)))
+                            (>= emacs-major-version 22)))
 
 (unless (fboundp 'custom-set-default)
-   (defalias 'custom-set-default 'set-default)) 
+   (defalias 'custom-set-default 'set-default))
 
 ;; Autoloads must be loaded first since move to sole `(require 'jde)' style.
 (require 'jde-autoload)
@@ -68,13 +68,13 @@
 ;; autoloads file (auto-autoloads.el). Therefore, require
 ;; jde-autoloads only if this JDEE version is not part of the XEmacs
 ;; package.
-(unless 
+(unless
     (and jde-xemacsp
-	 (file-exists-p 
-	  (expand-file-name 
-	   "jde/auto-autoloads.el"
-	   (jde-root))))
-	 (require 'jde-autoload))
+         (file-exists-p
+          (expand-file-name
+           "jde/auto-autoloads.el"
+           (jde-root))))
+         (require 'jde-autoload))
 
 (require 'jde-custom)
 (require 'jde-help)
@@ -130,7 +130,7 @@ See also the function `jde-check-versions'."
 
 ;; (makunbound 'jde-key-bindings)
 (defcustom jde-key-bindings
-  (list 
+  (list
    (cons "[?\C-c ?\C-v ?\C-a]" 'jde-run-menu-run-applet)
    (cons "[?\C-c ?\C-v ?\C-b]" 'jde-build)
    (cons "[?\C-c ?\C-v ?\C-c]" 'jde-compile)
@@ -163,7 +163,7 @@ See also the function `jde-check-versions'."
    )
   "*Specifies key bindings for the JDE.
 The value of this variable is an association list. The car of
-each element specifies a key sequence. The cdr specifies 
+each element specifies a key sequence. The cdr specifies
 an interactive command that the key sequence executes. To enter
 a key with a modifier, type C-q followed by the desired modified
 keystroke. For example, to enter C-s (Control s) as the key to be
@@ -171,36 +171,36 @@ bound, type C-q C-s in the key field in the customization buffer.
 You can use the notation [f1], [f2], etc., to specify function keys."
   :group 'jde-project
   :type '(repeat
-	  (cons :tag "Key binding"
-		(string :tag "Key")
-		(function :tag "Command")))
+          (cons :tag "Key binding"
+                (string :tag "Key")
+                (function :tag "Command")))
   :set '(lambda (sym val)
-	  (mapc
-	   (lambda (buf)
-	     (save-excursion
-	       (set-buffer buf)
-	       (when (boundp 'jde-mode-map)
-		 ;; Unmap existing key bindings
-		 (if (and (boundp 'jde-key-bindings)
-			  jde-key-bindings)
-		     (mapc 
-		      (lambda (binding)
-			(let ((key (car binding)))
-			  (if (string-match "\\[.+]" key)
-			      (setq key (car (read-from-string key))))
-			  (local-unset-key key)))
-		      jde-key-bindings))
-		 ;; Map new key bindings.
-		 (mapc 
-		  (lambda (binding)
-		    (let ((key (car binding))
-			  (fcn (cdr binding)))
-		      (if (string-match "\\[.+]" key)
-			  (setq key (car (read-from-string key))))
-		      (define-key (current-local-map) key fcn)))
-		  val))))
-	   (jde-get-java-source-buffers))
-	  (set-default sym val)))
+          (mapc
+           (lambda (buf)
+             (save-excursion
+               (set-buffer buf)
+               (when (boundp 'jde-mode-map)
+                 ;; Unmap existing key bindings
+                 (if (and (boundp 'jde-key-bindings)
+                          jde-key-bindings)
+                     (mapc
+                      (lambda (binding)
+                        (let ((key (car binding)))
+                          (if (string-match "\\[.+]" key)
+                              (setq key (car (read-from-string key))))
+                          (local-unset-key key)))
+                      jde-key-bindings))
+                 ;; Map new key bindings.
+                 (mapc
+                  (lambda (binding)
+                    (let ((key (car binding))
+                          (fcn (cdr binding)))
+                      (if (string-match "\\[.+]" key)
+                          (setq key (car (read-from-string key))))
+                      (define-key (current-local-map) key fcn)))
+                  val))))
+           (jde-get-java-source-buffers))
+          (set-default sym val)))
 
 (defcustom jde-launch-beanshell-on-demand-p t
   "If non-nil, the JDE launches the Beanshell the first time it is needed.
@@ -214,33 +214,33 @@ whenever you open a Java source file."
 (defcustom jde-java-environment-variables '("JAVA_VERSION" "JAVA_HOME")
   "This variable specifies the names of environment variables used to
 specify the version and location of the JDK to be used by the JDE.
-If set, the `jde-jdk' customization variable overrides the 
+If set, the `jde-jdk' customization variable overrides the
 java enviroment variables."
   :group 'jde-project
   :type '(list
-	  (string :tag "Java Version")
-	  (string :tag "Java Home")))
+          (string :tag "Java Version")
+          (string :tag "Java Home")))
 
 (defun jde-set-jdk-dir-type (sym val)
   (if val
       (let ((type
-	     (list
-	      (quote radio-button-choice)
-		  )))
-	    (loop for jdk in val do
-		  (setq 
-		   type 
-		   (append
-		    type
-		    (list (list (quote item) (car jdk))))))
-	    (put 'jde-jdk 
-		 'custom-type 
-		 (list (quote list) type))
-	    (put 'jde-jdk 'customized-value nil)
-	    (put 'jde-jdk
-		 'standard-value
-		 (list (list (quote list) (car (car val)))))
-	    (customize-set-value 'jde-jdk (list (car (car val)))))
+             (list
+              (quote radio-button-choice)
+                  )))
+            (loop for jdk in val do
+                  (setq
+                   type
+                   (append
+                    type
+                    (list (list (quote item) (car jdk))))))
+            (put 'jde-jdk
+                 'custom-type
+                 (list (quote list) type))
+            (put 'jde-jdk 'customized-value nil)
+            (put 'jde-jdk
+                 'standard-value
+                 (list (list (quote list) (car (car val)))))
+            (customize-set-value 'jde-jdk (list (car (car val)))))
     (progn
       (put 'jde-jdk 'custom-type 'symbol)
       (put 'jde-jdk 'standard-value nil)
@@ -259,10 +259,10 @@ field. Setting this variable determines the choices offered by the
 first."
   :group 'jde-project
   :type '(repeat
-	  (cons 
-	   :tag "JDK"
-	   (string :tag "Version")
-	   (string :tag "Path")))
+          (cons
+           :tag "JDK"
+           (string :tag "Version")
+           (string :tag "Path")))
   :set 'jde-set-jdk-dir-type)
 
 ;; (makunbound 'jde-jdk)
@@ -290,34 +290,34 @@ the current project."
   (if (or (featurep 'xemacs) (< emacs-major-version 21))
       'custom-set-default
     '(jde-jdk-registry)))
- 
+
 (defun jde-find-jdk-in-exec-path ()
   "Search for a JDK in `exec-path' and return the path of
 the root directory of the first JDK that is found.  Return nil if a
 JDK is not found anywhere in exec-path."
   (let ((list exec-path)
-	(command "java")
+        (command "java")
         file)
     (while list
       (setq list
-	    (if (and (setq file (expand-file-name command (car list)))
-		     (let ((suffixes executable-binary-suffixes)
-			   candidate)
-		       (while suffixes
-			 (setq candidate (concat file (car suffixes)))
-			 (if (and (file-executable-p candidate)
-				  (not (file-directory-p candidate)))
-			     (setq suffixes nil)
-			   (setq suffixes (cdr suffixes))
-			   (setq candidate nil)))
-		       (setq file candidate)))
-		nil
-	      (setq file nil)
-	      (cdr list))))
+            (if (and (setq file (expand-file-name command (car list)))
+                     (let ((suffixes executable-binary-suffixes)
+                           candidate)
+                       (while suffixes
+                         (setq candidate (concat file (car suffixes)))
+                         (if (and (file-executable-p candidate)
+                                  (not (file-directory-p candidate)))
+                             (setq suffixes nil)
+                           (setq suffixes (cdr suffixes))
+                           (setq candidate nil)))
+                       (setq file candidate)))
+                nil
+              (setq file nil)
+              (cdr list))))
     file))
 
 
-(defun jde-get-jdk-dir () 
+(defun jde-get-jdk-dir ()
   "Get the root directory of the JDK currently being used by the
 JDE. The directory is the directory of the version of the JDK
 specified by `jde-jdk'. If none is specified, this function returns
@@ -331,38 +331,38 @@ function displays an error message."
 
   (if jde-jdk
       (let* ((jdk (assoc (car jde-jdk) jde-jdk-registry))
-	     (jdk-dir (cdr jdk)))
+             (jdk-dir (cdr jdk)))
         (when (null jdk)
           (error (format
                   "No mapping in the jde-jdk-registry found for JDK version %s"
                   (car jde-jdk))))
-	(if (not (string= jdk-dir ""))
-	    (progn
-	      (setq jdk-dir (substitute-in-file-name jdk-dir))
-	      (if (not (file-exists-p jdk-dir))
-		  (error 
-		   (format "The path specified for JDK %s does not exist: %s"
-			   jde-jdk
-			   jdk-dir)))))
-	jdk-dir)
+        (if (not (string= jdk-dir ""))
+            (progn
+              (setq jdk-dir (substitute-in-file-name jdk-dir))
+              (if (not (file-exists-p jdk-dir))
+                  (error
+                   (format "The path specified for JDK %s does not exist: %s"
+                           jde-jdk
+                           jdk-dir)))))
+        jdk-dir)
     (let ((jdk-dir (getenv (nth 1 jde-java-environment-variables))))
       (if jdk-dir
-	  (progn
-	    (setq jdk-dir (substitute-in-file-name jdk-dir))
-	    (if (not (file-exists-p jdk-dir))
-		(error 
-		 (format "The path specified by %s does not exist: %s"
-			 (nth 1 jde-java-environment-variables)
-			 jdk-dir))))
-	(progn 
-	  (setq jdk-dir 
-		(executable-find "javac"))
-	  (if jdk-dir
-	      (setq jdk-dir 
-		    (expand-file-name 
-		     ".." 
-		     (file-name-directory jdk-dir)))
-	    (error "Cannot find the JDK directory. See `jde-jdk'."))))
+          (progn
+            (setq jdk-dir (substitute-in-file-name jdk-dir))
+            (if (not (file-exists-p jdk-dir))
+                (error
+                 (format "The path specified by %s does not exist: %s"
+                         (nth 1 jde-java-environment-variables)
+                         jdk-dir))))
+        (progn
+          (setq jdk-dir
+                (executable-find "javac"))
+          (if jdk-dir
+              (setq jdk-dir
+                    (expand-file-name
+                     ".."
+                     (file-name-directory jdk-dir)))
+            (error "Cannot find the JDK directory. See `jde-jdk'."))))
       jdk-dir)))
 
 
@@ -370,19 +370,19 @@ function displays an error message."
    "Returns the full path of the program passed in.  By default, assume
    it's in the bin directory under `jde-get-jdk-dir', but if not,
    look in the environment's command path."
-   (let* ((progname-str 
-	   (if (symbolp progname)
-	       (symbol-name progname) progname))
-          (full-progname 
-	   (if (eq system-type 'windows-nt)
-	       (concat progname-str ".exe")
-	     progname-str))
-          (progpath 
-	   (expand-file-name 
-	    (concat
-	     (if (eq system-type 'darwin) "Home/bin/" "bin/")
-	     full-progname)
-	    (jde-get-jdk-dir))))
+   (let* ((progname-str
+           (if (symbolp progname)
+               (symbol-name progname) progname))
+          (full-progname
+           (if (eq system-type 'windows-nt)
+               (concat progname-str ".exe")
+             progname-str))
+          (progpath
+           (expand-file-name
+            (concat
+             (if (eq system-type 'darwin) "Home/bin/" "bin/")
+             full-progname)
+            (jde-get-jdk-dir))))
      (if (file-exists-p progpath)
        progpath
        (executable-find full-progname))))
@@ -391,15 +391,15 @@ function displays an error message."
 (defun jde-get-tools-jar ()
   "Gets the correct tools.jar or equivalent. Signals an
 error if it cannot find the jar."
-  (let ((tools 
-         (expand-file-name 
+  (let ((tools
+         (expand-file-name
           (if (eq system-type 'darwin)
               "Classes/classes.jar"
             "lib/tools.jar")
           (jde-get-jdk-dir))))
     (if (file-exists-p tools)
         tools
-      (error (concat "Cannot find JDK's tools jar file (or equivalent)." 
+      (error (concat "Cannot find JDK's tools jar file (or equivalent)."
                      "Type M-x describe-function [RET] jde-get-jdk-dir for more info.")))))
 
 (defvar jde-java-version-cache nil
@@ -410,34 +410,34 @@ error if it cannot find the jar."
 system command path."
   (if (not jde-java-version-cache)
       (let ((buf (get-buffer-create "java version"))
-	    proc)
-	(save-excursion
-	  (set-buffer buf)
-	  (setq proc
-		(start-process
-		 "java version" buf "java" "-version"))
-	  (accept-process-output proc 10)
-	  (goto-char (point-min))
-	  (re-search-forward "[1-9][.][1-9]" (point-max) t)
-	  (setq jde-java-version-cache (match-string 0)))
-	(kill-buffer buf)))
+            proc)
+        (save-excursion
+          (set-buffer buf)
+          (setq proc
+                (start-process
+                 "java version" buf "java" "-version"))
+          (accept-process-output proc 10)
+          (goto-char (point-min))
+          (re-search-forward "[1-9][.][1-9]" (point-max) t)
+          (setq jde-java-version-cache (match-string 0)))
+        (kill-buffer buf)))
   jde-java-version-cache)
 
 (defun jde-java-version ()
   "Get the version of Java used by the JDE."
   (interactive)
   (let ((java-version (if jde-jdk (car jde-jdk)
-			(getenv 
-			 (nth 0 jde-java-environment-variables)))))
+                        (getenv
+                         (nth 0 jde-java-environment-variables)))))
     (if (not java-version)
-	(if jde-java-version-cache
-	    (setq java-version jde-java-version-cache)
-	  (if (jde-bsh-running-p)
-	      (progn
-		(setq jde-java-version-cache
-		      (jde-jeval-r "jde.util.JdeUtilities.getJavaVersion();"))
-		(setq java-version jde-java-version-cache))
-	    (setq java-version (jde-java-version-via-java)))))	    
+        (if jde-java-version-cache
+            (setq java-version jde-java-version-cache)
+          (if (jde-bsh-running-p)
+              (progn
+                (setq jde-java-version-cache
+                      (jde-jeval-r "jde.util.JdeUtilities.getJavaVersion();"))
+                (setq java-version jde-java-version-cache))
+            (setq java-version (jde-java-version-via-java)))))
     (if (interactive-p)
       (message java-version)
       java-version)))
@@ -448,10 +448,10 @@ the major version of the JDK being used
 by the current project."
   (let ((version (jde-java-version)))
     (string-match "\\([0-9]+\\)\\.\\([0-9]+\\)"
-		version)
+                version)
     (string-to-int
-     (substring 
-     version 
+     (substring
+     version
      (match-beginning 1)
      (match-end 1)))))
 
@@ -461,17 +461,17 @@ the minor version of the JDK being used
 by the current project."
   (let ((version (jde-java-version)))
     (string-match "\\([0-9]+\\)\\.\\([0-9]+\\)"
-		version)
+                version)
     (string-to-int
-     (substring 
-     version 
+     (substring
+     version
      (match-beginning 2)
      (match-end 2)))))
 
 
 ;;(makunbound 'jde-jdk-doc-url)
 (defcustom jde-jdk-doc-url ""
-  "*URL of JDK documentation. 
+  "*URL of JDK documentation.
 This can point to a remote or local copy of the documentation. If the value
 of this variable is the null string, the JDE looks for the JDK documentation
 in the docs subdirectory of the directory returned by `jde-get-jdk-dir'."
@@ -485,7 +485,7 @@ Use this variable if you want to the JDE to use the same classpath for
 compiling, running,and debugging an application. Note that the value
 of this variable is a list of strings, each of which specifies a
 path. The JDE converts this list to a colon- or semicolon-separated
-list before inserting in the compiler or vm command line. 
+list before inserting in the compiler or vm command line.
 
 The path may start with a tilde (~) or period (.) and may include
 environment variables. The JDEE replaces a ~ with your home directory.
@@ -505,7 +505,7 @@ running and debugging. You could do this by setting
 `jde-global-classpath' to the run and debug classpath. If you set
 `jde-global-classpath', the JDE uses it to construct the classpath for
 any operation for which you do not set the operation-specific
-classpath variable (e.g., `jde-compile-option-classpath'). 
+classpath variable (e.g., `jde-compile-option-classpath').
 
 If you do not set `jde-global-classpath', the JDE uses the operation-specific
 classpath if it is set. If neither the global nor the
@@ -531,7 +531,7 @@ The semicolons in the classpath confuse the shell."
 
 ;; (makunbound 'jde-lib-directory-names)
 (defcustom jde-lib-directory-names (list "^lib" "^jar")
-  "Regular expressions that matches names of jar/zip directories for 
+  "Regular expressions that matches names of jar/zip directories for
 the current project. See `jde-expand-classpath-p' and
 `jde-expand-classpath' for more information"
   :group 'jde-project
@@ -558,21 +558,21 @@ only confuse JDE.  Paths may contain environment variables."
 ;; (makunbound 'jde-build-function)
 (defcustom jde-build-function '(jde-make)
   "*Function that will be invoked by the `jde-build' command.
-The `jde-make' function uses a make 
+The `jde-make' function uses a make
 program to rebuild the project. The `jde-ant-build' function
 uses the Apache Ant program to build the project. You may also
 specify a custom function to use. The custom function must
-be an interactive function that can be called by 
+be an interactive function that can be called by
 `call-interactively'."
   :group 'jde-project
   :type '(list
-	  (radio-button-choice
-	   :format "%t \n%v"
-	   :tag "Function: "
-	   :entry-format " %b %v"
-	   (const jde-make)
-	   (const jde-ant-build)
-	   (function my-custom-build-function))))
+          (radio-button-choice
+           :format "%t \n%v"
+           :tag "Function: "
+           :entry-format " %b %v"
+           (const jde-make)
+           (const jde-ant-build)
+           (function my-custom-build-function))))
 
 ;;(makunbound 'jde-debugger)
 (defcustom jde-debugger (list "jdb")
@@ -583,25 +583,25 @@ the current project (see `jde-jdk'). Select old jdb, if you are using
 JDK 1.2.2 or later and want to use the the old (e.g., pre-JPDA)
 version of jdb instead of the new (JPDA-based) version of jdb."
   :group 'jde-project
-  :type '(list 
-	  (radio-button-choice
-	  (item "JDEbug")
-	  (item "jdb")
-	  (item "old jdb")))
+  :type '(list
+          (radio-button-choice
+          (item "JDEbug")
+          (item "jdb")
+          (item "old jdb")))
   :set '(lambda (sym val)
-	  (mapc 
-	   (lambda (buff)
-	     (save-excursion	       
-	       (set-buffer buff)
-	       (if (string= (car val) "JDEbug")
-		   (progn
-		     (jde-jdb-minor-mode -1)
-		     (jde-bug-minor-mode 1))
-		 (progn
-		   (jde-jdb-minor-mode 1)
-		   (jde-bug-minor-mode -1)))))
-	   (jde-get-java-source-buffers))
-	  (set-default sym val)))
+          (mapc
+           (lambda (buff)
+             (save-excursion
+               (set-buffer buff)
+               (if (string= (car val) "JDEbug")
+                   (progn
+                     (jde-jdb-minor-mode -1)
+                     (jde-bug-minor-mode 1))
+                 (progn
+                   (jde-jdb-minor-mode 1)
+                   (jde-bug-minor-mode -1)))))
+           (jde-get-java-source-buffers))
+          (set-default sym val)))
 
 (defcustom jde-devel-debug nil
   "If true, use the JDEE Java classes in the jde/java/classes
@@ -619,38 +619,38 @@ commands."
   :group 'jde-project
   :type 'boolean
   :set '(lambda (sym val)
-	  (set-default sym val)
+          (set-default sym val)
           (unless (or (not (featurep 'jde)) ;; skip initial set.
-		      jde-loading-project ;; skip when set by project loading system
-		      (and (boundp 'global-senator-minor-mode)
-			   global-senator-minor-mode))
-	    (mapc 
-	     (lambda (buff)
-	       (save-excursion	       
-		 (set-buffer buff)
-		 (senator-minor-mode (if val 1 -1))))
-	     (jde-get-java-source-buffers)))))
+                      jde-loading-project ;; skip when set by project loading system
+                      (and (boundp 'global-senator-minor-mode)
+                           global-senator-minor-mode))
+            (mapc
+             (lambda (buff)
+               (save-excursion
+                 (set-buffer buff)
+                 (senator-minor-mode (if val 1 -1))))
+             (jde-get-java-source-buffers)))))
 
-	 
+
 (defcustom jde-enable-abbrev-mode nil
 "*Enable expansion of abbreviations in jde-mode.
 See `jde-mode-abbreviations' for more information."
   :group 'jde-project
   :type 'boolean
   :set '(lambda (sym val)
-	  (set-default sym val)
+          (set-default sym val)
           (if (featurep 'jde) ;; skip initial set.
-	      (mapc
-	       (lambda (buf)
-		(with-current-buffer buf
-		  (setq abbrev-mode val)
-		  (when abbrev-mode
-		    (setq local-abbrev-table (make-abbrev-table))
-		    (jde-init-abbrev-table))))
-	       (jde-get-project-source-buffers)))))
+              (mapc
+               (lambda (buf)
+                (with-current-buffer buf
+                  (setq abbrev-mode val)
+                  (when abbrev-mode
+                    (setq local-abbrev-table (make-abbrev-table))
+                    (jde-init-abbrev-table))))
+               (jde-get-project-source-buffers)))))
 
 (defcustom jde-mode-abbreviations
-  (list 
+  (list
    (cons "ab" "abstract")
    (cons "bo" "boolean")
    (cons "br" "break")
@@ -708,22 +708,22 @@ To use these abbreviations, you must enable abbrev-mode (see
 abbreviation followed by a white-space character. To suppress
 expansion, enter C-q white-space."
   :group 'jde-project
-  :type '(repeat 
+  :type '(repeat
           (cons :tag "jde-mode abbreviation"
               (string :tag "Abbreviation")
               (string :tag "Expansion")))
   :set '(lambda (sym val)
-	  (set-default sym val)
+          (set-default sym val)
           (if (and
-	       (featurep 'jde)
-	       jde-enable-abbrev-mode)
-	      (progn
-		(mapc
-		 (lambda (buf)
-		   (with-current-buffer buf
-		     (setq local-abbrev-table (make-abbrev-table))
-		     (jde-init-abbrev-table)))
-		 (jde-get-project-source-buffers))))))
+               (featurep 'jde)
+               jde-enable-abbrev-mode)
+              (progn
+                (mapc
+                 (lambda (buf)
+                   (with-current-buffer buf
+                     (setq local-abbrev-table (make-abbrev-table))
+                     (jde-init-abbrev-table)))
+                 (jde-get-project-source-buffers))))))
 
 (defun jde-init-abbrev-table ()
   "Load the abbrev table.
@@ -735,7 +735,7 @@ comment."
   ;; around, since the anonymous function needs the closure provided by
   ;; lexical-let.
   (interactive)
-  (mapc 
+  (mapc
    (lambda (x)
      (lexical-let
          ((abbrev (car x))     ; this is the abbrev, lexically scoped
@@ -748,7 +748,7 @@ comment."
            (unless (jde-parse-comment-or-quoted-p)
              (delete-backward-char (length abbrev)) ; remove abbreviation and
              (insert expansion)))                   ; insert expansion
-	 0)))
+         0)))
    jde-mode-abbreviations)
 
   (if jde-gen-cflow-enable
@@ -784,7 +784,7 @@ t) "Abbreviations"))))
 
 
 (defvar jde-classpath-separator (if (member system-type '(cygwin32 cygwin))
-				    ";" path-separator)
+                                    ";" path-separator)
   "The separator to use in a classpath.
 This is usually the same as `path-separator'")
 
@@ -794,11 +794,11 @@ This is usually the same as `path-separator'")
   "Set the value of `jde-global-classpath'.
 It specifies the -classpath argument for the Java compiler and
 interpreter."
-  (interactive 
+  (interactive
    "sEnter classpath: ")
-  (custom-set-variables 
-   '(jde-global-classpath (split-string classpath jde-classpath-separator) t)))	
-		
+  (custom-set-variables
+   '(jde-global-classpath (split-string classpath jde-classpath-separator) t)))
+
 (defun jde-show-run-options ()
   "Show the JDE Run Options panel."
   (interactive)
@@ -836,7 +836,7 @@ This command invokes the function defined by `jde-build-function'."
   (interactive)
   (call-interactively (car jde-build-function)))
 
-; (define-derived-mode 
+; (define-derived-mode
 ;   jde-mode java-mode "JDE"
 ;   "Major mode for developing Java applications and applets.
 ;   \\{jde-mode-map}"
@@ -855,7 +855,7 @@ This command invokes the function defined by `jde-build-function'."
 \\{jde-mode-map}"
   (interactive)
   (condition-case err
-      (progn 
+      (progn
         (jde-check-versions)
         (java-mode)
         (if (get 'java-mode 'special)
@@ -870,11 +870,11 @@ This command invokes the function defined by `jde-build-function'."
         (make-local-variable 'jde-project-name)
         (make-local-variable 'jde-run-applet-document)
 
-        (setq jde-current-project 
+        (setq jde-current-project
               (or (jde-find-project-file default-directory)
                   "")) ;; Avoid setting startup values twice!
 
-	(setq jde-buffer-project-file jde-current-project)
+        (setq jde-buffer-project-file jde-current-project)
 
         ;; Load the project file for this buffer. The project file
         ;; defines JDE options for a project.
@@ -885,24 +885,24 @@ This command invokes the function defined by `jde-build-function'."
         ;; This feature loads the appropriate project settings whenever
         ;; a user switches from a Java buffer belonging to one project
         ;; to a buffer belonging to another.
-	(make-local-hook 'post-command-hook) ;; necessary for XEmacs (see below)
+        (make-local-hook 'post-command-hook) ;; necessary for XEmacs (see below)
         (add-hook 'post-command-hook
-                  'jde-detect-java-buffer-activation 
-		  nil 
-		  t ;; XEmacs ignores this argument if symbol is not local.
-		  )
+                  'jde-detect-java-buffer-activation
+                  nil
+                  t ;; XEmacs ignores this argument if symbol is not local.
+                  )
 
-	(unless jde-monitor-post-command-hook-timer
-	  (setq 
-	   jde-monitor-post-command-hook-timer
-	   (run-with-idle-timer 1 t 'jde-monitor-post-command-hook)))
+        (unless jde-monitor-post-command-hook-timer
+          (setq
+           jde-monitor-post-command-hook-timer
+           (run-with-idle-timer 1 t 'jde-monitor-post-command-hook)))
 
-	(unless (member 'jde-clean-up-after-jde kill-buffer-hook)
-	  (add-hook 'kill-buffer-hook 'jde-clean-up-after-jde))
-			
-	(when jde-xemacsp
-	  (require 'jde-xemacs)
-	  (jde-insert-menu-in-xemacs-menubar))
+        (unless (member 'jde-clean-up-after-jde kill-buffer-hook)
+          (add-hook 'kill-buffer-hook 'jde-clean-up-after-jde))
+
+        (when jde-xemacsp
+          (require 'jde-xemacs)
+          (jde-insert-menu-in-xemacs-menubar))
 
         ;; Define underscore as a word constituent. This is needed
         ;; to support coding styles the begin fields with an underscore.
@@ -924,15 +924,15 @@ This command invokes the function defined by `jde-build-function'."
 
         (make-local-variable 'mode-line-format)
         (setq mode-line-format jde-mode-line-format)
-  
+
         ;; When looking for a tag that has multiple matches
         ;; in the TAGS file, prefer (find first) the
         ;; occurrence in the _current_ buffer.
         ;; Contributed by Charles Rich, Mitsubishi Electric Research Laboratories,
         ;; Cambridge, MA>
-	(when (boundp 'tags-table-format-functions)
-	  (make-local-variable 'tags-table-format-functions)
-	  (add-hook 'tags-table-format-functions 'jde-etags-recognize-tags-table nil t))
+        (when (boundp 'tags-table-format-functions)
+          (make-local-variable 'tags-table-format-functions)
+          (add-hook 'tags-table-format-functions 'jde-etags-recognize-tags-table nil t))
 
         (if (and
              (not jde-launch-beanshell-on-demand-p)
@@ -945,34 +945,34 @@ This command invokes the function defined by `jde-build-function'."
         ;; parse!
         (add-hook 'semantic-init-hooks  'jde-parse-semantic-default-setup)
 
-	;; Install debug menu.
-	(if (string= (car jde-debugger) "JDEbug")
-	    (jde-bug-minor-mode 1)
-	  (jde-jdb-minor-mode 1))
+        ;; Install debug menu.
+        (if (string= (car jde-debugger) "JDEbug")
+            (jde-bug-minor-mode 1)
+          (jde-jdb-minor-mode 1))
 
-	;; Install plugin menu.
-	(jde-plugin-minor-mode 1)
+        ;; Install plugin menu.
+        (jde-plugin-minor-mode 1)
 
-	(when (boundp 'jde-mode-map)
-	  (let ((key (car (read-from-string "[return]"))))
-	   (if jde-electric-return-mode
-	     (define-key (current-local-map) key 'jde-electric-return))))
+        (when (boundp 'jde-mode-map)
+          (let ((key (car (read-from-string "[return]"))))
+           (if jde-electric-return-mode
+             (define-key (current-local-map) key 'jde-electric-return))))
 
-	;; Set up indentation of Java annotations.
+        ;; Set up indentation of Java annotations.
         (jde-annotations-setup)
 
 
         ;; The next form must be the last executed
         ;; by jde-mode.
-        (derived-mode-run-hooks 'jde-mode))    
+        (derived-mode-run-hooks 'jde-mode))
     (error
      (message "%s" (error-message-string err)))))
 
-                       
+
 (defconst jde-check-versions-message
    "JDEE requires a version of CEDET between %s and %s (found %s)")
- 
-(defun jde-check-versions () 
+
+(defun jde-check-versions ()
   "Check for correct versions of CEDET provided packages.
 Signal an error if CEDET is not installed.
 When `jde-check-version-flag' is non-nil, signal an error if the
@@ -997,7 +997,7 @@ this version of the JDEE."
 
 (defun jde-check-version (current-version min-version max-version)
   "Return non-nil if CURRENT-VERSION >= MIN-VERSION or <= MAX-VERSION."
-  (and (or (jde-earlier-versionp current-version 
+  (and (or (jde-earlier-versionp current-version
                                  max-version)
            (string= current-version
                     max-version))
@@ -1006,26 +1006,26 @@ this version of the JDEE."
            (string= current-version
                     min-version))))
 
-(defun jde-earlier-versionp (ver1 ver2) 
+(defun jde-earlier-versionp (ver1 ver2)
   "Return non-nil if VER1 is earlier than VER2"
   (let ((ver1n (replace-in-string ver1 "beta" "zb"))
-	(ver2n (replace-in-string ver2 "beta" "zb")))
+        (ver2n (replace-in-string ver2 "beta" "zb")))
     (setq ver1n (replace-in-string ver1n "pre" "zp"))
     (setq ver2n (replace-in-string ver2n "pre" "zp"))
     (if (string-match "z" ver1n)
-	(unless (string-match "z" ver2n)
-	  (setq ver2n (concat ver2n "zz")))
+        (unless (string-match "z" ver2n)
+          (setq ver2n (concat ver2n "zz")))
       (if (string-match "z" ver2n)
-	  (setq ver1n (concat ver1n "zz"))))
+          (setq ver1n (concat ver1n "zz"))))
     (string< ver1n ver2n)))
 
-      
+
 (defcustom jde-log-max 500
   "*Maximum number of lines to keep in the JDE log buffer.
 If nil, disable logging.  If t, don't truncate the buffer."
   :group 'jde-project
   :type '(choice (integer :tag "Number of lines to keep")
-		 (boolean :tag "Disable/Unlimited")))
+                 (boolean :tag "Disable/Unlimited")))
 
 (defun jde-log-msg (msg &rest args)
   "Log message MSG to the *jde-log* buffer.
@@ -1033,19 +1033,19 @@ Optional ARGS are used to `format' MSG.
 Does nothing if `jde-log-max' is nil."
   (if jde-log-max
       (save-match-data
-	(save-excursion
-	  (set-buffer (get-buffer-create "*jde-log*"))
-	  (goto-char (point-max))
-	  (insert (apply 'format msg args))
-	  (insert "\n")
-	  (if (integerp jde-log-max)
-	      (let ((line-cnt 0))
-		(while (search-backward "\n" nil t)
-		  (setq line-cnt (1+ line-cnt)))
-		(goto-char (point-min))
-		(while (> line-cnt jde-log-max)
-		  (delete-region (point) (search-forward "\n" nil t))
-		  (setq line-cnt (1- line-cnt)))))))))
+        (save-excursion
+          (set-buffer (get-buffer-create "*jde-log*"))
+          (goto-char (point-max))
+          (insert (apply 'format msg args))
+          (insert "\n")
+          (if (integerp jde-log-max)
+              (let ((line-cnt 0))
+                (while (search-backward "\n" nil t)
+                  (setq line-cnt (1+ line-cnt)))
+                (goto-char (point-min))
+                (while (> line-cnt jde-log-max)
+                  (delete-region (point) (search-forward "\n" nil t))
+                  (setq line-cnt (1- line-cnt)))))))))
 
 (defun jde-log-msg-t (msg &rest args)
   "Log message MSG to the *jde-log* buffer, and return t.
@@ -1067,173 +1067,173 @@ Does nothing but return nil if `jde-log-max' is nil."
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.java\\'" . jde-mode))
 
-(defcustom jde-menu-definition 
+(defcustom jde-menu-definition
   (list "JDE"
-	["Compile"           jde-compile t]
-	;; ["Run App"           jde-run (not (jde-run-application-running-p))]
-	["Run App"           jde-run t]
-	["Debug App"         jde-debug t]
-	"-"
-	;;["-"                 ignore nil]
-	["Run Applet"        jde-run-menu-run-applet t]
-	["Debug Applet"      jde-debug-applet t]
-	"-"  
-	["Build"             jde-build t]
-	(list "Find"
-	      ["Expression"    jde-find 
-	                          (and 
-				   (executable-find
-				    (if (eq system-type 'windows-nt) "find.exe" "find"))
-				   (executable-find
-				    (if (eq system-type 'windows-nt) "grep.exe" "grep")))]
-	      ["Expression..."  jde-find-dlg
-	                          (and 
-				   (executable-find
-				    (if (eq system-type 'windows-nt) "find.exe" "find"))
-				   (executable-find
-				    (if (eq system-type 'windows-nt) "grep.exe" "grep")))]
-	       ["Symbol Definition" jde-open-class-at-point t]
-	       ["Class"  jde-show-class-source t]
-	       ["Super Class"  jde-show-superclass-source t]
-	       ["Interface"  jde-show-interface-source t]
-	      )
-	(list "Interpreter"
-	      ["Start"         jde-bsh-run t]
-	      ["Exit"          jde-bsh-exit t]
-	      "-"
-	      ["Help"          jde-help-beanshell t]
-	 )
+        ["Compile"           jde-compile t]
+        ;; ["Run App"           jde-run (not (jde-run-application-running-p))]
+        ["Run App"           jde-run t]
+        ["Debug App"         jde-debug t]
+        "-"
+        ;;["-"                 ignore nil]
+        ["Run Applet"        jde-run-menu-run-applet t]
+        ["Debug Applet"      jde-debug-applet t]
+        "-"
+        ["Build"             jde-build t]
+        (list "Find"
+              ["Expression"    jde-find
+                                  (and
+                                   (executable-find
+                                    (if (eq system-type 'windows-nt) "find.exe" "find"))
+                                   (executable-find
+                                    (if (eq system-type 'windows-nt) "grep.exe" "grep")))]
+              ["Expression..."  jde-find-dlg
+                                  (and
+                                   (executable-find
+                                    (if (eq system-type 'windows-nt) "find.exe" "find"))
+                                   (executable-find
+                                    (if (eq system-type 'windows-nt) "grep.exe" "grep")))]
+               ["Symbol Definition" jde-open-class-at-point t]
+               ["Class"  jde-show-class-source t]
+               ["Super Class"  jde-show-superclass-source t]
+               ["Interface"  jde-show-interface-source t]
+              )
+        (list "Interpreter"
+              ["Start"         jde-bsh-run t]
+              ["Exit"          jde-bsh-exit t]
+              "-"
+              ["Help"          jde-help-beanshell t]
+         )
         (list "Documentation"
-	      ["Add"             jde-javadoc-autodoc-at-line (jde-javadoc-enable-menu-p)]
-	      ["Remove"          jde-javadoc-remdoc-at-line (jde-javadoc-enable-menu-p)]
-	      ["Check This"      jde-javadoc-checkdoc-at-line (jde-javadoc-enable-menu-p)]
-	      ["Check All"           jde-javadoc-checkdoc t]
-	      ["Generate All"        jde-javadoc-make t]
-	      ["Generate Buffer"     jde-javadoc-make-buffer t]
-	      "-"
-	      ["Javadoc Reference"     jde-javadoc-browse-tool-doc t]
-	)
-        "-" 
-	(list "Code Generation"
-	      (list "Templates"
-		    ["Get/Set Pair..."  jde-gen-get-set t]
-		    ["Println..."       jde-gen-println t]
-		    (list "Listener"
-			  ["Action"          jde-gen-action-listener t]
+              ["Add"             jde-javadoc-autodoc-at-line (jde-javadoc-enable-menu-p)]
+              ["Remove"          jde-javadoc-remdoc-at-line (jde-javadoc-enable-menu-p)]
+              ["Check This"      jde-javadoc-checkdoc-at-line (jde-javadoc-enable-menu-p)]
+              ["Check All"           jde-javadoc-checkdoc t]
+              ["Generate All"        jde-javadoc-make t]
+              ["Generate Buffer"     jde-javadoc-make-buffer t]
+              "-"
+              ["Javadoc Reference"     jde-javadoc-browse-tool-doc t]
+        )
+        "-"
+        (list "Code Generation"
+              (list "Templates"
+                    ["Get/Set Pair..."  jde-gen-get-set t]
+                    ["Println..."       jde-gen-println t]
+                    (list "Listener"
+                          ["Action"          jde-gen-action-listener t]
                           ["Change"          jde-gen-change-listener t]
-			  ["Window"          jde-gen-window-listener t]
-			  ["Mouse"           jde-gen-mouse-listener t]
-			  )
-		    ["Other..."        jde-gen-code t]
-		    )
-	      (list "Import"
-		    ["Class..."                jde-import-\find-and-import t]
-		    ["All"                     jde-import-all t]
-		    ["All Unique"              jde-import-all-unique t]
-		    "-"
-		    ["Expand Package Imports"  jde-import-expand-imports t]
-		    ["Collapse Class Imports"  jde-import-collapse-imports t]
-		    ["Delete Unneeded"         jde-import-kill-extra-imports t]
-		    ["Organize Imports"        jde-import-organize t]
-		    ["Show Unimported Classes" jde-import-all-show t]
-		    )
-	      (list "Wizards"
-		    ["Override Method"             jde-wiz-override-method t]
-		    ["Implement Interface..."      jde-wiz-implement-interface t]
-		    ["Generate Get/Set Methods"    jde-wiz-get-set-methods t]
-		    ["Generate toString Method"    jde-wiz-tostring t]
+                          ["Window"          jde-gen-window-listener t]
+                          ["Mouse"           jde-gen-mouse-listener t]
+                          )
+                    ["Other..."        jde-gen-code t]
+                    )
+              (list "Import"
+                    ["Class..."                jde-import-\find-and-import t]
+                    ["All"                     jde-import-all t]
+                    ["All Unique"              jde-import-all-unique t]
+                    "-"
+                    ["Expand Package Imports"  jde-import-expand-imports t]
+                    ["Collapse Class Imports"  jde-import-collapse-imports t]
+                    ["Delete Unneeded"         jde-import-kill-extra-imports t]
+                    ["Organize Imports"        jde-import-organize t]
+                    ["Show Unimported Classes" jde-import-all-show t]
+                    )
+              (list "Wizards"
+                    ["Override Method"             jde-wiz-override-method t]
+                    ["Implement Interface..."      jde-wiz-implement-interface t]
+                    ["Generate Get/Set Methods"    jde-wiz-get-set-methods t]
+                    ["Generate toString Method"    jde-wiz-tostring t]
                     ["Update Package Statement"    jde-package-update t]
-		    ["Implement Event Source..."   jde-wiz-implement-event-source t]
-		    ["Extend Abstract Class..."    jde-wiz-extend-abstract-class t]
-		    ["Delegate Methods..."         jde-wiz-delegate t]
-		    "-"
-		    ["Update Class List"   jde-wiz-update-class-list t]
-		    )
-	      (list "Modes"
-		    (vector "Abbrev"
-			    'jde-abbrev-mode
-			    (if (featurep 'xemacs) :active :enable) t
-			    :style 'toggle
-			    :selected 'jde-enable-abbrev-mode)
-		    (vector "Electric Return"
-			    'jde-electric-return-mode
-			    (if (featurep 'xemacs) :active :enable) t
-			    :style 'toggle
-			    :selected 'jde-electric-return-mode)
-	      ))
-	(list "Browse"
+                    ["Implement Event Source..."   jde-wiz-implement-event-source t]
+                    ["Extend Abstract Class..."    jde-wiz-extend-abstract-class t]
+                    ["Delegate Methods..."         jde-wiz-delegate t]
+                    "-"
+                    ["Update Class List"   jde-wiz-update-class-list t]
+                    )
+              (list "Modes"
+                    (vector "Abbrev"
+                            'jde-abbrev-mode
+                            (if (featurep 'xemacs) :active :enable) t
+                            :style 'toggle
+                            :selected 'jde-enable-abbrev-mode)
+                    (vector "Electric Return"
+                            'jde-electric-return-mode
+                            (if (featurep 'xemacs) :active :enable) t
+                            :style 'toggle
+                            :selected 'jde-electric-return-mode)
+              ))
+        (list "Browse"
               ["Source Files"          jde-show-speedbar t]
               ["Class at Point"        jde-browse-class-at-point t]
              )
-	["Check Style"  jde-checkstyle]
-	(list "Project"
-	      (vector "Auto Switch" 
+        ["Check Style"  jde-checkstyle]
+        (list "Project"
+              (vector "Auto Switch"
                       'jde-toggle-project-switching
-                      (if jde-xemacsp :active :enable) t 
-                      :style 'toggle 
+                      (if jde-xemacsp :active :enable) t
+                      :style 'toggle
                       :selected 'jde-project-context-switching-enabled-p)
-	      (list "Options"
-		    ["General"         jde-show-project-options t]
-		    ["Compile"         jde-compile-show-options-buffer t]
-		    ["Run"             jde-show-run-options t]
-		    ["Debug"           jde-show-debug-options t]
-		    ["Autocode"        jde-show-autocode-options t]
-		    ["Javadoc"         jde-javadoc-customize t]
-		    ["Make"            jde-make-show-options t]
-		    ["Ant"             jde-ant-show-options t]
-		    ["Complete"        jde-show-complete-options t]
-		    ["Wiz"             jde-show-wiz-options t]
-		    )
-	      (list "Project File"
-		    ["Create New" jde-create-new-project t]
-		    ["Save"     jde-save-project t]
-		    ["Load"     jde-load-project-file t]
-		    ["Load All" jde-load-all-project-files t]
-		    )
-	      )
-	(list "Help"
-	      ["JDEE Users Guide"      jde-show-help t]
-	      ["JDK"                   jde-help-browse-jdk-doc t]
-	      ["JDEE Key Bindings"     jde-keys t]
-	      "-"
-	      ["Class..."              jde-help-class t]
-	      ["Class Member..."       jde-help-class-member t]
-	      ["Symbol at Point"       jde-help-symbol t]
-	      "-"
-	      ["Submit problem report" jde-submit-problem-report t]
-	      "-"
-	      (concat "JDE " jde-version)
-	      )
-	)
+              (list "Options"
+                    ["General"         jde-show-project-options t]
+                    ["Compile"         jde-compile-show-options-buffer t]
+                    ["Run"             jde-show-run-options t]
+                    ["Debug"           jde-show-debug-options t]
+                    ["Autocode"        jde-show-autocode-options t]
+                    ["Javadoc"         jde-javadoc-customize t]
+                    ["Make"            jde-make-show-options t]
+                    ["Ant"             jde-ant-show-options t]
+                    ["Complete"        jde-show-complete-options t]
+                    ["Wiz"             jde-show-wiz-options t]
+                    )
+              (list "Project File"
+                    ["Create New" jde-create-new-project t]
+                    ["Save"     jde-save-project t]
+                    ["Load"     jde-load-project-file t]
+                    ["Load All" jde-load-all-project-files t]
+                    )
+              )
+        (list "Help"
+              ["JDEE Users Guide"      jde-show-help t]
+              ["JDK"                   jde-help-browse-jdk-doc t]
+              ["JDEE Key Bindings"     jde-keys t]
+              "-"
+              ["Class..."              jde-help-class t]
+              ["Class Member..."       jde-help-class-member t]
+              ["Symbol at Point"       jde-help-symbol t]
+              "-"
+              ["Submit problem report" jde-submit-problem-report t]
+              "-"
+              (concat "JDE " jde-version)
+              )
+        )
   "*The JDE main menu"
   :group 'jde-project
   :type 'sexp
   :set '(lambda (sym val)
-	  (set-default sym val)
-	  ; Define JDE menu for FSF Emacs.
-	  (if (or (not jde-xemacsp) (featurep 'infodock))
-	      (easy-menu-define jde-menu 
-				jde-mode-map
-				"Menu for JDE."
-				val))
-	  (if (and jde-xemacsp 
+          (set-default sym val)
+          ; Define JDE menu for FSF Emacs.
+          (if (or (not jde-xemacsp) (featurep 'infodock))
+              (easy-menu-define jde-menu
+                                jde-mode-map
+                                "Menu for JDE."
+                                val))
+          (if (and jde-xemacsp
                    (eq major-mode 'jde-mode))
-	      (jde-insert-menu-in-xemacs-menubar))))
+              (jde-insert-menu-in-xemacs-menubar))))
 
 
 (defun jde-insert-menu-in-xemacs-menubar ()
   "Insert JDE menu in the XEmacs menu bar."
-  (if (and 
+  (if (and
        (not (featurep 'infodock))
        (not (memq 'infodock c-emacs-features))
        (boundp 'current-menubar)
        current-menubar)
       (if (fboundp 'add-submenu)
-	  (add-submenu nil jde-menu-definition)
-	(add-menu nil "JDE" (cdr jde-menu-definition)))))
+          (add-submenu nil jde-menu-definition)
+        (add-menu nil "JDE" (cdr jde-menu-definition)))))
 
 
-(defcustom jde-new-buffer-menu 
+(defcustom jde-new-buffer-menu
   (list
    "JDE New"
    ["Class..."         jde-gen-class-buffer t]
@@ -1255,18 +1255,18 @@ Does nothing but return nil if `jde-log-max' is nil."
   :group 'jde-project
   :type 'sexp
   :set '(lambda (sym val)
-	  (set-default sym val)
-	  (if jde-xemacsp
-	      (unless (featurep 'infodock)
-		(when (fboundp 'add-submenu) 
-		  (add-submenu '("File") val "Insert File...")))
-	    (let* ((menu (if (fboundp 'easy-menu-create-menu)
-			     (easy-menu-create-menu 
-			      (car val) (cdr val))))
-		   (menu-name (car val)))
-	      (define-key-after menu-bar-file-menu [jde-new]
-		(cons menu-name menu)
-		  'open-file)))))
+          (set-default sym val)
+          (if jde-xemacsp
+              (unless (featurep 'infodock)
+                (when (fboundp 'add-submenu)
+                  (add-submenu '("File") val "Insert File...")))
+            (let* ((menu (if (fboundp 'easy-menu-create-menu)
+                             (easy-menu-create-menu
+                              (car val) (cdr val))))
+                   (menu-name (car val)))
+              (define-key-after menu-bar-file-menu [jde-new]
+                (cons menu-name menu)
+                  'open-file)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                                                            ;;
@@ -1282,16 +1282,16 @@ nonnil). The converion requires that cygpath be in your path. If the
   (interactive "sPath: ")
   (if (member system-type '(cygwin32 cygwin))
       (if (executable-find "cygpath")
-	  (save-excursion
-	    (let ((buf-name "*cygwin-output*")
-		  (output-type (if direction "-u" "-w")))
-	      (shell-command 
-	       (concat "cygpath " output-type " -p '" path "'") buf-name)
-	      (set-buffer buf-name)
-	      (let ((output (buffer-substring (point-min) (point-max))))
-		(kill-buffer buf-name)
-		(substitute ?\/ ?\\ (remove ?\n output)))))
-	(error "Cannot find cygpath executable."))
+          (save-excursion
+            (let ((buf-name "*cygwin-output*")
+                  (output-type (if direction "-u" "-w")))
+              (shell-command
+               (concat "cygpath " output-type " -p '" path "'") buf-name)
+              (set-buffer buf-name)
+              (let ((output (buffer-substring (point-min) (point-max))))
+                (kill-buffer buf-name)
+                (substitute ?\/ ?\\ (remove ?\n output)))))
+        (error "Cannot find cygpath executable."))
     path))
 
 (defvar jde-cygwin-root-cache nil
@@ -1303,31 +1303,31 @@ nonnil). The converion requires that cygpath be in your path. If the
       path
     (cond
      ((string-match "^/\\(cygdrive\\)?/\\([a-zA-Z]\\)/" path)
-      (concat 
+      (concat
        (substring
-	path
-	(match-beginning 2)
-	(match-end 2))
+        path
+        (match-beginning 2)
+        (match-end 2))
        ":/"
        (substring path (match-end 0))))
      ((string-match "^/[^/]*" path)
-       (let* ((root (substring 
-		    path (match-beginning 0) (match-end 0)))
-	      (rest (substring path (match-end 0)))
-	      (converted-root (cdr (assoc root jde-cygwin-root-cache))))
-	 (if (not converted-root)
-	   (progn
+       (let* ((root (substring
+                    path (match-beginning 0) (match-end 0)))
+              (rest (substring path (match-end 0)))
+              (converted-root (cdr (assoc root jde-cygwin-root-cache))))
+         (if (not converted-root)
+           (progn
              (setq converted-root (jde-cygpath root))
-	     (if converted-root
-		 (add-to-list 'jde-cygwin-root-cache 
-			      (cons root converted-root))
-	       (error "Cannot convert %s" path))))	 
-	 (if (string= rest "")
-	     converted-root
-	   (concat converted-root rest))))
+             (if converted-root
+                 (add-to-list 'jde-cygwin-root-cache
+                              (cons root converted-root))
+               (error "Cannot convert %s" path))))
+         (if (string= rest "")
+             converted-root
+           (concat converted-root rest))))
      (t
       (error "Cannot convert %s" path)))))
-	 	 
+
 
 (defun jde-cygwin-path-converter-internal (path)
   "Convert cygwin style PATH to a form acceptable to java vm.  Basically
@@ -1338,34 +1338,34 @@ unless they begin with '//[a-z]/' or '/cygdrive/[a-z]/'."
   (if (fboundp 'mswindows-cygwin-to-win32-path)
       (substitute ?/ ?\\ (mswindows-cygwin-to-win32-path path))
     (let* ((path-re "/\\(cygdrive\\)?/\\([a-zA-Z]\\)/")
-	   (subexpr 2)
-	   (index1 (* 2 subexpr))
-	   (index2 (1+ index1)))
+           (subexpr 2)
+           (index1 (* 2 subexpr))
+           (index2 (1+ index1)))
       (if (string-match (concat "^" path-re) path)
-	  (let ((new-path
-		 (concat (substring path 
-				    (nth index1 (match-data)) 
-				    (nth index2 (match-data)))
-			 ":/" 
-			 (substring path (match-end 0)))))
-	    (while (string-match (concat ":" path-re) new-path)
-	      (setq new-path
-		    (concat
-		     (substring new-path 0 (match-beginning 0))
-		     ";"
-		     (substring new-path 
-				(nth index1 (match-data)) 
-				(nth index2 (match-data)))
-		     ":/" 
-		     (substring new-path (match-end 0)))))
-	    (substitute ?\\ ?\/ new-path))
-	path))))
+          (let ((new-path
+                 (concat (substring path
+                                    (nth index1 (match-data))
+                                    (nth index2 (match-data)))
+                         ":/"
+                         (substring path (match-end 0)))))
+            (while (string-match (concat ":" path-re) new-path)
+              (setq new-path
+                    (concat
+                     (substring new-path 0 (match-beginning 0))
+                     ";"
+                     (substring new-path
+                                (nth index1 (match-data))
+                                (nth index2 (match-data)))
+                     ":/"
+                     (substring new-path (match-end 0)))))
+            (substitute ?\\ ?\/ new-path))
+        path))))
 
 (defcustom jde-cygwin-path-converter '(jde-cygwin-path-converter-internal)
-  "Function to use to convert cygwin paths to DOS paths.  
+  "Function to use to convert cygwin paths to DOS paths.
 Choose jde-cygwin-path-converter-internal, jde-cygwin-path-converter-cygpath,
 or \"custom-function.\" jde-cygwin-path-converter-cygpath handles all
-cygwin-style paths, including mount points, e.g.,/bin. 
+cygwin-style paths, including mount points, e.g.,/bin.
 jde-cygwin-path-converter-internal does not handle mount
 paths. However, it is much faster as it does not require running a
 subprocess every time the JDE needs to convert a path. Choose
@@ -1374,23 +1374,23 @@ supply. Replace \"custom-function\" with the name of the function that
 you want to use."
   :group 'jde-project
   :type  '(list
-	   (radio-button-choice :format "%t \n%v"
-			       :tag "Converter: "
-			       :entry-format "  %b %v"
-			       (const jde-cygwin-path-converter-internal)
-			       (const jde-cygwin-path-converter-cygpath)
-			       (function custom-function))))
-		       
+           (radio-button-choice :format "%t \n%v"
+                               :tag "Converter: "
+                               :entry-format "  %b %v"
+                               (const jde-cygwin-path-converter-internal)
+                               (const jde-cygwin-path-converter-cygpath)
+                               (function custom-function))))
+
 
 (defun jde-convert-cygwin-path (path &optional separator)
   "Convert cygwin style PATH to a form acceptable to java vm, using
 the conversion function specified by `jde-cygwin-path-converter'."
   (interactive "sPath: ")
-  (funcall (car jde-cygwin-path-converter) 
-	   (if separator (substitute ?\: (string-to-char separator) path) path)))
+  (funcall (car jde-cygwin-path-converter)
+           (if separator (substitute ?\: (string-to-char separator) path) path)))
 
 (defcustom jde-resolve-relative-paths-p t
-  "If this variable is non-nil, the JDE converts relative paths to 
+  "If this variable is non-nil, the JDE converts relative paths to
 absolute paths. The JDE does this by appending the relative path to the path
 of the project file for the current source buffer, if such
 a file exists. Otherwise, the JDE appends the relative path to the path
@@ -1398,7 +1398,7 @@ of the current directory."
   :group 'jde-project
   :type 'boolean)
 
-(defun jde-normalize-path (path &optional symbol) 
+(defun jde-normalize-path (path &optional symbol)
   "This function performs the following transformation on PATH:
 
   * Replaces environment variables of the form $VAR or ${VAR} with
@@ -1422,77 +1422,77 @@ variable that holds a path string, in which case the optional arg
 SYMBOL is unnecessary."
   (if (symbolp path)
       (setq symbol path
-	    path (symbol-value symbol)))
+            path (symbol-value symbol)))
   (let* ((directory-sep-char ?/)
-	 (p (substitute-in-file-name path))
-	(len (length p)))
+         (p (substitute-in-file-name path))
+        (len (length p)))
     (if (and
-	 jde-resolve-relative-paths-p
-	 (> len 0)
-	 (eq (aref p 0) ?.))
-	(let* (prj-file-path
-	       (dir (file-name-directory (or (buffer-file-name)
-					     default-directory))))
-	  ;; find the deepest originating project for the symbol
-	  ;; based on the current directory, and resolve to that
-	  ;; project's directory
-	  (if symbol
-	      (let ((prjs (get symbol 'jde-project))
-		    (sort-fn
-		     (lambda (x1 x2) 
-		       (let* ((dir1 (file-name-directory (car x1)))
-			      (dir2 (file-name-directory (car x2)))
-			      match1 match2)
-			 (if (null dir1)
-			     (null dir2)
-			   (if (null dir2)
-			       t
-			     (setq match1 (compare-strings
-					   dir1 0 (length dir1)
-					   dir 0 (length dir1)))
-			     (setq match2 (compare-strings
-					   dir2 0 (length dir2)
-					   dir 0 (length dir2))))
-			   (cond
-			    ((not (eq match1 t))
-			     (if (eq match2 t)
-				 nil
-			       (> (length dir1) (length dir2))))
-			    ((not (eq match2 t))
-			     t)
-			    ((> (length dir1) (length dir2)))))))))
-		(setq prjs (sort prjs sort-fn))
-		(setq prj-file-path (caar prjs))
-		(if (string= prj-file-path "default")
-		    ;; Case where the project file that sets symbol
+         jde-resolve-relative-paths-p
+         (> len 0)
+         (eq (aref p 0) ?.))
+        (let* (prj-file-path
+               (dir (file-name-directory (or (buffer-file-name)
+                                             default-directory))))
+          ;; find the deepest originating project for the symbol
+          ;; based on the current directory, and resolve to that
+          ;; project's directory
+          (if symbol
+              (let ((prjs (get symbol 'jde-project))
+                    (sort-fn
+                     (lambda (x1 x2)
+                       (let* ((dir1 (file-name-directory (car x1)))
+                              (dir2 (file-name-directory (car x2)))
+                              match1 match2)
+                         (if (null dir1)
+                             (null dir2)
+                           (if (null dir2)
+                               t
+                             (setq match1 (compare-strings
+                                           dir1 0 (length dir1)
+                                           dir 0 (length dir1)))
+                             (setq match2 (compare-strings
+                                           dir2 0 (length dir2)
+                                           dir 0 (length dir2))))
+                           (cond
+                            ((not (eq match1 t))
+                             (if (eq match2 t)
+                                 nil
+                               (> (length dir1) (length dir2))))
+                            ((not (eq match2 t))
+                             t)
+                            ((> (length dir1) (length dir2)))))))))
+                (setq prjs (sort prjs sort-fn))
+                (setq prj-file-path (caar prjs))
+                (if (string= prj-file-path "default")
+                    ;; Case where the project file that sets symbol
                     ;; is the user's .emacs file. Assume that the
-		    ;; user wants the relative path in the .emacs 
+                    ;; user wants the relative path in the .emacs
                     ;; file to be the default relative path for
                     ;; projects that do not specify a
                     ;; relative path.
-		    (setq prj-file-path
-			  (jde-find-project-file dir))))
-	    (setq prj-file-path 
-		  (jde-find-project-file dir)))
-	  (if prj-file-path
-	      (setq dir (file-name-directory prj-file-path))
-	    (setq dir default-directory))
-	  (if (and (> len 1)
-		   (eq (aref p 1) ?.))
-	      ;; path actually begins with `..', so normalize to one
-	      ;; directory up
-	      (save-match-data
-		(string-match "\\.+/?" p)
-		(setq p (expand-file-name (substring p (match-end 0))
-					  (expand-file-name (concat dir "../")))))
-	    (setq p (expand-file-name p dir))))
+                    (setq prj-file-path
+                          (jde-find-project-file dir))))
+            (setq prj-file-path
+                  (jde-find-project-file dir)))
+          (if prj-file-path
+              (setq dir (file-name-directory prj-file-path))
+            (setq dir default-directory))
+          (if (and (> len 1)
+                   (eq (aref p 1) ?.))
+              ;; path actually begins with `..', so normalize to one
+              ;; directory up
+              (save-match-data
+                (string-match "\\.+/?" p)
+                (setq p (expand-file-name (substring p (match-end 0))
+                                          (expand-file-name (concat dir "../")))))
+            (setq p (expand-file-name p dir))))
       ;; Do tilde expansion but not relative path expansion when
       ;; jde-resolve-relative-paths-p is false.
-      (if (not 
-	   (or
-	    (string= p ".")
-	    (string-match "[.]/" p)))
-	  (setq p (expand-file-name p))))
+      (if (not
+           (or
+            (string= p ".")
+            (string-match "[.]/" p)))
+          (setq p (expand-file-name p))))
     (setq p (jde-convert-cygwin-path p))
     p))
 
@@ -1518,51 +1518,51 @@ root names match EXCLUDE-REGEXPS. Return the files normalized against SYMBOL."
      (jde-normalize-path included-file symbol))
    (remove-if
     (lambda (file-path)
-      (let ((file-name 
-	      (file-name-nondirectory file-path)))
-	(catch 'match
-	    (loop for regexp in exclude-regexps do
-		  (if (string-match regexp file-name)
-		      (throw 'match t))))))
+      (let ((file-name
+              (file-name-nondirectory file-path)))
+        (catch 'match
+            (loop for regexp in exclude-regexps do
+                  (if (string-match regexp file-name)
+                      (throw 'match t))))))
     (jde-directory-files-recurs dir include-regexp))))
 
 
 (defun jde-expand-classpath (classpath &optional symbol)
-  "If `jde-expand-classpath-p' is nonnil, replaces paths to 
+  "If `jde-expand-classpath-p' is nonnil, replaces paths to
 directories that match `jde-lib-directory-names' with paths to jar or
 zip files in those directories, excepting those specified by
 `jde-lib-excluded-file-names'. This function assumes that the
 existing paths are already normalized."
   (if jde-expand-classpath-p
       (let (paths)
-	(loop for path in classpath do
-	      (if (and 
-		   (file-exists-p path)
-		   (file-directory-p path)
-		   (let ((dir-name (file-name-nondirectory path)))
-		     (member-if 
-		      (lambda (lib-name)
-			(string-match lib-name dir-name))
-		      jde-lib-directory-names)))
-		  (progn
-		    (setq paths 
-			  (append 
-			   paths
-			   (jde-expand-directory
-			    path 
-			    "\\.jar$"
-			    jde-lib-excluded-file-names
-			    symbol)))
-		    (setq paths
-			  (append 
-			   paths 
-			   (jde-expand-directory
-			    path 
-			    "\\.zip$"
-			    jde-lib-excluded-file-names
-			    symbol))))
-		(setq paths (append paths (list path)))))
-	paths)
+        (loop for path in classpath do
+              (if (and
+                   (file-exists-p path)
+                   (file-directory-p path)
+                   (let ((dir-name (file-name-nondirectory path)))
+                     (member-if
+                      (lambda (lib-name)
+                        (string-match lib-name dir-name))
+                      jde-lib-directory-names)))
+                  (progn
+                    (setq paths
+                          (append
+                           paths
+                           (jde-expand-directory
+                            path
+                            "\\.jar$"
+                            jde-lib-excluded-file-names
+                            symbol)))
+                    (setq paths
+                          (append
+                           paths
+                           (jde-expand-directory
+                            path
+                            "\\.zip$"
+                            jde-lib-excluded-file-names
+                            symbol))))
+                (setq paths (append paths (list path)))))
+        paths)
     classpath))
 
 
@@ -1573,14 +1573,14 @@ arg SYMBOL is unnecessary. If QUOTE-PATH-P is nonnil, quote paths
 that contain spaces."
   (if (symbolp paths)
       (setq symbol paths
-	    paths (symbol-value symbol)))
+            paths (symbol-value symbol)))
   (mapconcat
    (lambda (path)
      path)
-    (jde-expand-classpath 
+    (jde-expand-classpath
      (mapcar
       (lambda (path)
-	(jde-normalize-path path symbol))
+        (jde-normalize-path path symbol))
       paths)
      symbol)
    jde-classpath-separator))
@@ -1604,46 +1604,46 @@ that contain spaces."
  (jde-build-path-arg "-classpath" path-list quote symbol))
 
 (defun jde-root-dir-p (dir)
-  "Return nonnil if DIR is a root directory." 
+  "Return nonnil if DIR is a root directory."
   (let ((parent (expand-file-name  ".." dir)))
-    (cond 
+    (cond
      ((and
        (fboundp 'ange-ftp-ftp-name)
        (ange-ftp-ftp-name dir))
       (ange-ftp-get-file-entry parent))
      ((eq system-type 'windows-nt)
-      ;; If the current directory tree is on a 
+      ;; If the current directory tree is on a
       ;; virtual drive created by the subst command
       ;;
-      ;;  (not (file-exists-p parent)) 
-      ;;  
+      ;;  (not (file-exists-p parent))
+      ;;
       ;; fails. Hence, the following hack contributed
       ;; by Nat Goodspeed.
-      (or 
+      (or
        (string= parent "//") ; for paths like //host/d/prj/src
        (string= parent "\\\\") ; for paths like \\host\d\prj\src
        (string= parent dir) ;; for paths like d:/ on emacs 22
        (string= (substring parent -3) "/.."))) ;; for paths like d:/ on emacs 21
      ((member system-type '(cygwin32 cygwin))
       (or (string= (file-truename dir) (file-truename "/"))
-	  (string= parent "//") ; for paths like //host/d/prj/src
-	  (string= parent "\\\\") ; for paths like \\host\d\prj\src
-	  (and (> (length parent) 3) ; for paths like d:/prj/src
-	       (string= (substring parent -3) "/.."))
-	  (not (file-exists-p (file-truename dir)))))
+          (string= parent "//") ; for paths like //host/d/prj/src
+          (string= parent "\\\\") ; for paths like \\host\d\prj\src
+          (and (> (length parent) 3) ; for paths like d:/prj/src
+               (string= (substring parent -3) "/.."))
+          (not (file-exists-p (file-truename dir)))))
      (t
       (or (or (not (file-readable-p dir))
-	      (not (file-readable-p parent)))
-	  (and 
-	   (string= (file-truename dir) "/")
-	   (string= (file-truename parent) "/")))))))
+              (not (file-readable-p parent)))
+          (and
+           (string= (file-truename dir) "/")
+           (string= (file-truename parent) "/")))))))
 
-(defun jde-get-global-classpath () 
+(defun jde-get-global-classpath ()
   "Return the value of `jde-global-classpath', if defined, otherwise
 the value of the CLASSPATH environment variable converted to a list,
 of normalized paths, i.e., with . and ~ characters expanded and backslashes
 replaces with slashes."
-  (if jde-global-classpath 
+  (if jde-global-classpath
       jde-global-classpath
     (let ((cp (getenv "CLASSPATH")))
       (if (stringp cp)
@@ -1655,8 +1655,8 @@ replaces with slashes."
 
 
 
-(defvar jde-entering-java-buffer-hook 
-  '(jde-reload-project-file 
+(defvar jde-entering-java-buffer-hook
+  '(jde-reload-project-file
     jde-which-method-update-on-entering-buffer)
    "*Lists functions to run when entering a jde-mode source buffer from another
 jde-mode buffer. Note that these functions do not run when reentering the same
@@ -1670,25 +1670,25 @@ only once, when the buffer is created.")
 
 (defun jde-detect-java-buffer-activation ()
   "Detects when a user activates a buffer.
-If the activated buffer is a Java buffer, runs the 
+If the activated buffer is a Java buffer, runs the
 `jde-entering-java-buffer-hook' hooks."
   (let ((curr-buff (current-buffer)))
     (unless (equal curr-buff jde-current-buffer)
       (setq jde-current-buffer curr-buff)
       (if (eq major-mode 'jde-mode)
-	  (condition-case err
-	      (run-hooks 'jde-entering-java-buffer-hook)
-	    (error 
-	     (message "jde-entering-java-buffer-hook error: %s" 
-		      (error-message-string err))))))))
+          (condition-case err
+              (run-hooks 'jde-entering-java-buffer-hook)
+            (error
+             (message "jde-entering-java-buffer-hook error: %s"
+                      (error-message-string err))))))))
 
 (defun jde-monitor-post-command-hook ()
   "Checks whether `post-command-hook' includes all hooks required
 by JDEE. If not, it adds the required hooks."
   (if (eq major-mode 'jde-mode)
       (dolist (hook (list 'jde-detect-java-buffer-activation))
-	(when (not (member hook post-command-hook))
-	  (add-hook 'post-command-hook hook)))))
+        (when (not (member hook post-command-hook))
+          (add-hook 'post-command-hook hook)))))
 
 (defvar jde-monitor-post-command-hook-timer nil
 "Timer that runs `jde-monitor-post-command-hook' during
@@ -1696,27 +1696,27 @@ idle moments.")
 
 (defun jde-count-open-java-buffers ()
   "Returns non-nil if any java buffers are open."
-  (count 
+  (count
    ".java"
    (buffer-list)
    :test
    (lambda (file-type buffer)
      (let ((file-name (buffer-file-name buffer)))
        (if file-name
-	   (save-match-data
-	    (string-match file-type file-name)))))))
-	 
+           (save-match-data
+            (string-match file-type file-name)))))))
+
 
 (defun jde-clean-up-after-jde ()
   "Removes `jde-detect-java-buffer-activation-hook' when
 all Java source buffers have been closed."
   (if  (eq major-mode 'jde-mode)
       (unless  (> (jde-count-open-java-buffers) 1)
-	(remove-hook 'post-command-hook 'jde-detect-java-buffer-activation)
-	(when jde-monitor-post-command-hook-timer
-	  (cancel-timer jde-monitor-post-command-hook-timer)
-	  (setq jde-monitor-post-command-hook-timer nil))
-	(remove-hook 'kill-buffer-hook 'jde-clean-up-after-jde))))
+        (remove-hook 'post-command-hook 'jde-detect-java-buffer-activation)
+        (when jde-monitor-post-command-hook-timer
+          (cancel-timer jde-monitor-post-command-hook-timer)
+          (setq jde-monitor-post-command-hook-timer nil))
+        (remove-hook 'kill-buffer-hook 'jde-clean-up-after-jde))))
 
 
 ;; JDE help
@@ -1726,7 +1726,7 @@ Returns  nil if the directory cannot be found. At some
 point, XEmacs will include the JDE. Versions of XEmacs
 that include JDE will store the JDE doc in a data
 directory called jde. On all other Emacs versions, the JDE
-expects to find the documentation in a subdirectory 
+expects to find the documentation in a subdirectory
 named doc of the directory that contains the file
 jde.el."
   (jde-find-jde-data-directory))
@@ -1738,14 +1738,14 @@ jde.el."
   (let* ((jde-dir (jde-find-jde-doc-directory))
          (jde-help
           (if jde-dir
-	      (expand-file-name "doc/html/jde-ug/jde-ug.html" jde-dir))))      
+              (expand-file-name "doc/html/jde-ug/jde-ug.html" jde-dir))))
     (if (and
          jde-help
          (file-exists-p jde-help))
         (browse-url (concat "file://" (jde-convert-cygwin-path jde-help))
                     (if (boundp 'browse-url-new-window-flag)
-			'browse-url-new-window-flag
-		      browse-url-new-window-p))
+                        'browse-url-new-window-flag
+                      browse-url-new-window-p))
       (signal 'error '("Cannot find JDE help file.")))))
 
 
@@ -1755,10 +1755,10 @@ jde.el."
 (defvar jde-problem-report-mail-address "pkinnucan@comcast.net" )
 
 (defun jde-submit-problem-report()
-  "Submit a problem report for the JDEE." 
+  "Submit a problem report for the JDEE."
   (interactive)
   (require 'reporter)
-  (and 
+  (and
    (y-or-n-p "Do you want to submit a problem report on the JDEE? ")
    (progn
      (message "Preparing problem report...")
@@ -1766,7 +1766,7 @@ jde.el."
      (reporter-submit-bug-report
       jde-problem-report-mail-address
       (format "JDE version %s\nRequired packages: cedet-%s\n"
-	      jde-version cedet-version)
+              jde-version cedet-version)
       (jde-problem-report-list-all-variables)
       nil
       'jde-problem-report-post-hooks
@@ -1776,144 +1776,144 @@ jde.el."
 
 (defun jde-problem-report-post-hooks()
   "Function run the reporter package done its work.
-It looks for a JDEBug buffer and inserts the contents of that, and then prompts 
+It looks for a JDEBug buffer and inserts the contents of that, and then prompts
 for insertion of the .emacs file"
-  (save-excursion 
+  (save-excursion
     (goto-char (point-max))
     (let* ((debug-buffer (get-buffer "*JDEbug*"))
-	   (messages-buffer 
-	    (get-buffer
-	     (if jde-xemacsp " *Message-Log*" "*Messages*")))
-	   (backtrace-buffer (get-buffer "*Backtrace*"))
-	   (jde-log-buffer (get-buffer "*jde-log*"))
-	   (process 
-	    (let ((proc (jde-dbs-get-target-process)))
-	      (if (not proc)
-		  (let ((dead-proc-alist 
-			 (oref jde-dbs-the-process-morgue proc-alist)))
-		    (if dead-proc-alist
-			(setq proc (cdr (car dead-proc-alist))))))
-	      proc))
-	   (cli-buffer (if (and process (slot-boundp process 'cli-buf))
-			   (oref process cli-buf)))
-	   (locals-buffer (if (and process (slot-boundp process 'locals-buf))
-			      (oref process locals-buf))))
-     
+           (messages-buffer
+            (get-buffer
+             (if jde-xemacsp " *Message-Log*" "*Messages*")))
+           (backtrace-buffer (get-buffer "*Backtrace*"))
+           (jde-log-buffer (get-buffer "*jde-log*"))
+           (process
+            (let ((proc (jde-dbs-get-target-process)))
+              (if (not proc)
+                  (let ((dead-proc-alist
+                         (oref jde-dbs-the-process-morgue proc-alist)))
+                    (if dead-proc-alist
+                        (setq proc (cdr (car dead-proc-alist))))))
+              proc))
+           (cli-buffer (if (and process (slot-boundp process 'cli-buf))
+                           (oref process cli-buf)))
+           (locals-buffer (if (and process (slot-boundp process 'locals-buf))
+                              (oref process locals-buf))))
 
-      ;;insert the contents of the debug buffer if it is there. 
+
+      ;;insert the contents of the debug buffer if it is there.
       (if debug-buffer
-	  (progn
-	    (insert-string "\n\n\nThe contents of the *JDEBug* buffer were\n\n")
-	    (insert-buffer debug-buffer)
-	    (goto-char (point-max))
-	    (insert-string "\n\n\nEnd Insert *JDEbug* buffer" ))
-	(insert-string "\n\n\nThere was no *JDEBug* buffer" ))
+          (progn
+            (insert-string "\n\n\nThe contents of the *JDEBug* buffer were\n\n")
+            (insert-buffer debug-buffer)
+            (goto-char (point-max))
+            (insert-string "\n\n\nEnd Insert *JDEbug* buffer" ))
+        (insert-string "\n\n\nThere was no *JDEBug* buffer" ))
 
       ;;insert the contents of the CLI buffer if it exists.
       (if cli-buffer
-	  (progn
-	    (insert-string "\n\n\nThe contents of the CLI buffer are\n\n")
-	    (insert-buffer cli-buffer)
-	    (goto-char (point-max))
-	    (insert-string "\n\n\nEnd Insert CLI buffer" ))
-	(insert-string "\n\n\nThere is no CLI buffer" ))
+          (progn
+            (insert-string "\n\n\nThe contents of the CLI buffer are\n\n")
+            (insert-buffer cli-buffer)
+            (goto-char (point-max))
+            (insert-string "\n\n\nEnd Insert CLI buffer" ))
+        (insert-string "\n\n\nThere is no CLI buffer" ))
 
 
       ;;insert the contents of the locals buffer if it exists.
       (if locals-buffer
-	  (progn
-	    (insert-string "\n\n\nThe contents of the locals buffer are\n\n")
-	    (insert-buffer locals-buffer)
-	    (goto-char (point-max))
-	    (insert-string "\n\n\nEnd Insert locals buffer" ))
-	(insert-string "\n\n\nThere is no locals buffer" ))
+          (progn
+            (insert-string "\n\n\nThe contents of the locals buffer are\n\n")
+            (insert-buffer locals-buffer)
+            (goto-char (point-max))
+            (insert-string "\n\n\nEnd Insert locals buffer" ))
+        (insert-string "\n\n\nThere is no locals buffer" ))
 
-      ;;insert the contents of the backtrace buffer if it is there. 
+      ;;insert the contents of the backtrace buffer if it is there.
       (if backtrace-buffer
-	  (progn
-	    (insert-string "\n\n\nThe contents of the *Backtrace* buffer were\n\n")
-	    (insert-buffer backtrace-buffer)
-	    (goto-char (point-max))
-	    (insert-string "\n\n\nEnd Insert *Backtrace* buffer" ))
-	(insert-string "\n\n\nThere was no *Backtrace* buffer" ))
+          (progn
+            (insert-string "\n\n\nThe contents of the *Backtrace* buffer were\n\n")
+            (insert-buffer backtrace-buffer)
+            (goto-char (point-max))
+            (insert-string "\n\n\nEnd Insert *Backtrace* buffer" ))
+        (insert-string "\n\n\nThere was no *Backtrace* buffer" ))
 
 
-      ;;insert the contents of the messages buffer if it is there. 
+      ;;insert the contents of the messages buffer if it is there.
       (if messages-buffer
-	  (progn
-	    (insert-string "\n\n\nThe contents of the *Messages* buffer were\n\n")
-	    (insert-buffer messages-buffer)
-	    (goto-char (point-max))
-	    (insert-string "\n\n\nEnd Insert *Messages* buffer" ))
-	(insert-string "\n\n\nThere was no *Messages* buffer" ))
+          (progn
+            (insert-string "\n\n\nThe contents of the *Messages* buffer were\n\n")
+            (insert-buffer messages-buffer)
+            (goto-char (point-max))
+            (insert-string "\n\n\nEnd Insert *Messages* buffer" ))
+        (insert-string "\n\n\nThere was no *Messages* buffer" ))
 
-      ;;insert the contents of the jde-log buffer if it is there. 
+      ;;insert the contents of the jde-log buffer if it is there.
       (if jde-log-buffer
-	  (progn
-	    (insert-string "\n\n\nThe contents of the *jde-log* buffer were\n\n")
-	    (insert-buffer jde-log-buffer)
-	    (goto-char (point-max))
-	    (insert-string "\n\n\nEnd Insert *jde-log* buffer" ))
-	(insert-string "\n\n\nThere was no *jde-log* buffer" )))
+          (progn
+            (insert-string "\n\n\nThe contents of the *jde-log* buffer were\n\n")
+            (insert-buffer jde-log-buffer)
+            (goto-char (point-max))
+            (insert-string "\n\n\nEnd Insert *jde-log* buffer" ))
+        (insert-string "\n\n\nThere was no *jde-log* buffer" )))
 
     (when process-environment
       (insert-string "\n\n\nProcess environment: \n\n")
       (insert-string (mapconcat (lambda (var) var) process-environment "\n")))
 
     (let* ((init-file-name (if (featurep 'xemacs) "init.el" ".emacs"))
-	   (buf (get-buffer-create 
-		 (format "*Insert %s*" init-file-name)))
-	   (mail-buf (current-buffer)))
-      
+           (buf (get-buffer-create
+                 (format "*Insert %s*" init-file-name)))
+           (mail-buf (current-buffer)))
+
       (set-buffer buf)
 
-      (widget-insert 
+      (widget-insert
        (format       "You should include the entire contents of your %s file.\n"
-	       init-file-name))
+               init-file-name))
 
       (widget-insert
        (format       "This is because often parts of the %s file that appear\n"
-	       init-file-name))
-	
+               init-file-name))
+
       (widget-insert "not to be JDEE-related do in fact contain the cause of\n")
       (widget-insert "reported bugs.\n\n")
 
-      (widget-insert 
-       (format "If you choose not to send your %s file or the file loads many\n" 
-	       init-file-name))
+      (widget-insert
+       (format "If you choose not to send your %s file or the file loads many\n"
+               init-file-name))
 
-      (widget-insert 
-       (format "other files, please attempt to replicate the bug, using the\n" 
-	       init-file-name))
+      (widget-insert
+       (format "other files, please attempt to replicate the bug, using the\n"
+               init-file-name))
 
-      (widget-insert 
-       (format "minimal %s file suggested in the JDEE documentation, and note\n" 
-	       init-file-name))
+      (widget-insert
+       (format "minimal %s file suggested in the JDEE documentation, and note\n"
+               init-file-name))
 
       (widget-insert "that you have done this in this bug report.\n")
       (switch-to-buffer buf)
-      
+
       (set-buffer mail-buf)
       (goto-char (point-max))
 
-      (if (y-or-n-p 
-	   (format "Insert your %s file into the problem report? " 
-		   init-file-name))
-	  (progn
-	    (insert-string 
-	     (format "\n\n\nThe contents of the %s file was\n\n\n"
-		     init-file-name))
+      (if (y-or-n-p
+           (format "Insert your %s file into the problem report? "
+                   init-file-name))
+          (progn
+            (insert-string
+             (format "\n\n\nThe contents of the %s file was\n\n\n"
+                     init-file-name))
 
-	    (if (featurep 'xemacs) 
-		(insert-file "~/.xemacs/init.el")
-	      (insert-file "~/.emacs"))
-	    (goto-char (point-max))
-	    (insert-string 
-	     (format "\n\n\n=====end inserted %s file"
-		     init-file-name)))
-	(insert-string 
-	 (format "\n\n\nThe user choose not to insert their %s file\n" 
-		 init-file-name)))
+            (if (featurep 'xemacs)
+                (insert-file "~/.xemacs/init.el")
+              (insert-file "~/.emacs"))
+            (goto-char (point-max))
+            (insert-string
+             (format "\n\n\n=====end inserted %s file"
+                     init-file-name)))
+        (insert-string
+         (format "\n\n\nThe user choose not to insert their %s file\n"
+                 init-file-name)))
 
       ;;clean up the prompt buffer
       (kill-buffer buf))))
@@ -1924,7 +1924,7 @@ for insertion of the .emacs file"
     (mapatoms
      (lambda (symbol)
        (if  (jde-symbol-p symbol)
-	 (setq vars (cons symbol vars)))))
+         (setq vars (cons symbol vars)))))
     vars))
 
 
@@ -1939,24 +1939,24 @@ for insertion of the .emacs file"
  "When in setnu-mode, toggles setnu-mode off and on."
    (if setnu-mode
        (if (or
-	    (and
-	     (> length 0)
-	     jde-setnu-deletion-check)
-	    (string-match 
-		  "[\n\r]" 
-		  (buffer-substring-no-properties start end)))
-	   (run-with-timer 
-	    0.001 nil
-	    ;; setnu toggler      
-	   (lambda () (setnu-mode) (setnu-mode))))
+            (and
+             (> length 0)
+             jde-setnu-deletion-check)
+            (string-match
+                  "[\n\r]"
+                  (buffer-substring-no-properties start end)))
+           (run-with-timer
+            0.001 nil
+            ;; setnu toggler
+           (lambda () (setnu-mode) (setnu-mode))))
      (setq jde-setnu-deletion-check nil)))
 
-(defun jde-setnu-before-change (start end) 
+(defun jde-setnu-before-change (start end)
   "Determines whether any newlines were deleted."
    (if setnu-mode
-       (if (> end start) 
-	   (setq jde-setnu-deletion-check 
-		 (string-match "[\n\r]" (buffer-substring-no-properties start end))))))
+       (if (> end start)
+           (setq jde-setnu-deletion-check
+                 (string-match "[\n\r]" (buffer-substring-no-properties start end))))))
 
 
 (defcustom jde-setnu-mode-threshold 20000
@@ -1970,34 +1970,34 @@ automatic line numbering."
  :group 'jde-project
  :type 'boolean
  :set '(lambda (sym val)
-	 (if val
-	     (progn
-	       (require 'setnu)
-	       (add-hook 
-		'after-change-functions 
-		'jde-setnu-after-change)
-	       (add-hook 
-		'before-change-functions 
-		'jde-setnu-before-change)
-	       (mapc
-		(lambda (buf)
-		  (save-excursion
-		    (set-buffer buf)
-		    (if (and
-			 (not setnu-mode)
-			 (< (point-max) jde-setnu-mode-threshold))
-			(setnu-mode 1))))
-		  (jde-get-java-source-buffers)))
-	   (progn
-	     (mapc 
-	      (lambda (buf)
-		(save-excursion
-		  (set-buffer buf)
-		  (if (and (boundp 'setnu-mode)
-			   setnu-mode)
-		      (setnu-mode))))
-	      (jde-get-java-source-buffers))))	 
-	 (set-default sym val)))
+         (if val
+             (progn
+               (require 'setnu)
+               (add-hook
+                'after-change-functions
+                'jde-setnu-after-change)
+               (add-hook
+                'before-change-functions
+                'jde-setnu-before-change)
+               (mapc
+                (lambda (buf)
+                  (save-excursion
+                    (set-buffer buf)
+                    (if (and
+                         (not setnu-mode)
+                         (< (point-max) jde-setnu-mode-threshold))
+                        (setnu-mode 1))))
+                  (jde-get-java-source-buffers)))
+           (progn
+             (mapc
+              (lambda (buf)
+                (save-excursion
+                  (set-buffer buf)
+                  (if (and (boundp 'setnu-mode)
+                           setnu-mode)
+                      (setnu-mode))))
+              (jde-get-java-source-buffers))))
+         (set-default sym val)))
 
 ;; jde-describe-map is Ehud Karni's describe map with jde prepended.
 (defun jde-keymap-test (var)           ; internal function for keymap checking
@@ -2029,16 +2029,16 @@ automatic line numbering."
 This is done if FILE.el is newer than FILE.elc or if FILE.elc doesn't exist."
   (if (string= (file-name-extension file) "el")
       (let* ((root (file-name-sans-extension file))
-	     (elc-file (concat root ".elc")))
-	(if (and
-	     (or (not (file-exists-p elc-file))
-		(file-newer-than-file-p file  elc-file))
-	     (or (not (string= root "jde-xemacs"))
-		 (featurep 'xemacs)))
-	    (progn
-	      (message (format "Byte-compiling %s..." 
-			       (file-name-nondirectory file)))
-	      (byte-compile-file file))))))
+             (elc-file (concat root ".elc")))
+        (if (and
+             (or (not (file-exists-p elc-file))
+                (file-newer-than-file-p file  elc-file))
+             (or (not (string= root "jde-xemacs"))
+                 (featurep 'xemacs)))
+            (progn
+              (message (format "Byte-compiling %s..."
+                               (file-name-nondirectory file)))
+              (byte-compile-file file))))))
 
 ;;;###autoload
 (defun jde-compile-jde ()
@@ -2051,14 +2051,14 @@ This is done if FILE.el is newer than FILE.elc or if FILE.elc doesn't exist."
   (interactive)
   (require 'jde-compat)
   (let ((load-path (append '(".") load-path))
-	(jde-lisp-directory (expand-file-name "lisp" (jde-find-jde-data-directory))))
-    (save-excursion 
-      (mapcar 
+        (jde-lisp-directory (expand-file-name "lisp" (jde-find-jde-data-directory))))
+    (save-excursion
+      (mapcar
        (function jde-compile-file-if-necessary)
        (directory-files jde-lisp-directory t)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;                                                                            ;; 
+;;                                                                            ;;
 ;; Find command                                                               ;;
 ;;                                                                            ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2078,17 +2078,17 @@ on any character), Word (match words only), Line
 (match lines only)."
   :group 'jde-project
   :type  '(list
-	   (radio-button-choice
-	    :format "%t \n%v"
-	    :tag "Search granularity:"
-	    (item "Character")
-	    (item "Word")
-	    (item "Line"))))
+           (radio-button-choice
+            :format "%t \n%v"
+            :tag "Search granularity:"
+            (item "Character")
+            (item "Word")
+            (item "Line"))))
 
 
 (defcustom jde-find-file-regexp '("*.java")
   "*Specifies the regular expression that the jde-find command uses
-to select files to be searched. You can use any regular expression  
+to select files to be searched. You can use any regular expression
 supported by the -name option of the GNU find command."
   :group 'jde-project
   :type '(repeat (string :tag "Find regexp"))
@@ -2096,43 +2096,43 @@ supported by the -name option of the GNU find command."
 
 (defclass jde-find-dialog (efc-dialog)
   ((expr-field     :initarg :expr-field
-		   :documentation "Edit field for expression to find.")
+                   :documentation "Edit field for expression to find.")
    (expression     :initarg :expression
-		   :type string
-		   :initform ""
-		   :documentation "Regular expression to find.")
+                   :type string
+                   :initform ""
+                   :documentation "Regular expression to find.")
    (dir-fields     :initarg :dir-fields
-		   :documentation "List of directory path fields.")
+                   :documentation "List of directory path fields.")
    (dirs           :initarg :dirs
-		   :type list
-		   :documentation "Directories to search recursively.")
+                   :type list
+                   :documentation "Directories to search recursively.")
    (file-fields    :initarg :file-fields
-		   :documentation "Regular expression fields for files to search.")
+                   :documentation "Regular expression fields for files to search.")
    (files          :initarg :files
-		   :type list
-		   :initform ("*.java")
-		   :documentation "Files to search.")
+                   :type list
+                   :initform ("*.java")
+                   :documentation "Files to search.")
    (ignore-case-cb :initarg :ignore-case
-		   :documentation "Ignore case check box.")
+                   :documentation "Ignore case check box.")
    (ignore-case-p  :initarg :ignore-case-p
-		   :type boolean
-		   :initform t
-		   :documentation "If true, ignore case when searching.")
+                   :type boolean
+                   :initform t
+                   :documentation "If true, ignore case when searching.")
    (grain-rbs      :initarg :grain-rbs
-		   :documentation "Granularity radio buttons.")
+                   :documentation "Granularity radio buttons.")
    (grain          :initarg :grain
-		   :type string
-		   :initform "Character"
-		   :documentation "Search granularity: Character, Word, Line")
+                   :type string
+                   :initform "Character"
+                   :documentation "Search granularity: Character, Word, Line")
    (ok             :initarg :ok
-		   :type boolean
-		   :initform nil
-		   :documentation "True if user clicked the OK button.")
+                   :type boolean
+                   :initform nil
+                   :documentation "True if user clicked the OK button.")
    (the-dialog     :type (or null jde-find-dialog)
-		   :allocation :class
-		   :initform nil
-		   :documentation
-		   "The only instance of the find expression dialog buffer."))
+                   :allocation :class
+                   :initform nil
+                   :documentation
+                   "The only instance of the find expression dialog buffer."))
   "Dialog displayed by `jde-find' command.")
 
 (defmethod initialize-instance ((this jde-find-dialog) &rest fields)
@@ -2141,66 +2141,66 @@ supported by the -name option of the GNU find command."
   (call-next-method))
 
 (defmethod efc-dialog-create ((this jde-find-dialog))
- 
+
   (widget-insert "Find Expression Options\n\n")
 
   (oset this expr-field
- 	(widget-create
-	 (list
-	  'text
-	  :tab-order 1
-	  :format "%t %v"
-	  :tag "Expression:"
-	  :value (oref this expression))))
+        (widget-create
+         (list
+          'text
+          :tab-order 1
+          :format "%t %v"
+          :tag "Expression:"
+          :value (oref this expression))))
 
   (widget-insert "\n")
 
   (oset this dir-fields
-	(widget-create
-	 (list
-	  'repeat 
-	  :tag "Directories to search recursively"
-	  :value (if (slot-boundp this 'dirs)
-		     (oref this dirs)
-		   (mapcar
-		    (lambda (p)
-		      (jde-normalize-path p 'jde-sourcepath))
-		    jde-sourcepath))
-	  (list 'file :tag "Path"))))
+        (widget-create
+         (list
+          'repeat
+          :tag "Directories to search recursively"
+          :value (if (slot-boundp this 'dirs)
+                     (oref this dirs)
+                   (mapcar
+                    (lambda (p)
+                      (jde-normalize-path p 'jde-sourcepath))
+                    jde-sourcepath))
+          (list 'file :tag "Path"))))
   (widget-insert "\n")
 
   (oset this file-fields
-	(widget-create
-	 (list
-	  'repeat 
-	  :tag "File types to search"
-	  :value (oref this files)
-	  (list 'file :tag "File regexp"))))
+        (widget-create
+         (list
+          'repeat
+          :tag "File types to search"
+          :value (oref this files)
+          (list 'file :tag "File regexp"))))
 
   (widget-insert "\n")
 
   (oset this ignore-case-cb
-	(widget-create
-	 (list 'checkbox 
-	       :format "%[%v%] %t" 
-	       :tag "Ignore case"
-	       :value (oref this ignore-case-p)
-	       )))
+        (widget-create
+         (list 'checkbox
+               :format "%[%v%] %t"
+               :tag "Ignore case"
+               :value (oref this ignore-case-p)
+               )))
 
   (widget-insert "\n\n")
 
   (oset this grain-rbs
- 	(widget-create
- 	 (list
-	  'radio-button-choice
-	  :format "%t\n%v"
-	  :tag "Search granularity:"
-	  :value (oref this grain)
-	  :args (list
-		 (list 'item "Character")
-		 (list 'item "Word")
-		 (list 'item "Line")))))
-		       
+        (widget-create
+         (list
+          'radio-button-choice
+          :format "%t\n%v"
+          :tag "Search granularity:"
+          :value (oref this grain)
+          :args (list
+                 (list 'item "Character")
+                 (list 'item "Word")
+                 (list 'item "Line")))))
+
   (widget-insert "\n"))
 
 
@@ -2218,26 +2218,26 @@ an option or canceled the dialog. See `efc-dialog-ok' and
   "Invoked when the user selects the OK button on the options
 dialog. Sets the :dirs field of THIS to the search paths chosen by the
 user, kills the dialog buffer, and exits recursive-edit mode."
-  
-  (oset this 
-	expression
-	(widget-value (oref this expr-field)))
-
-  (oset this 
-	dirs
-	(widget-value (oref this dir-fields)))
 
   (oset this
-	files
-	(widget-value (oref this file-fields)))
-
-  (oset this 
-	ignore-case-p
-	(widget-value (oref this ignore-case-cb)))
+        expression
+        (widget-value (oref this expr-field)))
 
   (oset this
-	grain
-	(widget-value (oref this grain-rbs)))
+        dirs
+        (widget-value (oref this dir-fields)))
+
+  (oset this
+        files
+        (widget-value (oref this file-fields)))
+
+  (oset this
+        ignore-case-p
+        (widget-value (oref this ignore-case-cb)))
+
+  (oset this
+        grain
+        (widget-value (oref this grain-rbs)))
 
   (oset this ok t)
 
@@ -2271,38 +2271,38 @@ directories to search recursively. If NO-CASE is nonnil, ignore
 case. GRAIN is a string that indicates the granularity of the search,
 i.e., match any \"Character\" string, a \"Word\" only, or a \"Line\"
 only."
-  (if (not (executable-find 
-	    ;; Hack required by faulty XEmacs implementation of executable-find.
-	    (if (eq system-type 'windows-nt) "grep.exe" "grep")))
+  (if (not (executable-find
+            ;; Hack required by faulty XEmacs implementation of executable-find.
+            (if (eq system-type 'windows-nt) "grep.exe" "grep")))
       (error "This command requires the Unix grep utility."))
-  (if (not (executable-find 
-	    (if (eq system-type 'windows-nt) "find.exe" "find")))
+  (if (not (executable-find
+            (if (eq system-type 'windows-nt) "find.exe" "find")))
       (error (list "This command requires the Unix find utility.")))
   (let* ((directories-option
-	  (if dirs dirs "."))
-	 (case-sensitive-option 
-	  (if no-case  "-i" ""))
-	 (granularity-option
-	  (cond
-	   ((and grain (string= grain "Word"))
-	    "-w")
-	   ((and grain (string= grain "Line"))
-	    "-x")
-	   (t
-	    " ")))	    
-	  (file-regexp-option 
-	   (mapconcat 
-	    (lambda (x) 
-	      (format "-name \"%s\"" x)) 
-	    files
-	    " -or "))
-	  (cmd 
-	   (format "find %s %s -type f | xargs grep %s %s -n \"%s\" /dev/null" 
-		  directories-option
-		  file-regexp-option
-		  case-sensitive-option
-		  granularity-option
-		  regexp)))
+          (if dirs dirs "."))
+         (case-sensitive-option
+          (if no-case  "-i" ""))
+         (granularity-option
+          (cond
+           ((and grain (string= grain "Word"))
+            "-w")
+           ((and grain (string= grain "Line"))
+            "-x")
+           (t
+            " ")))
+          (file-regexp-option
+           (mapconcat
+            (lambda (x)
+              (format "-name \"%s\"" x))
+            files
+            " -or "))
+          (cmd
+           (format "find %s %s -type f | xargs grep %s %s -n \"%s\" /dev/null"
+                  directories-option
+                  file-regexp-option
+                  case-sensitive-option
+                  granularity-option
+                  regexp)))
     (grep cmd)))
 
 
@@ -2321,47 +2321,47 @@ command requires that the Unix grep and find utilities be installed on
 your system in the Emacs command path. The Cygwin package contains
 Windows versions of both utilities."
   (interactive)
-  (let ((regexp 
-	 (if (and (boundp 'regexp) regexp) 
-	     regexp
-	   (read-from-minibuffer 
-	    "Search for regexp: "
-	    (if (boundp 'jde-find-regexp-history) 
-		(car jde-find-regexp-history)
-	      nil)
-	    nil nil 'jde-find-regexp-history)))
-	(search-path 
-	 (read-from-minibuffer 
-	   "Search directories: "
-	   (cons 
-	    (mapconcat 
-	     (lambda (x) x)
-	     (cond
-	      (jde-sourcepath
-	       (mapcar 
-		(lambda (path)
-		  (jde-normalize-path path 'jde-sourcepath))
-		jde-sourcepath))
-	      (jde-compile-option-sourcepath 
-	       (mapcar 
-		(lambda (path)
-		  (jde-normalize-path path 'jde-compile-option-sourcepath))
-		jde-compile-option-sourcepath))
-	      (jde-compile-option-classpath 
-	       (mapcar 
-		(lambda (path)
-		  (jde-normalize-path path 'jde-compile-option-classpath))
-		jde-compile-option-classpath))
-	      (jde-global-classpath 
-	       (mapcar 
-		(lambda (path)
-		  (jde-normalize-path path 'jde-global-classpath))
-		jde-global-classpath))
-	      (t
-	       (list default-directory)))	
-	     " ")
-	    0)
-	   nil nil 'jde-find-root-history)))
+  (let ((regexp
+         (if (and (boundp 'regexp) regexp)
+             regexp
+           (read-from-minibuffer
+            "Search for regexp: "
+            (if (boundp 'jde-find-regexp-history)
+                (car jde-find-regexp-history)
+              nil)
+            nil nil 'jde-find-regexp-history)))
+        (search-path
+         (read-from-minibuffer
+           "Search directories: "
+           (cons
+            (mapconcat
+             (lambda (x) x)
+             (cond
+              (jde-sourcepath
+               (mapcar
+                (lambda (path)
+                  (jde-normalize-path path 'jde-sourcepath))
+                jde-sourcepath))
+              (jde-compile-option-sourcepath
+               (mapcar
+                (lambda (path)
+                  (jde-normalize-path path 'jde-compile-option-sourcepath))
+                jde-compile-option-sourcepath))
+              (jde-compile-option-classpath
+               (mapcar
+                (lambda (path)
+                  (jde-normalize-path path 'jde-compile-option-classpath))
+                jde-compile-option-classpath))
+              (jde-global-classpath
+               (mapcar
+                (lambda (path)
+                  (jde-normalize-path path 'jde-global-classpath))
+                jde-global-classpath))
+              (t
+               (list default-directory)))
+             " ")
+            0)
+           nil nil 'jde-find-root-history)))
     (jde-find-grep-internal
      regexp
      jde-find-file-regexp
@@ -2376,20 +2376,20 @@ search. Use `jde-find' if you need to set only the expression to be
 found and the directories to be searched and prefer using the
 minibuffer."
   (interactive)
-  (let ((dialog 
-	 (progn
-	   (if (not (oref 'jde-find-dialog the-dialog))
-	       (oset-default 'jde-find-dialog the-dialog (jde-find-dialog "find dialog")))
-	   (oref 'jde-find-dialog the-dialog))))
+  (let ((dialog
+         (progn
+           (if (not (oref 'jde-find-dialog the-dialog))
+               (oset-default 'jde-find-dialog the-dialog (jde-find-dialog "find dialog")))
+           (oref 'jde-find-dialog the-dialog))))
     (efc-dialog-show dialog)
     (when (oref dialog ok)
       (jde-find-grep-internal
        (oref dialog expression)
        (oref dialog files)
        (mapconcat
-	'jde-normalize-path
-	(oref dialog dirs)
-	" ")
+        'jde-normalize-path
+        (oref dialog dirs)
+        " ")
        (oref dialog ignore-case-p)
        (oref dialog grain)))))
 
@@ -2399,11 +2399,11 @@ to include all the classes on `jde-global-classpath', if
 defined, otherwise the classpath specified by the CLASSPATH
 environment variable."
   (let* ((directory-sep-char ?/)  ;; Override NT/XEmacs setting
-	 (classpath 
-	      (jde-build-path-arg nil (jde-get-global-classpath) t)))
+         (classpath
+              (jde-build-path-arg nil (jde-get-global-classpath) t)))
     (format "jde.util.JdeUtilities.setProjectValues(\"%s\", %s);"
-	    jde-current-project 
-	    classpath)))
+            jde-current-project
+            classpath)))
 
 (defclass jde-bsh-buffer (bsh-comint-buffer) ()
   "JDEE's beanshell buffer")
@@ -2472,8 +2472,8 @@ environment variable."
   "Sets the vm and classpath to the vm and classpath for the current project before
 the PRIMARY launch method is invoked."
   (let* ((project-ant-home
-	  ;; Code referring to jde-ant variables uses symbols to
-	  ;; avoid causing compilation errors since jde-ant is not required.
+          ;; Code referring to jde-ant variables uses symbols to
+          ;; avoid causing compilation errors since jde-ant is not required.
           (jde-get-project 'jde-ant-home jde-current-project))
          (ant-home (if (and (boundp 'jde-ant-home)
                             (not (string= (symbol-value 'jde-ant-home) "")))
@@ -2499,10 +2499,10 @@ the PRIMARY launch method is invoked."
                        (oref this regexp-jar)
                        (if jde-devel-debug
                            (oref this jde-classes-dir))
-		       (oref this jde-jar)       
+                       (oref this jde-jar)
                        (jde-get-tools-jar)
                        (if ant-home (expand-file-name "lib" ant-home)))
-		      (jde-pi-get-bsh-classpath)
+                      (jde-pi-get-bsh-classpath)
                       (jde-expand-classpath (jde-get-global-classpath)))))))
 
 ;; Create the BeanShell wrapper object.
@@ -2522,7 +2522,7 @@ standard error pipes.  If EVAL-RETURN is non-nil, this function
 returns the result of evaluating the Java output as a Lisp
 expression."
   (let ((the-bsh (oref 'jde-bsh the-bsh)))
-   
+
     (when (not (bsh-running-p the-bsh))
       (bsh-launch the-bsh)
       (bsh-eval the-bsh (jde-create-prj-values-str)))
@@ -2530,11 +2530,11 @@ expression."
     (bsh-eval the-bsh java-statement eval-return)))
 
 (defun jde-jeval-r (java-statement)
-  "Uses the JDEE's instance of the BeanShell to 
+  "Uses the JDEE's instance of the BeanShell to
 evaluate JAVA-STATEMENT and then uses the Emacs Lisp
 interpreter to evaluate the result. This function
 is intended to be used to implement Emacs extensions
-coded in Java and executed by the BeanShell. The function 
+coded in Java and executed by the BeanShell. The function
 assumes that the Java extension interacts with Emacs
 by printing Lisp forms to the BeanShell's standard output \
 port."
@@ -2546,65 +2546,65 @@ port."
 The optional argument BUFFER-HEAD specifies text to appear at the head of
 the compilation buffer. The optional argument FINISH-FCN specifies a
 function to be called when the compilation is finished. This function
-is intended to be used to invoke Java development utilities, such as 
+is intended to be used to invoke Java development utilities, such as
 source code style checkers, that emit compiler-like error messages.
 Displaying the output in a compilation-mode buffer enables the user to
-use compilation-mode's error message navigation and hyperlinking 
+use compilation-mode's error message navigation and hyperlinking
 capabilities.
 
 The following example uses this function to invoke the javac compiler on
 a file in the current directory:
 
- (jde-bsh-compile-mode-eval \"jde.util.CompileServer.compile(\\\"Test.java\\\");\" 
+ (jde-bsh-compile-mode-eval \"jde.util.CompileServer.compile(\\\"Test.java\\\");\"
    \"Compile Test.java\" 'jde-compile-finish-kill-buffer)"
   (let* ((buffer-obj (bsh-compilation-buffer "buffer"))
-	 (native-buf (oref buffer-obj buffer))
-	 (bufwin (display-buffer native-buf)))
+         (native-buf (oref buffer-obj buffer))
+         (bufwin (display-buffer native-buf)))
 
     (compilation-set-window-height bufwin)
 
     (save-some-buffers (not compilation-ask-about-save) nil)
 
-    (if finish-fcn 
-	(lexical-let ((finish finish-fcn))
-	  (setq compilation-finish-function 
-		(lambda (buf msg) 
-		  (funcall finish buf msg)
-		  (setq compilation-finish-function nil)))))
+    (if finish-fcn
+        (lexical-let ((finish finish-fcn))
+          (setq compilation-finish-function
+                (lambda (buf msg)
+                  (funcall finish buf msg)
+                  (setq compilation-finish-function nil)))))
 
 
     (if (not (featurep 'xemacs))
-	(if compilation-process-setup-function
-	  (funcall compilation-process-setup-function)))  
+        (if compilation-process-setup-function
+          (funcall compilation-process-setup-function)))
 
 
     (if (not (featurep 'xemacs))
-	(if compilation-process-setup-function
-	  (funcall compilation-process-setup-function)))     
+        (if compilation-process-setup-function
+          (funcall compilation-process-setup-function)))
 
 
     (save-excursion
       (set-buffer native-buf)
 
       (if buffer-head
-	  (insert buffer-head)
-	(insert java-expr))
+          (insert buffer-head)
+        (insert java-expr))
 
       (insert "\n")
- 
+
 
       (if (not (jde-bsh-running-p))
-	  (progn
-	    (bsh-launch (oref 'jde-bsh the-bsh))
-	    (bsh-eval (oref 'jde-bsh the-bsh) (jde-create-prj-values-str))))
+          (progn
+            (bsh-launch (oref 'jde-bsh the-bsh))
+            (bsh-eval (oref 'jde-bsh the-bsh) (jde-create-prj-values-str))))
 
 
-      (bsh-buffer-eval 
+      (bsh-buffer-eval
        (oref 'jde-bsh the-bsh)
        java-expr
        buffer-obj)
-    
-    (set-buffer-modified-p nil)	 
+
+    (set-buffer-modified-p nil)
     (setq compilation-last-buffer native-buf))))
 
 
@@ -2633,12 +2633,12 @@ version of speedar is installed."
   (interactive)
   (require 'speedbar)
   (speedbar-frame-mode))
-    
+
 (defun jde-autoload-update ()
   "Updates autoload definitions in jde-autoload.el."
   (interactive)
   (let* ((default-directory (expand-file-name "lisp" (jde-find-jde-data-directory)))
-	 (generated-autoload-file (expand-file-name "jde-autoload.el" default-directory)))
+         (generated-autoload-file (expand-file-name "jde-autoload.el" default-directory)))
     (mapc 'update-file-autoloads (directory-files "." nil "\\.el$"))
     (save-excursion
       (set-buffer  "jde-autoload.el")
@@ -2669,7 +2669,7 @@ feature in JDE (see `jde-complete-at-point')."
 
 (eval-when-compile
   ;; This code will not appear in the compiled (.elc) file
-  (defun jde-self-test () 
+  (defun jde-self-test ()
     "Runs jde self tests."
     (interactive)
     (require 'jde-junit)
@@ -2683,7 +2683,7 @@ feature in JDE (see `jde-complete-at-point')."
 
 (provide 'jde)
 
-;; Change History 
+;; Change History
 
 ;;
 ;; $Log: jde.el,v $
