@@ -16,8 +16,13 @@
  jde-compile-option-debug (quote ("all" (t nil nil)))
  )
 
+;; confluence
+(setq confluence-url "http://192.168.208.186/wiki/rpc/xmlrpc")
+(setq confluence-default-space-alist (list (cons confluence-url "fost")))
+
 (mapc 'load (directory-files "~/.emacs.d/config/01base" t "\.el$"))
 (mapc 'load (directory-files "~/.emacs.d/config/25jdee" t "\.el$"))
 (mapc 'load (directory-files "~/.emacs.d/config/50webdev" t "\.el$"))
 (mapc 'load (directory-files "~/.emacs.d/config/70emacsonrails" t "\.el$"))
+(mapc 'load (directory-files "~/.emacs.d/config/85authoring" t "\.el$"))
 (mapc 'load (directory-files "~/.emacs.d/config/99post" t "\.el$"))
