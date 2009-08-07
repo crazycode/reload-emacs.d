@@ -1,5 +1,6 @@
 (setq defer-loading-jde t)
-
+(setq jde-plugins-directory "~/.emacs.d/vendor/25jdee/jde-plugins")
+(setq jde-mvn-nexus-url "http://192.168.208.186/nexus")
 ;; to read:
 ;;
 ;;  (setq defer-loading-jde t)
@@ -18,3 +19,5 @@
 ;; setq ad init.el
 (require 'cedet)
 (require 'jde-autoload)
+
+(require 'jde-eclipse-compiler-server)
