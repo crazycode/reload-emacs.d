@@ -3,7 +3,7 @@
   (interactive)
   (if (window-system frame)
       (progn 
-       (set-default-font "Yahei Consolas Hybrid-10")
+       (set-default-font "Yahei Consolas Hybrid-12")
        (set-fontset-font (frame-parameter nil 'font)
                          'han '("Yahei Consolas Hybrid"."unicode-bmp"))
        ))
