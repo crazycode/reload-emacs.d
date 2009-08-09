@@ -13,10 +13,6 @@
 (setq hippie-expand-try-functions-list
       '(
         yas/hippie-try-expand
-        try-expand-line
-        try-expand-line-all-buffers
-        try-expand-list
-        try-expand-list-all-buffers
         try-expand-dabbrev
         try-expand-dabbrev-visible
         try-expand-dabbrev-all-buffers
@@ -25,6 +21,10 @@
         try-complete-file-name-partially
         try-complete-lisp-symbol
         try-complete-lisp-symbol-partially
+        try-expand-line
+        try-expand-line-all-buffers
+        try-expand-list
+        try-expand-list-all-buffers
         try-expand-whole-kill))
 
 ;;(global-set-key (kbd "<tab>") 'crazycode/indent-and-complete)
@@ -41,8 +41,9 @@
             (set (make-local-variable 'tab-width) 2)
             (require 'ruby-electric)
             (ruby-electric-mode t)
-            (local-set-key (kbd "<tab") 'crazycode/indent-and-complete)
+            (local-set-key (kbd "TAB") 'crazycode/indent-and-complete)
             (local-set-key (kbd "<return>") 'ruby-reindent-then-newline-and-indent)
+            (local-set-key (kbd "RET") 'ruby-reindent-then-newline-and-indent)
             ;;(local-set-key "\C-h" 'ri)
             (local-set-key "\M-\C-i" 'ri-ruby-complete-symbol)
             (local-set-key "\C-c\C-h" 'ri-ruby-show-args)
