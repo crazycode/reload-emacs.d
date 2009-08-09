@@ -7,6 +7,7 @@
 ;;(setq yas/root-directory "~/.emacs.d/snippets")
 
 (setq yas/global-mode t)
+(setq yas/indent-line 'auto)
 ;; (add-hook 'ruby-mode-hook
 ;;           '(lambda ()
 ;;              (make-variable-buffer-local 'yas/trigger-key)

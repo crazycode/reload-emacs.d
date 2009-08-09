@@ -198,5 +198,8 @@ scroll-conservatively 10000)
 
 
 ;; 代替M-x的快捷键，据说这样手舒服一点.
-(global-set-key "\C-x\C-m" 'execute-extended-command)
+;;(global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
+
+;;Winner Mode is a global minor mode. When activated, it allows to “undo” (and “redo”) changes in the window configuration with the key commands ‘C-x left’ and ‘C-x right’. In Emacs 22, these keybindings have been changed to ‘C-c left’ and ‘C-c right’.
+(winner-mode 1)
