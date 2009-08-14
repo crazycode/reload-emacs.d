@@ -182,12 +182,6 @@ scroll-conservatively 10000)
             (select-frame new-frame)
             (scroll-bar-mode 0)
             (tool-bar-mode 0)
-            (if (window-system frame)
-                (progn
-                  (split-window-horizontally)
-                  (enlarge-window-horizontally 15)
-                  )
-              )
             ))
 
 ;; 保存时自动把TAB换成空格，同时清除掉尾部空格（除Makefile之类的文件外，见untabify-file.el)
