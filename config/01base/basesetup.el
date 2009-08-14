@@ -81,8 +81,6 @@ scroll-conservatively 10000)
 (setq kept-new-versions 5)
 ;;删掉不属于以上7中版本的版本
 (setq delete-old-versions t)
-;;设置备份文件的路径
-(setq backup-directory-alist '(("." . "~/.emacs.d/tmp")))
 ;;备份设置方法，直接拷贝
 (setq backup-by-copying t)
 

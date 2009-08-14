@@ -117,7 +117,7 @@
           (lambda (new-frame)
             (select-frame new-frame)
             (my-maximized)
-            (sleep-for 0.2 200)
+            ;;(sleep-for 0.2 200)
             (scroll-bar-mode 0)
             (tool-bar-mode 0)
             (if (window-system frame)
