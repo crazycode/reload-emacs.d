@@ -1,8 +1,8 @@
 (defun circle-windows ()
   (interactive)
   (let ((owindow (selected-window))
-	(obuffer (current-buffer))
-	)
+        (obuffer (current-buffer))
+        )
     (while (not (equal owindow (next-window)))
       (set-window-buffer (selected-window) (window-buffer (next-window)))
       (select-window (next-window)))
@@ -11,23 +11,23 @@
 
 (defun move-region-around (direction beg end)
   (let (real-beg
-	real-end
-	target-beg
-	deactivate-mark
-	text)
+        real-end
+        target-beg
+        deactivate-mark
+        text)
     (save-excursion
       (goto-char beg)
       (setq real-beg (line-beginning-position))
-      
+
       (when (equal direction 'up)
         (setq target-beg (line-beginning-position 0)))
-      
+
       (goto-char end)
       (setq real-end (line-beginning-position 2))
-      
+
       (when (equal direction 'down)
         (setq target-beg (copy-marker (line-beginning-position 3)))) ;must use marker
-      
+
       (setq text (buffer-substring-no-properties real-beg real-end))
       (delete-region real-beg real-end)
       (goto-char target-beg)
@@ -47,14 +47,6 @@
   (interactive "r")
   (move-region-around 'down beg end))
 
-;全屏
-(defun my-fullscreen ()
-  (interactive)
-  (x-send-client-message
-   nil 0 nil "_NET_WM_STATE" 32
-   '(2 "_NET_WM_STATE_FULLSCREEN" 0))
-)
-
 ;最大化
 (defun my-maximized ()
   (interactive)
@@ -68,6 +60,14 @@
         '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
        )
     )
+)
+
+;全屏
+(defun my-fullscreen ()
+  (interactive)
+  (x-send-client-message
+   nil 0 nil "_NET_WM_STATE" 32
+   '(2 "_NET_WM_STATE_FULLSCREEN" 0))
 )
 
 ;; author: pluskid
@@ -111,13 +111,21 @@
 (global-set-key "\C-c\C-d" 'my-insert-date)
 (global-set-key "\C-c\C-t" 'my-insert-time)
 
-;启动时最大化
 
-(my-maximized) 
+;启动时最大化
+(my-maximized)  ;;会检查是否gui系统
 (add-hook 'after-make-frame-functions
           (lambda (new-frame)
             (select-frame new-frame)
             (my-maximized)
+            (scroll-bar-mode 0)
+            (tool-bar-mode 0)
+            (if (window-system frame)
+                (progn
+                  (split-window-horizontally)
+                  (enlarge-window-horizontally 15)
+                  )
+              )
             ))
 
 (global-set-key [\C-f10] 'toggle-menu-bar-mode-from-frame)

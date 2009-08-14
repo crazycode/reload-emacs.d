@@ -176,20 +176,11 @@ scroll-conservatively 10000)
 
 (menu-bar-mode 0)  ;; 默认不打开菜单条，通过C-F10来切换打开
 
-;; 有关界面和字体的配置
-(add-hook 'after-make-frame-functions
-          (lambda (new-frame)
-            (select-frame new-frame)
-            (scroll-bar-mode 0)
-            (tool-bar-mode 0)
-            ))
-
 ;; 保存时自动把TAB换成空格，同时清除掉尾部空格（除Makefile之类的文件外，见untabify-file.el)
 (require 'untabify-file)
 
 ;; 所有类型中回车到新行时，都自动进行一下缩进.
 (global-set-key (kbd "RET") 'newline-and-indent)
-
 
 ;; 代替M-x的快捷键，据说这样手舒服一点.
 ;;(global-set-key "\C-x\C-m" 'execute-extended-command)

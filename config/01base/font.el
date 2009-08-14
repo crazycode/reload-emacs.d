@@ -2,8 +2,8 @@
 (defun my-default-font (frame)
   (interactive)
   (if (window-system frame)
-      (progn 
-       (set-default-font "Yahei Consolas Hybrid-12")
+      (progn
+       (set-default-font "Yahei Consolas Hybrid-10")
        (set-fontset-font (frame-parameter nil 'font)
                          'han '("Yahei Consolas Hybrid"."unicode-bmp"))
        ))
@@ -23,7 +23,7 @@
 ;; (if (>= emacs-major-version 23)
 ;;     (progn (set-frame-font "DejaVu Sans Mono-10")
 ;;      (set-fontset-font (frame-parameter nil 'font)
-;;                        'unicode '("Microsoft YaHei" . "unicode-bmp")) 
+;;                        'unicode '("Microsoft YaHei" . "unicode-bmp"))
 ;;      (set-fontset-font (frame-parameter nil 'font)
 ;;                        'han '("Microsoft YaHei" . "unicode-bmp"))
 ;;      (set-fontset-font (frame-parameter nil 'font)
@@ -31,7 +31,7 @@
 ;;      (set-fontset-font (frame-parameter nil 'font)
 ;;                        'cjk-misc '("Microsoft YaHei"  . "unicode-bmp"))
 ;;      (set-fontset-font (frame-parameter nil 'font)
-;;                        'bopomofo '("Microsoft YaHei"  . "unicode-bmp")) 
+;;                        'bopomofo '("Microsoft YaHei"  . "unicode-bmp"))
 ;;      )
 ;; (create-fontset-from-fontset-spec
 ;; "-*-courier-medium-R-normal--14-*-*-*-*-*-fontset-mymono,
@@ -45,7 +45,7 @@
 
 ;; (set-frame-font "DejaVu Sans Mono-10")
 ;; (set-fontset-font (frame-parameter nil 'font)
-;;                   'unicode '("Microsoft YaHei" . "unicode-bmp")) 
+;;                   'unicode '("Microsoft YaHei" . "unicode-bmp"))
 ;; (set-fontset-font (frame-parameter nil 'font)
 ;;                   'han '("Microsoft YaHei" . "unicode-bmp"))
 ;; (set-fontset-font (frame-parameter nil 'font)
@@ -53,5 +53,5 @@
 ;; (set-fontset-font (frame-parameter nil 'font)
 ;;                   'cjk-misc '("Microsoft YaHei"  . "unicode-bmp"))
 ;; (set-fontset-font (frame-parameter nil 'font)
-;;                   'bopomofo '("Microsoft YaHei"  . "unicode-bmp")) 
+;;                   'bopomofo '("Microsoft YaHei"  . "unicode-bmp"))
 
