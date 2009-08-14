@@ -6,5 +6,6 @@
 /**/*.elc
 **/*.elc
 .svn
+my-custom.el
 url
 tramp

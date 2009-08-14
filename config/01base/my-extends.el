@@ -111,13 +111,13 @@
 (global-set-key "\C-c\C-d" 'my-insert-date)
 (global-set-key "\C-c\C-t" 'my-insert-time)
 
-
 ;启动时最大化
 (my-maximized)  ;;会检查是否gui系统
 (add-hook 'after-make-frame-functions
           (lambda (new-frame)
             (select-frame new-frame)
             (my-maximized)
+            (sleep-for 0.2 200)
             (scroll-bar-mode 0)
             (tool-bar-mode 0)
             (if (window-system frame)
@@ -147,3 +147,28 @@
      (string-match "finished" state))
      (kill-buffer (current-buffer))))
 (global-set-key "\C-x\M-r" 'term)
+
+;;my buffers key binding.
+(defun my-kill-other-buffers (&optional list)
+  "Kill other buffers except the current one."
+  (interactive)
+  (if (null list)
+      (setq list (buffer-list)))
+  (while list
+    (let* ((buffer (car list))
+           (name (buffer-name buffer)))
+      (if (not (string-equal name (buffer-name (current-buffer))))
+      (and name  ; Can be nil for an indirect buffer, if we killed the base buffer.
+           (not (string-equal name ""))
+           (/= (aref name 0) ?\s)
+           (kill-buffer buffer))))
+    (setq list (cdr list))))
+
+(defun my-kill-current-buffer ()
+  "Kill current buffer."
+  (interactive)
+  (kill-buffer (current-buffer)))
+
+(global-set-key (kbd "C-x q") 'my-kill-other-buffers)
+(global-set-key [\C-f4] 'my-kill-current-buffer)
+;;(global-set-key (kbd "C-x <f4>") 'my-kill-current-buffer)

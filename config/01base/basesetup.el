@@ -68,11 +68,6 @@ scroll-conservatively 10000)
 
 (desktop-save-mode 1)
 
-;; 默认工作目录
-(if (>= emacs-major-version 23)
-    (setq default-directory "~/gitworks")
-  (setq default-directory "~/work"))
-
 ;;去掉工具栏
 (tool-bar-mode nil)
 
@@ -91,8 +86,6 @@ scroll-conservatively 10000)
 ;;备份设置方法，直接拷贝
 (setq backup-by-copying t)
 
- ;; 所有的备份文件转移到~/backups目录下
-(setq backup-directory-alist (quote (("." . "~/.emacs.d/tmp"))))
 ;; Emacs 中，改变文件时，默认都会产生备份文件(以 ~ 结尾的文件)。可以完全去掉
 ;; (并不可取)，也可以制定备份的方式。这里采用的是，把所有的文件备份都放在一
 ;; 个固定的地方("~/var/tmp")。对于每个备份文件，保留最原始的两个版本和最新的
@@ -112,14 +105,6 @@ scroll-conservatively 10000)
 
 ;;设置在双栏模式下自动折行显示
 (setq truncate-partial-width-windows nil)
-
-;设定用户信息
-(setq user-full-name "Tang Liqun")
-(setq user-mail-address "crazycode@gmail.com")
-;设置地理位置
-(setq calendar-latitude 31.22)
-(setq calendar-longitude 121.48)
-(setq calendar-location-name "Shanghai")
 
 ;;加入行号显示
 (require 'linum)

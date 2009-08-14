@@ -1,21 +1,23 @@
-h1. PreInstall
-You must install braid to maintain the vender elisp lib.
-Braid is a simple tool to help track git and svn vendor branches in a git repository.
+h1. Requirements
 
-h2. Requirements
+* git 1.5 with submodule support
 
-* git 1.6+ (and git-svn if you want to mirror svn repositories)
-* main >= 2.8.0
-* open4 >= 0.9.6
+h1. Install Step by Step
 
-h2. Installing using rubygems - official releases
+h3. First Install
 
-  gem install braid
+git clone git://github.com/crazycode/reload-emacs.d.git
+cd reload-emacs.d
+git submodule init
+git submodule update
+cp my-custom.el.sample my-custom.el
+ln -s <path-to/>reload-emacs.d ~/.emacs.d
 
-If further down the line, you want to bring new changes from rails in your repository, just update the mirror:
+My System is Ubuntu / Emacs23, with font Yahei Consolas Hybrid.
+You may need change ~/.emacs.d/my-custom.el to fit your system.
 
-  braid update vendor/70rubyonrails/rinari
+h3. Update
 
-Or, if you want all mirrors updated:
-
-  braid update
+cd ~/.emacs.d
+git pull
+git submodule update
