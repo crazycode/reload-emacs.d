@@ -20,6 +20,7 @@
 (setq confluence-url "http://192.168.208.186/wiki/rpc/xmlrpc")
 (setq confluence-default-space-alist (list (cons confluence-url "fost")))
 
+(load "~/.emacs.d/my-custom.el")
 (mapc 'load (directory-files "~/.emacs.d/config/01base" t "\.el$"))
 (mapc 'load (directory-files "~/.emacs.d/config/25jdee" t "\.el$"))
 (mapc 'load (directory-files "~/.emacs.d/config/50webdev" t "\.el$"))
