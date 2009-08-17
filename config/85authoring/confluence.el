@@ -65,6 +65,6 @@
 ;; setup confluence mode
 (add-hook 'confluence-mode-hook
           '(lambda ()
-             (local-set-key "\C-xw" confluence-prefix-map)))
+             (local-set-key "\C-xc" confluence-prefix-map)))
 
 (setq confluence-coding-alist (list (cons confluence-url 'utf-16-be)))
