@@ -1,0 +1,5 @@
+
+
+jde-xref-get-current-class  得到当前point所在的类全名（包括包名)
+jde-parse-get-package-name  得到当前包名
+jde-parse-get-class-at-point 得到point所在类名
