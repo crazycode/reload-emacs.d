@@ -22,7 +22,7 @@
  jde-jdk (quote ("1.6"))
  jde-compiler (quote ("javac" ""))
  jde-jdk-registry (quote (("1.6" . "/usr/lib/jvm/java-6-openjdk")))
- jde-global-classpath (quote ("~/.emacs.d/vendor/25jdee/jde-2.3.6/classes" "/usr/lib/jvm/java-6-openjdk/"))
+ jde-global-classpath (quote ("~/.emacs.d/vendor/25jdee/jde-2.4.0/classes" "/usr/lib/jvm/java-6-openjdk/"))
  jde-sourcepath (quote ("$JAVA_HOME/src" "." "./src" ""))
  jde-compile-option-debug (quote ("all" (t nil nil)))
  )
@@ -54,16 +54,22 @@
 (setq calendar-longitude 121.48)
 (setq calendar-location-name "Shanghai")
 
-;; USE SCIM
-(require 'scim-bridge)
-(require 'scim-bridge-zh-si)
-;; Turn on scim-mode automatically after loading .emacs
-(add-hook 'after-init-hook 'scim-mode-on)
-;; Setup input status switch keystroke.
-(scim-define-common-key (kbd "S-SPC") t)
-;; Use C-SPC for Set Mark command
-(scim-define-common-key (kbd "C-SPC") nil)
-;; Use C-/ for Undo command
-(scim-define-common-key (kbd "C-\\") nil)
-;; Change cursor color depending on SCIM status
-(setq scim-cursor-color '("red" "blue" "limegreen"))
+
+(add-hook 'after-make-frame-functions
+          (lambda (new-frame)
+            (select-frame new-frame)
+            ;; USE SCIM
+            (require 'scim-bridge)
+            (require 'scim-bridge-zh-si)
+            ;; Setup input status switch keystroke.
+            (scim-define-common-key (kbd "S-SPC") t)
+            ;; Use C-SPC for Set Mark command
+            (scim-define-common-key (kbd "C-SPC") nil)
+            ;; Use C-/ for Undo command
+            (scim-define-common-key (kbd "C-\\") nil)
+            ;; Change cursor color depending on SCIM status
+            (setq scim-cursor-color '("red" "blue" "limegreen"))
+
+            ;; Turn on scim-mode automatically after loading .emacs
+            (scim-mode-on)
+            ))
