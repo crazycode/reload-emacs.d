@@ -27,3 +27,5 @@
 (mapc 'load (directory-files "~/.emacs.d/config/70emacsonrails" t "\.el$"))
 (mapc 'load (directory-files "~/.emacs.d/config/85authoring" t "\.el$"))
 (mapc 'load (directory-files "~/.emacs.d/config/99post" t "\.el$"))
+
+(put 'downcase-region 'disabled nil)
