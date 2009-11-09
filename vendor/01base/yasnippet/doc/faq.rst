@@ -1,6 +1,6 @@
-==========================
-Frequently Asked Questions
-==========================
+============================
+ Frequently Asked Questions
+============================
 
 Why is there an extra newline?
 ==============================
@@ -47,14 +47,15 @@ code to work around:
 .. sourcecode:: lisp
 
   (add-hook 'org-mode-hook
-            #'(lambda ()
-                (setq yas/fallback-behavior
-                      `(apply ,(lookup-key org-mode-map [tab]))) 
-                (local-set-key [tab] 'yas/expand)))
+            (let ((original-command (lookup-key org-mode-map [tab])))
+              `(lambda ()
+                 (setq yas/fallback-behavior
+                       '(apply ,original-command))
+                 (local-set-key [tab] 'yas/expand))))
 
 replace ``org-mode-hook`` and ``org-mode-map`` with the major mode
-hook you are dealing with (``C-h m`` to see what major mode you are
-in).
+hook you are dealing with (Use ``C-h m`` to see what major mode you
+are in).
 
 As an alternative, you can also try
 
@@ -75,10 +76,13 @@ As an alternative, you can also try
 To *advise* the modes indentation function bound to TAB, (in this case
 ``ruby-indent-line``) to first try to run ``yas/expand``.
 
-If The output of ``C-h k RET <tab>`` tells you that ``<tab>`` is
+If the output of ``C-h k RET <tab>`` tells you that ``<tab>`` is
 indeed bound to ``yas/expand`` but YASnippet still doesn't work, check
 your configuration and you may also ask for help on the `discussion
-group <http://groups.google.com/group/smart-snippet>`_. 
+group <http://groups.google.com/group/smart-snippet>`_. See this
+particular `thread
+<http://code.google.com/p/yasnippet/issues/detail?id=93&can=1>`_ for
+quite some solutions and alternatives.
 
 Don't forget to attach the information on what command is bound to TAB
 as well as the mode information (Can be obtained by ``C-h m``).
@@ -102,8 +106,30 @@ latter's ``priority`` property to something big. If you know
 emacs-lisp and can solve this problem, drop a line in the `discussion
 group`_.
 
+How do I turn off the minor mode where in some buffers
+======================================================
+
+The best way, since version 0.6.1c, is to set the default value of the
+variable ``yas/dont-activate`` to a lambda function like so:
+
+.. sourcecode:: lisp
+  
+  (set-default 'yas/dont-activate
+             #'(lambda ()
+                 (and yas/root-directory
+                      (null (yas/get-snippet-tables)))))
+
+This is also the default value starting for that version. It skips the
+minor mode in buffers where it is not applicable (no snippet tables),
+but only once you have setup your yas/root-directory.
+
+
 How do I define an abbrev key containing characters not supported by the filesystem?
 ====================================================================================
+
+**Note**: This question applies if you're still defining snippets
+  whose key *is* the filename. This is behavior stil provided by
+  version 0.6 for backward compatibilty, but is somewhat deprecated...
 
 For example, you want to define a snippet by the key ``<`` which is
 not a valid character for filename on Windows. This means you can't
