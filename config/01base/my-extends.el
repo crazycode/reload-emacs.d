@@ -112,11 +112,11 @@
 (global-set-key "\C-c\C-t" 'my-insert-time)
 
 ;启动时最大化
-(my-maximized)  ;;会检查是否gui系统
+;;(my-maximized)  ;;会检查是否gui系统
 (add-hook 'after-make-frame-functions
           (lambda (new-frame)
             (select-frame new-frame)
-            (my-maximized)
+            ;;(my-maximized)
             ;;(sleep-for 0.2 200)
             (scroll-bar-mode 0)
             (tool-bar-mode 0)
