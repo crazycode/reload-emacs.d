@@ -120,12 +120,12 @@
             ;;(sleep-for 0.2 200)
             (scroll-bar-mode 0)
             (tool-bar-mode 0)
-            (if (window-system frame)
-                (progn
-                  (split-window-horizontally)
-                  (enlarge-window-horizontally 15)
-                  )
-              )
+            ;;(if (window-system frame)
+            ;;    (progn
+            ;;      (split-window-horizontally)
+            ;;      (enlarge-window-horizontally 15)
+            ;;      )
+            ;;  )
             ))
 
 (global-set-key [\C-f10] 'toggle-menu-bar-mode-from-frame)
