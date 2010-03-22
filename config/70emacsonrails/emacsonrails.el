@@ -40,3 +40,7 @@
 ;; ;;(set-face-background (quote flymake-errline) "#F0F0F0")
 ;; (set-face-background (quote mmm-output-submode-face) "#F0F0F0")
 ;; (set-face-background (quote mmm-code-submode-face) "#F0F0F0")
+
+;; cucumber support.
+(require 'feature-mode)
+(add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
