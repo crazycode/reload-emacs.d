@@ -49,7 +49,7 @@ Choice.options do
     short '-f'
     long '--file=SNIPPET FILE NAME'
     desc 'A specific snippet that you want to copy or a glob for various files'
-    default '*.{tmSnippet,plist}'
+    default '*.{tmSnippet,plist,tmMacro}'
   end
 
   option :print_pretty do
@@ -103,7 +103,8 @@ class TmSnippet
   def initialize(file,info=nil)
     @file    = file
     @info    = info
-    @snippet = Plist::parse_xml(file)
+    @snippet = TmSnippet::read_plist(file)
+    raise RuntimeError.new("Cannot convert this snippet #{file}!") unless @snippet;  
   end
 
   def name
@@ -142,6 +143,7 @@ class TmSnippet
 
   def to_yasnippet
     doc = "# -*- mode: snippet -*-\n"
+    doc << "# type: command\n" unless self.content
     doc << "# key: #{self.tab_trigger}\n" if self.tab_trigger
     doc << "# contributor: Translated from TextMate Snippet\n"
     doc << "# name: #{self.name}\n"
@@ -176,12 +178,27 @@ class TmSnippet
     File.join(basedir,canonicalize(@file[0, @file.length-File.extname(@file).length]) + ".yasnippet")
   end
 
+  def self.read_plist(xml_or_binary)
+    begin
+      parsed = Plist::parse_xml(xml_or_binary)
+      return parsed if parsed;
+      raise RuntimeError.new "Probably in binary format and parse_xml is very quiet..."
+    rescue RuntimeError => e
+      if (system "plutil -convert xml1 '#{xml_or_binary}' -o /tmp/textmate_import")
+        return Plist::parse_xml("/tmp/textmate_import") 
+      else
+        raise RuntimeError.new "plutil failed miserably, check if you have it..."
+      end
+    end
+  end
+
 end
 
 
 
-if $0 == __FILE__ 
-  info_plist = Plist::parse_xml(Choice.choices.info_plist) if Choice.choices.info_plist
+if $0 == __FILE__
+
+  info_plist = TmSnippet::read_plist(Choice.choices.info_plist) if Choice.choices.info_plist;
 
   if Choice.choices.output_dir
     FileUtils.mkdir_p Choice.choices.output_dir
@@ -216,7 +233,7 @@ if $0 == __FILE__
         puts "\n\n"
       end
     rescue Exception => e
-      $stderr.puts "Oops... #{e.class}:#{e.message}"
+      $stderr.puts "Oops... #{e.class}:#{e.message}\n#{e.backtrace.join("\n")}"
     end
   end
 end
