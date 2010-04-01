@@ -1,0 +1,6 @@
+# name : {tip:...}
+# contributor : crazycode@gmail.com
+# --
+{tip:title=${1:Handy Hint}}
+$0
+{tip}

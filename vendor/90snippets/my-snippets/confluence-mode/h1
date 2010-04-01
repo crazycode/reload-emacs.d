@@ -1,0 +1,4 @@
+# name : h1
+# contributor : crazycode@gmail.com
+# --
+h1. ${1:Large heading}

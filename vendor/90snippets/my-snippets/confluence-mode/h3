@@ -1,0 +1,4 @@
+# name : h3
+# contributor : crazycode@gmail.com
+# --
+h3. ${1:Medium heading}

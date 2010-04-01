@@ -1,0 +1,4 @@
+# name : Table Header
+# contributor : crazycode@gmail.com
+# --
+|| ${1:head} ||$0

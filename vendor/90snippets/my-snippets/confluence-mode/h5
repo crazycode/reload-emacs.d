@@ -1,0 +1,4 @@
+# name : h5
+# contributor : crazycode@gmail.com
+# --
+h5. ${1:Small heading}

@@ -1,0 +1,6 @@
+# name : {info:...}
+# contributor : crazycode@gmail.com
+# --
+{info:title=${1:Be Careful}}
+$0
+{info}

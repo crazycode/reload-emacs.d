@@ -1,0 +1,6 @@
+# name : {color:red}...{color}
+# contributor : crazycode@gmail.com
+# --
+{color{1::red}}
+$0
+{color}

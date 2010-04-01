@@ -1,0 +1,4 @@
+# name : {{code text}}
+# contributor : crazycode@gmail.com
+# --
+{{${1:code text}}}$0

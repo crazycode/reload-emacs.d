@@ -1,0 +1,4 @@
+# name : Table Column
+# contributor : crazycode@gmail.com
+# --
+| ${1:text} |$0

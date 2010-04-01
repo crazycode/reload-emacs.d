@@ -1,0 +1,4 @@
+# name : Bulleted point (*)
+# contributor : crazycode@gmail.com
+# --
+* ${1:item}

@@ -1,0 +1,6 @@
+# name : {column:width=..}...{section}
+# contributor : crazycode@gmail.com
+# --
+{column:width=${1:30}%}
+$0
+{column}
