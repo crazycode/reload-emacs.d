@@ -6,6 +6,7 @@
 ;; Develop in ~/emacs.d/mysnippets, but also
 ;; try out snippets in ~/Downloads/interesting-snippets
 (setq yas/root-directory '("~/.emacs.d/vendor/90snippets/my-snippets"
+                           "~/.emacs.d/vendor/90snippets/imported-snippets"
                            "~/.emacs.d/vendor/01base/yasnippet/extras/imported"
                            "~/.emacs.d/vendor/01base/yasnippet/snippets"))
 
