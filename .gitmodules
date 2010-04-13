@@ -31,3 +31,6 @@
 [submodule "vendor/70rubyonrails/cucumber"]
 	path = vendor/70rubyonrails/cucumber
 	url = git://github.com/crazycode/cucumber.el.git
+[submodule "vendor/01base/yasnippet-mirror"]
+	path = vendor/01base/yasnippet-mirror
+	url = git://github.com/crazycode/yasnippet.git
