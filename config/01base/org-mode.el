@@ -24,3 +24,8 @@
       '(("TODO" ?t "* TODO %?\n %x\n %a" "~/Dropbox/org/todo.org" "Tasks")
         ("IDEA" ?i "* IDEA %?\n %x\n %a" "~/Dropbox/org/idea.org" "Idea")
         ))
+
+(add-hook 'org-mode-hook
+          (lambda()
+            (textmate-mode -1)
+            ))

@@ -41,6 +41,7 @@
             (set (make-local-variable 'tab-width) 2)
             (require 'ruby-electric)
             (ruby-electric-mode t)
+            (textmate-mode t)
             (local-set-key (kbd "TAB") 'crazycode/indent-and-complete)
             (local-set-key (kbd "<return>") 'ruby-reindent-then-newline-and-indent)
             (local-set-key (kbd "RET") 'ruby-reindent-then-newline-and-indent)
