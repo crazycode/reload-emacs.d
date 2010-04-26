@@ -34,3 +34,6 @@
 [submodule "vendor/01base/yasnippet-mirror"]
 	path = vendor/01base/yasnippet-mirror
 	url = git://github.com/crazycode/yasnippet.git
+[submodule "vendor/20language/groovy-mode"]
+	path = vendor/20language/groovy-mode
+	url = http://github.com/timvisher/emacs-groovy-mode-mirror.git
