@@ -14,8 +14,8 @@
                                         ;新建一个wiki工程
 (setq muse-project-alist
       '(("my-wiki"
-         ("~/gitworks/my-wiki" :default "index")
-         (:base "html" :path "~/gitworks/my-wiki/publish"))))
+         ("~/Dropbox/my-wiki" :default "index")
+         (:base "html" :path "~/Dropbox/my-wiki/publish"))))
 
 ;; 默认情况下 TAB 键会在各个链接之间跳转，我觉得没有什么用处，而且很烦人，我更喜欢让 TAB 键帮我缩进到正确的位置
 (define-key muse-mode-map [tab] 'indent-for-tab-command)
