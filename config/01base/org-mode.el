@@ -9,7 +9,7 @@
 (setq org-agenda-files
       (list "~/Dropbox/org/personal.org"
             "~/Dropbox/org/idea.org"
-            "~/Dropbox/org/fost.org"
+            "~/Dropbox/org/sdo.org"
             "~/Dropbox/org/todo.org"))
 (defun todo ()
   (interactive)

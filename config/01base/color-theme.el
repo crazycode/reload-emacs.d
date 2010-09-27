@@ -21,7 +21,8 @@
   ;; test winsystem
   (let ((color-theme-is-global nil))
     (if (window-system frame)
-        (color-theme-blue)
+        (color-theme-blackboard)
+        ;; (color-theme-blue)
       (color-theme-tty-dark)
       )
     )

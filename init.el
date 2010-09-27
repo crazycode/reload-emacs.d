@@ -20,6 +20,7 @@
 (setq confluence-url "http://192.168.208.186/wiki/rpc/xmlrpc")
 (setq confluence-default-space-alist (list (cons confluence-url "fost")))
 
+
 (load "~/.emacs.d/my-custom.el")
 (mapc 'load (directory-files "~/.emacs.d/config/01base" t "\.el$"))
 (mapc 'load (directory-files "~/.emacs.d/config/20languages" t "\.el$"))
@@ -34,7 +35,7 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(org-agenda-files (quote ("~/Dropbox/org/personal.org" "~/Dropbox/org/fost.org" "~/Dropbox/org/todo.org"))))
+ '(org-agenda-files (quote ("~/Dropbox/org/personal.org" "~/Dropbox/org/sdo.org" "~/Dropbox/org/todo.org"))))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
