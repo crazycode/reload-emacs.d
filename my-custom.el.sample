@@ -1,22 +1,3 @@
-;; set my default font on emacs23 gui
-(defun setup-emacs23-default-font (frame)
-  ;;(interactive)
-  (if (and (window-system frame) (>= emacs-major-version 23))
-      (progn
-       (set-default-font "Yahei Consolas Hybrid-10")
-       (set-fontset-font (frame-parameter nil 'font)
-                         'han '("Yahei Consolas Hybrid"."unicode-bmp"))
-       ))
-  )
-
-(setup-emacs23-default-font (selected-frame))
-
-(add-hook 'after-make-frame-functions
-          (lambda (new-frame)
-            (select-frame new-frame)
-            (setup-emacs23-default-font new-frame)
-            ))
-
 ;; setup java environment
 (setq
  jde-jdk (quote ("1.6"))
@@ -54,22 +35,3 @@
 (setq calendar-longitude 121.48)
 (setq calendar-location-name "Shanghai")
 
-
-(add-hook 'after-make-frame-functions
-          (lambda (new-frame)
-            (select-frame new-frame)
-            ;; USE SCIM
-            (require 'scim-bridge)
-            (require 'scim-bridge-zh-si)
-            ;; Setup input status switch keystroke.
-            (scim-define-common-key (kbd "S-SPC") t)
-            ;; Use C-SPC for Set Mark command
-            (scim-define-common-key (kbd "C-SPC") nil)
-            ;; Use C-/ for Undo command
-            (scim-define-common-key (kbd "C-\\") nil)
-            ;; Change cursor color depending on SCIM status
-            (setq scim-cursor-color '("red" "blue" "limegreen"))
-
-            ;; Turn on scim-mode automatically after loading .emacs
-            (scim-mode-on)
-            ))
