@@ -7,3 +7,12 @@
 (global-set-key [f6] 'buffer-menu)
 (global-set-key [f7] 'other-window)
 (global-set-key [f8] 'find-file)
+
+
+(defun my-switch-to-last-buffer ()
+      (interactive)
+      (switch-to-buffer (other-buffer)))
+
+(global-set-key (kbd "C-`") 'other-window)
+(global-set-key (kbd "C-;") 'ido-switch-buffer)
+(global-set-key "\M-`" 'my-switch-to-last-buffer)
