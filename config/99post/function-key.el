@@ -14,5 +14,5 @@
       (switch-to-buffer (other-buffer)))
 
 (global-set-key (kbd "C-`") 'other-window)
-(global-set-key (kbd "C-;") 'ido-switch-buffer)
+(global-set-key (kbd "C-M-;") 'ido-switch-buffer)
 (global-set-key "\M-`" 'my-switch-to-last-buffer)
