@@ -14,6 +14,8 @@
 
 ;;(color-theme-blue)
 
+;;(color-theme-ir-black)
+
 ;; hook: test win sys to rerun ctheme
 (defun set-win-color-theme(frame)
   ;; must be current for local ctheme
