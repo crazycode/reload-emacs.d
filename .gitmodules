@@ -40,3 +40,6 @@
 [submodule "vendor/85authoring/showoff-mode"]
 	path = vendor/85authoring/showoff-mode
 	url = git://github.com/crazycode/showoff-mode.git
+[submodule "vendor/70rubyonrails/rvm"]
+	path = vendor/70rubyonrails/rvm
+	url = git://github.com/senny/rvm.el.git
