@@ -4,20 +4,20 @@
 (setq ri-ruby-script "~/.emacs.d/vendor/20language/ri-emacs/ri-emacs.rb")
 (autoload 'ri "ri-ruby" nil t)
 
-(add-hook 'nxml-mode-hook  
-          (lambda ()  
-            (setq local-abbrev-table nxml-mode-abbrev-table)))  
+(add-hook 'nxml-mode-hook
+          (lambda ()
+            (setq local-abbrev-table nxml-mode-abbrev-table)))
 
 ;;(defun try-complete-abbrev (old)
 ;;  (if (expand-abbrev) t nil))
-    
+
 (require 'psvn)
 (require 'rails)
 
 ;; associate ruby-mode with .rb files
 (add-to-list 'auto-mode-alist '("\.rb$" . ruby-mode))
-(setq auto-mode-alist  (cons '("\\.rjs$" . ruby-mode) auto-mode-alist))  
-(setq auto-mode-alist  (cons '("\\.rake$" . ruby-mode) auto-mode-alist))  
+(setq auto-mode-alist  (cons '("\\.rjs$" . ruby-mode) auto-mode-alist))
+(setq auto-mode-alist  (cons '("\\.rake$" . ruby-mode) auto-mode-alist))
 
 (setq rails-always-use-text-menus t)
 
@@ -44,3 +44,10 @@
 ;; cucumber support.
 (require 'feature-mode)
 (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
+
+;; I don't like the default color.
+(set-face-background 'flymake-errline "red4")
+(set-face-background 'flymake-warnline "dark slate blue")
+
+(require 'flymake-ruby)
+(add-hook 'ruby-mode-hook 'flymake-ruby-load)
