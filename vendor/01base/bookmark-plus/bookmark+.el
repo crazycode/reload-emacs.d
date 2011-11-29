@@ -7,18 +7,18 @@
 ;; Copyright (C) 2000-2011, Drew Adams, all rights reserved.
 ;; Copyright (C) 2009, Thierry Volpiatto, all rights reserved.
 ;; Created: Fri Sep 15 07:58:41 2000
-;; Last-Updated: Mon Jan  3 09:57:15 2011 (-0800)
+;; Last-Updated: Mon Aug  1 08:59:18 2011 (-0700)
 ;;           By: dradams
-;;     Update #: 14949
+;;     Update #: 14963
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki/bookmark+.el
 ;; Keywords: bookmarks, bookmark+, placeholders, annotations, search, info, url, w3m, gnus
 ;; Compatibility: GNU Emacs: 20.x, 21.x, 22.x, 23.x
 ;;
 ;; Features that might be required by this library:
 ;;
-;;   `bookmark', `bookmark+-1', `bookmark+-bmu', `bookmark+-lit',
-;;   `bookmark+-mac', `dired', `dired-aux', `dired-x', `ffap', `pp',
-;;   `pp+'.
+;;   `bookmark', `bookmark+-1', `bookmark+-bmu', `bookmark+-key',
+;;   `bookmark+-lit', `bookmark+-mac', `dired', `dired-aux',
+;;   `dired-x', `ffap', `pp', `pp+'.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -33,6 +33,8 @@
 ;;    `bookmark+-lit.el' - (optional) code for highlighting bookmarks
 ;;    `bookmark+-bmu.el' - code for the `*Bookmark List*' (bmenu)
 ;;    `bookmark+-1.el'   - other required code (non-bmenu)
+;;    `bookmark+-key.el' - key and menu bindings
+;;
 ;;    `bookmark+-doc.el' - documentation (comment-only file)
 ;;    `bookmark+-chg.el' - change log (comment-only file)
 ;;
@@ -83,6 +85,22 @@
 ;;         `bmkp-bmenu-commands-file' (`~/.emacs-bmk-bmenu-commands.el'),
 ;;         if you have one.
 ;;
+;;      You can do this editing in a virgin Emacs session (`emacs
+;;      -Q'), that is, without loading Bookmark+.
+;;
+;;      Alternatively, you can do this editing in an Emacs session
+;;      where Bookmark+ has been loaded, but in that case you must
+;;      TURN OFF AUTOMATIC SAVING of both your default bookmark file
+;;      and your `*Bookmark List*' state file.  Otherwise, when you
+;;      quit Emacs your manually edits will be overwritten.
+;;
+;;      To turn off this automatic saving, you can use `M-~' and `M-l'
+;;      in buffer `*Bookmark List*' (commands
+;;      `bmkp-toggle-saving-bookmark-file' and
+;;      `bmkp-toggle-saving-menu-list-state' - they are also in the
+;;      `Bookmark+' menu).
+;;
+;;
 ;;      Again, sorry for this inconvenience.
 ;;
 ;;
@@ -123,12 +141,13 @@
                                         ; not want to use `bookmark+-lit.el' then simply do not put
                                         ; it in your `load-path'.
 (require 'bookmark+-bmu)                ; `*Bookmark List*' stuff.
-(require 'bookmark+-1)                  ; Rest of Bookmark+ required stuff.
+(require 'bookmark+-1)                  ; Rest of Bookmark+ required stuff, except keys & menus.
+(require 'bookmark+-key)                ; Keys & menus.
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;###autoload
-(defconst bmkp-version-number "3.2.0")
+(defconst bmkp-version-number "3.2.2")
 
 ;;;###autoload
 (defun bmkp-version ()

@@ -6,9 +6,9 @@
 ;; Maintainer: Drew Adams (concat "drew.adams" "@" "oracle" ".com")
 ;; Copyright (C) 2000-2011, Drew Adams, all rights reserved.
 ;; Created: Fri Sep 15 07:58:41 2000
-;; Last-Updated: Mon Jan  3 14:20:35 2011 (-0800)
+;; Last-Updated: Sun Aug  7 14:14:44 2011 (-0700)
 ;;           By: dradams
-;;     Update #: 13439
+;;     Update #: 13841
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki/bookmark+-doc.el
 ;; Keywords: bookmarks, bookmark+, placeholders, annotations, search,
 ;;           info, url, w3m, gnus
@@ -31,7 +31,9 @@
 ;;    `bookmark+-mac.el' - Lisp macros
 ;;    `bookmark+-lit.el' - (optional) code for highlighting bookmarks
 ;;    `bookmark+-bmu.el' - code for the `*Bookmark List*' (bmenu)
-;;    `bookmark+-1.el'   - other required code (non-bmenu) 
+;;    `bookmark+-1.el'   - other required code (non-bmenu)
+;;    `bookmark+-key.el' - key and menu bindings
+;;
 ;;    `bookmark+-doc.el' - documentation (comment-only - this file)
 ;;    `bookmark+-chg.el' - change log (comment-only file)
 ;;
@@ -83,6 +85,22 @@
 ;;         `bmkp-bmenu-commands-file' (`~/.emacs-bmk-bmenu-commands.el'),
 ;;         if you have one.
 ;;
+;;      You can do this editing in a virgin Emacs session (`emacs
+;;      -Q'), that is, without loading Bookmark+.
+;;
+;;      Alternatively, you can do this editing in an Emacs session
+;;      where Bookmark+ has been loaded, but in that case you must
+;;      TURN OFF AUTOMATIC SAVING of both your default bookmark file
+;;      and your `*Bookmark List*' state file.  Otherwise, when you
+;;      quit Emacs your manually edits will be overwritten.
+;;
+;;      To turn off this automatic saving, you can use `M-~' and `M-l'
+;;      in buffer `*Bookmark List*' (commands
+;;      `bmkp-toggle-saving-bookmark-file' and
+;;      `bmkp-toggle-saving-menu-list-state' - they are also in the
+;;      `Bookmark+' menu).
+;;
+;;
 ;;      Again, sorry for this inconvenience.
  
 ;;(@> "Index")
@@ -110,6 +128,7 @@
 ;;      (@> "State-Restoring Commands and Bookmarks")
 ;;    (@> "Bookmarking without Visiting the Target")
 ;;      (@> "Bookmarking a File or a URL")
+;;      (@> "Autofile Bookmarks")
 ;;      (@> "Bookmarking the Marked Files in Dired")
 ;;      (@> "Bookmarking Compilation, Grep, and Occur Hits")
 ;;      (@> "Bookmarking Files That You Cannot Visit")
@@ -138,6 +157,7 @@
 ;;      (@> "Highlighting Automatically")
 ;;      (@> "Using Highlighted Bookmarks")
 ;;    (@> "Use Bookmark+ with Icicles")
+;;    (@> "If you use Emacs 20 and Also a More Recent Version")
 ;;    (@> "Bookmark Compatibility with Vanilla Emacs (`bookmark.el')")
 ;;    (@> "New Bookmark Structure")
  
@@ -150,10 +170,12 @@
 ;;  ** Installing Bookmark+ **
 ;;
 ;;  The main Bookmark+ library is `bookmark+.el'.  The other required
-;;  libraries are `bookmark+-mac.el', `bookmark+-bmu.el' and
-;;  `bookmark+-1.el'.  If you want to be able to highlight bookmarks
-;;  then you will also want to use library `bookmark+-lit.el'.  I
-;;  recommend that you byte-compile the libraries.
+;;  libraries are `bookmark+-mac.el', `bookmark+-bmu.el',
+;;  `bookmark+-1.el', and `bookmark+-key.el'.  If you want to be able
+;;  to highlight bookmarks then you will also need library
+;;  `bookmark+-lit.el'.  I recommend that you byte-compile all of the
+;;  libraries, after loading the source files (in particular, load
+;;  `bookmark+-mac.el').
 ;;
 ;;  Put the directory of these libraries in your `load-path' and add
 ;;  this to your init file (~/.emacs):
@@ -175,13 +197,12 @@
 ;;  vanilla Emacs.  The others are available from the Emacs Wiki web
 ;;  site: http://www.emacswiki.org/.  You also need Emacs 22 or later
 ;;  for this feature.
-;;
-;;
+ 
 ;;(@* "Bookmark+ Features")
 ;;  ** Bookmark+ Features **
 ;;
-;;  Here is an overview of the features that Bookmark+ provides.  Some
-;;  of these are detailed in other sections, below.
+;;  Here is an overview of some of the features that Bookmark+
+;;  provides.  Some of these are detailed in other sections, below.
 ;;
 ;;  * Richer bookmarks.  They record more.  They are more accurate.
 ;;
@@ -190,13 +211,27 @@
 ;;       tags, and multiple bookmarks can have the same tag.  You can
 ;;       sort, show/hide, or mark bookmarks based on their tags.
 ;;
-;;     - Bookmark tags can be more than just names.  They can be
+;;     - Bookmark+ tags can be more than just names.  They can be
 ;;       full-fledged user-defined attributes, with Emacs-Lisp objects
 ;;       as their values.
 ;;
-;;     - Bookmarks record the number of you have visited them and the
-;;       time of the last visit.  You can sort, show/hide, or mark
-;;       bookmarks based on this info.
+;;     - You can have multiple bookmarks with the same name.  This is
+;;       particularly useful for autofile bookmarks, which are
+;;       bookmarks that have the same name as their target files.
+;;       They give you the effect of using files themselves as
+;;       bookmarks.  In particular, they let you, in effect, tag
+;;       files.  See (@> "Autofile Bookmarks") and
+;;       (@> "Tagging Files").
+;;
+;;       (In vanilla Emacs you can also, in theory, have multiple
+;;       bookmarks with the same name.  But you cannot really use them
+;;       in any practical way.  Vanilla Emacs cannot distinguish among
+;;       them: the most recent one shadows all others with the same
+;;       name.)
+;;
+;;     - Bookmarks record the number of times you have visited them
+;;       and the time of the last visit.  You can sort, show/hide, or
+;;       mark bookmarks based on this info.
 ;;
 ;;     - You can combine bookmarks, to make composite, or sequence,
 ;;       bookmarks.  Invoking a sequence bookmark invokes each of its
@@ -213,44 +248,57 @@
 ;;
 ;;  * Additional types of bookmarks.
 ;;
-;;     - You can bookmark a Dired buffer, recording and restoring its
-;;       `ls' switches, which files are marked, which subdirectories
-;;       are inserted, and which (sub)directories are hidden.
+;;     - Autofile bookmarks.  You can bookmark a file without visiting
+;;       it or naming the bookmark.  The bookmark name is the same as
+;;       the file name (non-directory part).  You can have multiple
+;;       such bookmarks with the same name, to bookmark files with the
+;;       same name but in different directories.
 ;;
-;;     - You can bookmark the current state of buffer `*Bookmark
-;;       List*' - a list of bookmarks.  Jumping to such a bookmark
-;;       restores the recorded sort order, filter, title, and omit
-;;       list.  See (@> "Omitting Bookmarks from Display").
+;;     - Dired bookmarks.  You can bookmark a Dired buffer, recording
+;;       and restoring its `ls' switches, which files are marked,
+;;       which subdirectories are inserted, and which (sub)directories
+;;       are hidden.
 ;;
-;;     - You can bookmark a bookmark file.  Jumping to such a bookmark
-;;       loads the bookmarks in the file.  See (@> "Bookmark-File Bookmarks").
+;;     - Bookmark-list bookmarks.  You can bookmark the current state
+;;       of buffer `*Bookmark List*' - a list of bookmarks.  Jumping
+;;       to such a bookmark restores the recorded sort order, filter,
+;;       title, and omit list.  See (@> "Omitting Bookmarks from Display").
 ;;
-;;     - You can bookmark the current desktop, as defined by library
-;;       `desktop.el' - use command `bmkp-set-desktop-bookmark' (`C-x
-;;       p K').  You can "jump" to (that is, restore) a saved desktop.
-;;       A desktop includes:
+;;     - Bookmark-file bookmarks.  You can bookmark a bookmark file.
+;;       Jumping to such a bookmark loads the bookmarks in the file.
+;;       See (@> "Bookmark-File Bookmarks").
+;;
+;;     - Desktop bookmarks.  You can bookmark the current Emacs
+;;       desktop, as defined by library `desktop.el' - use command
+;;       `bmkp-set-desktop-bookmark' (`C-x p K').  You can "jump" to
+;;       (that is, restore) a saved desktop.  A desktop includes:
 ;;
 ;;         - Some global variables.  To exclude variables normally
 ;;           saved, see option `bmkp-desktop-no-save-vars'.
 ;; 	   - The current set of buffers and their associated files.
 ;;           For each: its mode, point, mark, & some local variables.
 ;;
-;;     - You can bookmark a Gnus article, a URL, a PDF file (DocView),
-;;       a UNIX manual page (from the output of Emacs command `man' or
-;;       `woman'), an image, or a piece of music.
+;;     - Gnus bookmarks.  You can bookmark a Gnus article, a URL, a
+;;       PDF file (DocView), a UNIX manual page (from the output of
+;;       Emacs command `man' or `woman'), an image, or a piece of
+;;       music.
 ;;
-;;     - You can bookmark a buffer that is not associated with a file.
+;;     - Non-file (buffer) bookmarks.  You can bookmark a buffer that
+;;       is not associated with a file.
 ;;
-;;     - A bookmark can represent a Lisp function, which is invoked
-;;       when you "jump" to the bookmark.
+;;     - Function bookmarks.  A bookmark can represent a Lisp
+;;       function, which is invoked when you "jump" to the bookmark.
 ;;
-;;     - A bookmark can represent a sequence of other bookmarks.
+;;     - Sequence (composite) bookmarks.  A bookmark can represent a
+;;       sequence of other bookmarks.
 ;;
-;;     - A bookmark can represent a set of variables and their values.
+;;     - Lisp variable bookmarks.  A bookmark can represent a set of
+;;       variables and their values.
 ;;
-;;     In particular, note that you can use these kinds of bookmarks
-;;     to quickly switch among different projects (sets of bookmarks):
-;;     Dired, bookmark-list, bookmark-file, and desktop bookmarks.
+;;     In particular, note that you can use the following kinds of
+;;     bookmarks to quickly switch among different projects (sets of
+;;     bookmarks): Dired, bookmark-list, bookmark-file, and desktop
+;;     bookmarks.
 ;;
 ;;  * Additional ways to bookmark.
 ;;
@@ -262,8 +310,28 @@
 ;;
 ;;     - You can bookmark all of the marked files in Dired at once.
 ;;
-;;  * Improvements for the bookmark list (buffer `*Bookmark List*',
-;;    aka "menu list") that is displayed using `C-x r l'.
+;;  * Extensive menus.
+;;
+;;     - In the `*Bookmark List*' display, a `mouse-3' popup menu has
+;;       actions for the individual bookmark that you point to when
+;;       you click the mouse.
+;;
+;;     - In the `*Bookmark List*' display, a complete menu-bar menu,
+;;       `Bookmark+', is available.  The same menu is available on
+;;       `C-mouse-3'.  It has submenus `Jump To', `Mark', `Omit',
+;;       `Show', `Sort', `Tags', `Highlight' (needs library
+;;       `bookmark+-lit.el), and `Define Command'.
+;;
+;;     - The vanilla `Bookmarks' menu, which is typically a submenu of
+;;       the menu-bar `Edit' menu, is modified by adding several items
+;;       from the `Bookmark+' menu, including submenus `Jump To',
+;;       `Tags', and `Highlight'.
+;;
+;;  * Improvements for the bookmark list.
+;;
+;;    This is buffer `*Bookmark List*', aka the bookmark "menu list"
+;;    (a misnomer), which you display using `C-x r l'.  See
+;;    (@> "The Bookmark List (Display)").
 ;;
 ;;     - The last display state is saved (by default), and is restored
 ;;       the next time you show the list.  (Tip: Use the bookmark list
@@ -303,20 +371,8 @@
 ;;       (or if there are no bookmarks for the buffer), you can choose
 ;;       from all bookmarks.
 ;;
-;;     - A popup menu is available on `mouse-3', with actions for the
-;;       individual bookmark you point to when you click the mouse.
-;;
-;;     - A complete menu, `Bookmark+', is provided on the menu-bar.
-;;       Use it, in particular, when you don't remember a key binding.
-;;       The same menu is available on `C-mouse-3'.
-;;
-;;     - The vanilla `Bookmarks' menu, which is typically a submenu of
-;;       the `Edit' menu-bar menu, is modified by adding several items
-;;       from the `Bookmark+' menu, including the `Jump To' submenu
-;;       (called `Jump To Bookmark' there).
-;;
-;;     - You can edit a bookmark: its name and file name/location, or
-;;       its defining internal Lisp record.
+;;     - You can edit a bookmark: its name and file name/location, its
+;;       tags, or its complete defining internal Lisp record.
 ;;
 ;;  * Multiple bookmark files.
 ;;
@@ -327,6 +383,7 @@
 ;;       into the same session, accumulating their bookmark
 ;;       definitions.  The last file you used is the default, so it is
 ;;       easy to go back and forth between two bookmark files.
+;;       See (@> "Using Multiple Bookmark Files").
 ;;
 ;;  * Type-specific jump commands.
 ;;
@@ -375,8 +432,16 @@
 ;;         defines it (internal form).
 ;;
 ;;       . In the bookmark list, `C-h RET' (or `C-h C-RET') describes
-;;         the bookmark under the cursor.  Again, a prefix arg means
-;;         show the full (internal) information.
+;;         the bookmark under the cursor.  The description is as
+;;         complete as possible - for example, for an image-file
+;;         bookmark the complete EXIF image metadata is shown.  (This
+;;         is only for Emacs 22 and later, and only if you have
+;;         command-line tool `exiftool' installed.  See standard Emacs
+;;         library `image-dired.el' for more information about
+;;         `exiftool'.)
+;;
+;;         And again, a prefix arg (`C-u C-h RET') means show the full
+;;         (internal) bookmark information.
 ;;
 ;;     - General Bookmark+ documentation.
 ;;
@@ -421,8 +486,7 @@
 ;;       jumping (visiting), setting, and help.  It gives you a
 ;;       bookmark browser.  See (@> "Use Bookmark+ with Icicles") and
 ;;       http://www.emacswiki.org/cgi-bin/wiki/Icicles.
-;;
-;;
+ 
 ;;(@* "Different Types of Jump Commands")
 ;;  ** Different Types of Jump Commands **
 ;;
@@ -455,8 +519,8 @@
 ;;  default bindings `C-x j' and `C-x 4 j'.  You can bind these maps
 ;;  to any keys you like.
 ;;
-;;  If you do not want to remember the different type-specfic
-;;  bindings, you can use commands `bmkp-jump-to-type' and
+;;  If you do not remember the different type-specfic bindings, you
+;;  can use commands `bmkp-jump-to-type' and
 ;;  `bmkp-jump-to-type-other-window' (`C-x j :' and `C-x 4 j :').
 ;;  They work for any type, prompting you first for the type, then for
 ;;  a bookmark of that type (only).
@@ -465,11 +529,49 @@
 ;;  The completion candidates can be those bookmarks that have all
 ;;  tags in a given set, some tags in a given set, all tags matching a
 ;;  regexp, or some tags matching a regexp.  You are prompted for the
-;;  set of tags or the regexp to match.  These commands all have the
-;;  prefix key `C-x j t', with the regexp-matching ones having the
-;;  prefix key `C-x j t %'.  The key suffix is `*' for "all" and `+'
-;;  for "some".  For example, `C-x j t % +' jumps to a bookmark you
-;;  choose that has one or more tags that match the regexp you input.
+;;  set of tags or the regexp to match.
+;;
+;;  These commands all have the prefix key `C-x j t'.  The suffix key
+;;  is `*' for "all" and `+' for "some".  The regexp-matching commands
+;;  precede the suffix key with `%'.  For example, `C-x j t % +' jumps
+;;  to a bookmark you choose that has one or more tags that match the
+;;  regexp you input.
+;;
+;;  There are some type-specific jump commands for bookmarks with
+;;  tags.  The key sequences for these include a key that indicates
+;;  the bookmark type, after the `t' indicating tags.  For example,
+;;  commands for jumping to a file or directory bookmark having
+;;  certain tags use the prefix `C-x j t f' (`f' for file).  Similar
+;;  commands for autofile bookmarks have prefix `C-x j t a' (`a' for
+;;  autofile).
+;;
+;;  For example, `C-x j t f % *' jumps to a file or directory bookmark
+;;  you choose, where all of its tags match a regexp, and `C-x j t a
+;;  +' finds a file tagged with at least one of the tags you input.
+;;  The autofile "jump" commands are really `find-file' commands: they
+;;  read a file name using `read-file-name' - see (@> "Autofile Bookmarks").
+;;
+;;  Bookmark names are global.  File names are not; that is, the
+;;  non-directory portion is not.  Suppose you have two similar
+;;  directories with some like-named files, perhaps tagged in similar
+;;  ways.  Imagine image files of your vacations organized in
+;;  different directories by year.  It is sometimes useful to narrow
+;;  your focus to the file bookmarks in one directory.
+;;
+;;  Commands such as `bmkp-file-this-dir-jump' (`C-x j C-f') offer as
+;;  completion candidates only bookmarks for files and subdirs in the
+;;  current directory (`default-directory').  For tags, there are
+;;  equivalent commands.  For example, `C-x j t C-f % *' is the same
+;;  as `C-x j t f % *', but the destinations are limited to files in
+;;  the current directory.  All of the "this-dir" file jump commands
+;;  are bound to the same keys as the general file jump commands, but
+;;  with `C-f' instead of `f'.
+;;
+;;  Remember that Bookmark+ collects lots of commands on only a few
+;;  predefined prefix keys, primarily as a mnemonic device.  Nothing
+;;  requires you to use the long key sequence `C-x j t f % *' to visit
+;;  a file that has a given set of tags.  It is expected that you will
+;;  bind short key sequences to commands that you use often.
 ;;
 ;;  The `C-x j' and `C-x 4 j' bindings are global.  In addition, in
 ;;  some modes `j' is bound to the corresponding type-specific jump
@@ -479,11 +581,11 @@
 ;;  These commands are also added to the mode's menu-bar menu.
 ;;
 ;;  In Dired mode, `C-j' is bound to a special Dired-specific jump
-;;  command, `bmkp-dired-jump-current', whose destinations all use the
-;;  current Dired directory.  The aim of `C-j' is not to change
-;;  directories but to change to a different set of markings,
-;;  switches, inserted subdirectories, or hidden subdirectories for
-;;  the same Dired directory.
+;;  command, `bmkp-dired-this-dir-jump', whose destinations all use
+;;  the current directory (`default-directory').  The aim of `C-j' is
+;;  not to change directories but to change to a different set of
+;;  Dired markings, switches, inserted subdirectories, or hidden
+;;  subdirectories for the same Dired directory.
 ;;
 ;;  In addition to the predefined bookmark types, which you can use as
 ;;  described above, you can define a "type"-specific jump command for
@@ -517,24 +619,36 @@
 ;;  `bmkp-choose-navlist-from-bookmark-list'.  To then jump to a
 ;;  bookmark from such a navigation list, use `C-x j N' or `C-x 4 j N'
 ;;  (`bmkp-jump-in-navlist' or `bmkp-jump-in-navlist-other-window').
-;;
-;;
+ 
 ;;(@* "Bookmark Tags")
 ;;  ** Bookmark Tags **
 ;;
-;;  With Bookmark+ you can bookmark several kinds of Emacs object.
+;;  With Bookmark+ you can bookmark many kinds of Emacs object.
 ;;  Bookmarks record locations - that is their primary purpose.  They
 ;;  can also record annotations: general free-text descriptions of
 ;;  your choosing.
 ;;
-;;  Bookmark+ bookmarks can also be tagged, in del.icio.us style, as a
-;;  way to organize them, which also means as a way to organize the
-;;  objects that are bookmarked.  A bookmark tag is a string that
-;;  contains no newline characters.
+;;  Bookmark+ bookmarks can also be tagged, as a way to organize them,
+;;  which also means as a way to organize the objects that are
+;;  bookmarked.
 ;;
-;;  You can add as many tags as you like to any bookmark, and multiple
-;;  bookmarks can have the same tag(s).  In fact, that's the whole
-;;  idea behind using them for organizing.
+;;  By "tagging" and "tag" in this context is meant associating
+;;  keywords or other text with an object, typically in order to
+;;  classify or characterize it.  Tags are metadata about an object.
+;;  This notion of tagging is sometimes called "delicious" tagging
+;;  after the Web site www.delicious.com that popularized it
+;;  (`http://en.wikipedia.org/wiki/Delicious_(website)').
+;;
+;;  Be aware that there is another notion of "tag" associated with
+;;  Emacs: that involving Emacs tags files, which record the locations
+;;  of function, variable, etc. definitions in source files.  There is
+;;  no relation between the two notions of "tag".
+;;
+;;  A bookmark tag is a string (or a cons whose car is a string - see
+;;  (@> "Bookmark Tags Can Have Values")).  You can add as many tags
+;;  as you like to any bookmark, and multiple bookmarks can have the
+;;  same tag(s).  In fact, that's the whole idea behind using them for
+;;  organizing.
 ;;
 ;;  This feature is unrelated to the fact that bookmarks record
 ;;  locations and are useful for navigating.  You can, if you want,
@@ -543,43 +657,66 @@
 ;;  the bookmarks as a way to visit them.
 ;;
 ;;  For example, if you use Dired+ (library `dired+.el'), then you can
-;;  use `M-b' (`diredp-do-bookmark') in Dired to create a bookmark for
-;;  each of the marked files in the Dired buffer.  Even if you never
-;;  use those bookmarks for navigating to the files, you can use them
-;;  with tags to organize the files.
+;;  use `M-b' (`diredp-do-bookmark') in Dired to create an autofile
+;;  bookmark for each of the marked files in the Dired buffer.  Even
+;;  if you never use those bookmarks for navigating to the files, you
+;;  can use them with tags to organize the files and thus operate on
+;;  subsets of them.
 ;;
 ;;  By default, you create bookmarks without tags and add tags to them
 ;;  later.  If you prefer, you can customize option
 ;;  `bmkp-prompt-for-tags-flag' to non-nil so that you are prompted to
-;;  add tags immediately whenever you set (create) a bookmark.
+;;  add tags immediately whenever you set (create) a bookmark.  There
+;;  are also some commands, such as `bmkp-tag-a-file' (`C-x p t + a')
+;;  and `bmkp-untag-a-file' (`C-x p t - a'), that always prompt for
+;;  tags to add or remove.  (In general, the key `a' is used in key
+;;  sequences for autofile bookmarks.)
 ;;
-;;  To make tags more useful, Bookmark+ provides lots of commands:
-;;  commands for adding or removing tags, and for marking or unmarking
-;;  bookmarks that are tagged in various ways.  When combined with
-;;  other Bookmark+ commands (e.g. search, query-replace) that apply
-;;  to the marked bookmarks in the `*Bookmark List*' window, you can
-;;  really do quite a lot using bookmark tags.  Use your imagination!
+;;  When you are prompted to enter a tag, you type some text then hit
+;;  `RET'.  If you want to include a newline character in the tag
+;;  itself, use `C-q C-j' (`C-j' is the newline character).  You can
+;;  use `C-q' this way to enter any character.  If you do use complex
+;;  strings as tags then you might prefer to simply edit a bookmark's
+;;  tags in a separate buffer.  You can do that using `C-x p t e' (or
+;;  `T e' in the bookmark-list display).
+;;
+;;  To make tags more useful, Bookmark+ provides *lots* of commands:
+;;  commands for adding, removing, copying, pasting, and renaming
+;;  tags; commands for jumping to bookmarks with particular sets of
+;;  tags; and commands for marking or unmarking (in buffer `*Bookmark
+;;  List*') bookmarks that are tagged in various ways.
+;;
+;;  Most commands pertaining to tags are by default on prefix key `C-x
+;;  p t' - use `C-x p t C-h' to see them.  In buffer `*Bookmark
+;;  List*', commands pertaining to tags are on prefix key `T' - use `T
+;;  C-h' to see them.
+;;
+;;  When combined with other Bookmark+ commands (e.g. search,
+;;  query-replace) that apply to the marked bookmarks in the
+;;  `*Bookmark List*' window, you can really do quite a lot using
+;;  bookmark tags.  Use your imagination!
 ;;
 ;;  See Also:
 ;;
 ;;  * (@> "Bookmarking the Marked Files in Dired")
 ;;  * (@> "Opening Bookmarks Using Windows File Associations")
 ;;  * (@> "Tag Commands and Keys")
-;;
-;;
+ 
 ;;(@* "Bookmark Tags Can Have Values")
 ;;  ** Bookmark Tags Can Have Values **
 ;;
 ;;  Bookmark tags are simply names (strings) when you create them.
 ;;  Nearly all of the predefined operations that use tags use these
-;;  names: sorting, marking, and so on.  But you can in fact add an
-;;  associated value to each tag.  This means that a tag can act just
-;;  like an object attribute or property: it can be a name/value pair.
+;;  names: sorting, marking, jumping, and so on.  But you can in fact
+;;  add an associated value to any tag.  This means that a tag can act
+;;  just like an object attribute or property: it can be a name/value
+;;  pair.
 ;;
 ;;  To add a value to a tag that has none, or to change the current
-;;  value of a tag, you use command `bmkp-set-tag-value', bound to `T
-;;  v' in the bookmark list.  You are prompted for the bookmark, the
-;;  tag, and the new value.
+;;  value of a tag, you use command `bmkp-set-tag-value', which is
+;;  bound to `T v' in the bookmark list and bound to `C-x p t v'
+;;  globally.  You are prompted for the bookmark, the tag, and the new
+;;  value.
 ;;
 ;;  A tag value can be a number, symbol, string, list, vector, and so
 ;;  on.  It can be as complex as you like.  It can be any Emacs-Lisp
@@ -619,8 +756,7 @@
 ;;  You can use this tag to invoke functions that are specific to
 ;;  individual bookmarks; bookmarks can thus have their own, extra
 ;;  jump functions.
-;;
-;;
+ 
 ;;(@* "Function, Sequence, and Variable-List Bookmarks")
 ;;  ** Function, Sequence, and Variable-List Bookmarks **
 ;;
@@ -670,19 +806,19 @@
 ;;  `bmkp-set-restrictions-bookmark' bookmarks this value for the
 ;;  current buffer.  Jumping to such a bookmark restores the saved
 ;;  ring/stack of restrictions.
-;;
-;;
+ 
 ;;(@* "Editing Bookmarks")
-;;  *** Editing Bookmarks ***
+;;  ** Editing Bookmarks **
 ;;
 ;;  In vanilla Emacs, you can use `e' in the bookmark list display to
-;;  edit the annotation associated with a bookmark, but that is all.
-;;  There is no easy way to edit a bookmark.
+;;  edit the annotation associated with a bookmark.  And you can use
+;;  `r' to rename a bookmark.  But that is all.  There is no easy way
+;;  to really edit a bookmark.
 ;;
-;;  With Bookmark+, in addition to `e' you can use `E' in the bookmark
-;;  list, or `C-x p E' anywhere, to edit the bookmark name and the
-;;  target file name (bookmarked location).  You are prompted for the
-;;  new names.
+;;  With Bookmark+, in addition to `e' and `r', you can use `E' in the
+;;  bookmark list, or `C-x p E' anywhere, to edit the bookmark name
+;;  and the target file name (bookmarked location).  You are prompted
+;;  for the new names.
 ;;
 ;;  If you use a prefix argument (`C-u E' in the bookmark list or `C-u
 ;;  C-x p E' elsewhere), then you can edit the complete internal
@@ -704,7 +840,9 @@
 ;;  anyway.  Remember that you can use `undo' to reverse particular
 ;;  changes or simply kill the edit buffer to abandon all changes.
 ;;
-;;
+;;  In a similar way, you can use `T e' in the bookmark list or `C-x p
+;;  t e' elsewhere, to edit a bookmark's tags.
+ 
 ;;(@* "Bookmark-List Views - Saving and Restoring State")
 ;;  ** Bookmark-List Views - Saving and Restoring State **
 ;;
@@ -763,11 +901,11 @@
 ;;  * Define a command that restores the bookmark-list state.
 ;;
 ;;  When you use `C-x r m' (`bookmark-set') in buffer `*Bookmark
-;;  List*' to create a bookmark, the current sort order, filter,
-;;  regexp pattern, title, and omit list are saved as part of the
-;;  bookmark.  (These concepts are described below - see (@> "Bookmark
-;;  List (Display)").)  Jumping to such a bookmark restores all of
-;;  these.
+;;  List*' to create a bookmark-list bookmark, the current sort order,
+;;  filter, regexp pattern, title, and omit list are saved as part of
+;;  the bookmark.  (These concepts are described below - see
+;;  (@> "Bookmark List (Display)").)  Jumping to such a bookmark
+;;  restores all of these.
 ;;
 ;;  Alternatively, you can define a command that does the same thing,
 ;;  but without creating another bookmark - use `c'
@@ -809,8 +947,7 @@
 ;;  command in a sequence, you need to first create a function
 ;;  bookmark that uses the command, and then include that bookmark in
 ;;  the sequence.)
-;;
-;;
+ 
 ;;(@* "Bookmarking without Visiting the Target")
 ;;  ** Bookmarking without Visiting the Target **
 ;;
@@ -826,9 +963,10 @@
 ;;     of them, in one operation.
 ;;
 ;;  3. As a special case of #1 and #2, you bookmark a file that you
-;;     cannot visit in Emacs (in the sense of editing it in a buffer).
-;;     "Jumping" to the bookmark performs an operation appropriate to
-;;     the file.
+;;     cannot visit in Emacs (in the sense of editing it in a buffer)
+;;     - for example, a music file.  "Jumping" to the bookmark
+;;     performs an operation appropriate to the file - for example,
+;;     playing music.
 ;;
 ;;  4. In a compilation buffer (e.g. `*grep*', `*compile*') or an
 ;;     occur or multi-occur buffer (`*Occur*'), you bookmark one or
@@ -843,15 +981,62 @@
 ;;  `bmkp-url-target-set', bound by default to `C-x p c f' and `C-x p
 ;;  c u', to bookmark any file or URL.  Completion is available, the
 ;;  default file name or URL being determined by the text at point.
+;;  In addition to the file or URL, you are prompted for the bookmark
+;;  name.  (In general, the keys `f' and `u' are used in key sequences
+;;  for file and URL bookmarks, respectively.)
+;;
+;;
+;;(@* "Autofile Bookmarks")
+;;  *** Autofile Bookmarks ***
+;;
+;;  Autofile bookmarking represents a special case of bookmarking a
+;;  file without visiting it.  For an autofile bookmark you need not
+;;  provide the bookmark name - you specify only the file to bookmark.
+;;  You can create a new autofile bookmark, or set an existing one,
+;;  using `bmkp-bookmark-a-file' (aka `bmkp-autofile-set'), which is
+;;  bound by default to `C-x p c a'.  (In general, the key `a' is used
+;;  in key sequences for autofile bookmarks.)
+;;
+;;  If user option `bmkp-propertize-bookmark-names-flag' is non-nil,
+;;  which it is by default with Emacs 21 and later, then you can have
+;;  multiple bookmarks with the same name.  This is important for
+;;  autofile bookmarks because the bookmark name is only the
+;;  non-directory part of the file name.  This Bookmark+ feature lets
+;;  you have different autofile bookmarks for files of the same name
+;;  in different directories.
+;;
+;;  Because an autofile bookmark name is the same as its
+;;  (non-directory) file name, you can define and use file-visiting
+;;  commands where the file name is read using `read-file-name' with a
+;;  predicate that tests various bookmark fields.
+;;
+;;  For example, by default (for Emacs 21 or later), you can use `C-x
+;;  j a' or `C-x 4 j a' to visit an autofile bookmark.  These keys are
+;;  bound to `bmkp-find-file' and `bmkp-find-file-other-window',
+;;  respectively (which are also known as `bmkp-autofile-jump' and
+;;  `bmkp-autofile-jump-other-window').
+;;
+;;  Similarly, you can use prefix key `C-x j t a' followed by the
+;;  usual tags-command suffix keys (e.g. `+', `% *') to visit a file
+;;  or directory (that is, jump to an autofile bookmark) that is
+;;  tagged in a particular way.  See (@> "Tagging Files").  All of the
+;;  autofile "jump" commands are really `find-file' commands: they
+;;  read a file name using `read-file-name', letting you navigate up
+;;  and down the file hierarchy.
+;;
+;;  In addition to the single autofile bookmark you can create for a
+;;  given absolute file location, you can of course create additional
+;;  bookmarks to the same file, using different bookmark names.  Among
+;;  other things, this lets you tag the same file in different ways.
 ;;
 ;;  
 ;;(@* "Bookmarking the Marked Files in Dired")
 ;;  *** Bookmarking the Marked Files in Dired ***
 ;;
 ;;  If you use Dired+ (library `dired+.el'), then you can bookmark all
-;;  of the marked files in a Dired buffer at once, even if you
-;;  normally do not or cannot visit those files in Emacs.  These keys
-;;  are available in Dired:
+;;  of the marked files in a Dired buffer at once, as autofiles, even
+;;  if you normally do not or cannot visit those files in Emacs.
+;;  These keys are available in Dired:
 ;;
 ;;    `M-b'                   - Bookmark each marked file
 ;;    `C-M-S-b' (aka `C-M-B') - Bookmark each marked file in a
@@ -860,9 +1045,9 @@
 ;;                              bookmark-file you specify, and create
 ;;                              a bookmark for that bookmark-file
 ;;
-;;  Each of these commands bookmarks each of the marked files.  By
-;;  default, the bookmark file used for the latter two commands is in
-;;  the current directory.
+;;  Each of these commands bookmarks each of the marked files as an
+;;  autofile.  By default, the bookmark file used for the latter two
+;;  commands is in the current directory.
 ;;
 ;;  If you use multiple `C-u' as a prefix arg for these commands, then
 ;;  you can bookmark all of the files in Dired, regardless of
@@ -943,8 +1128,8 @@
 ;;  which operation (bookmark handler) to use for which file type.
 ;;  This is a set of associations (an alist) with key a regexp
 ;;  matching a file name and with value a Lisp sexp that evaluates to
-;;  a shell command (a string) or an Emacs function (a symbol or
-;;  lambda form).
+;;  either a shell command (a string) or an Emacs function (a symbol
+;;  or lambda form).
 ;;
 ;;  The handler for the bookmark created invokes the shell command or
 ;;  the Emacs function with the file name as argument.
@@ -962,10 +1147,16 @@
 ;;
 ;;  The default value of `bmkp-default-handler-associations' is taken
 ;;  from the value of option `dired-guess-shell-alist-user' (from
-;;  Dired-X).  If no matching file association is found in
-;;  `bmkp-default-handler-associations', then the associations in
-;;  `bmkp-default-handler-associations' are used to find a shell
-;;  command appropriate to the target file type.
+;;  Dired X).
+;;
+;;  If no matching file association is found in
+;;  `bmkp-default-handler-associations', and if option
+;;  `bmkp-guess-default-handler-for-file-flag' is non-nil (it is nil
+;;  by default), then Bookmark+ will guess a shell command to use in
+;;  the handler.  It does this by matching the file name against
+;;  `dired-guess-shell-alist-default' (also from Dired X).  In Emacs
+;;  23+, if it finds no shell command that way then it guesses one
+;;  based on mailcap entries.
 ;;
 ;;
 ;;(@* "Opening Bookmarks Using Windows File Associations")
@@ -996,10 +1187,105 @@
 ;;  kind of file.  Your MS Windows file association for PostScript
 ;;  might, for example, use Adobe Distiller to create a PDF file from
 ;;  PostScript, while your `bmkp-default-handler-associations'
-;;  association for Postcript might use GhostView to display it
+;;  association for PostScript might use GhostView to display it
 ;;  directly.
+ 
+;;(@* "Tagging Files")
+;;  ** Tagging Files **
 ;;
+;;  Section (@> "Tags: Sets of Bookmarks") covers bookmark tags, which
+;;  are persistent metadata that you define to help you organize
+;;  bookmarks into meaningful sets.
 ;;
+;;  Section (@> "Autofile Bookmarks") describes autofile bookmarks,
+;;  which, in effect, let you treat files generally as if they were
+;;  bookmarks.  You can choose a file to visit or act on by its name
+;;  and location, but also by its bookmark metadata.
+;;
+;;  In particular, you can tag a file - that is, specify tags for its
+;;  associated autofile bookmark.  And you can then visit a file that
+;;  has a given set of tags.  Bookmark+ provides file commands that
+;;  automatically create and manipulate autofile bookmarks, that is,
+;;  bookmarks that have the same name as the files they tag.
+;;
+;;  Command `bmkp-tag-a-file' (aka `bmkp-autofile-add-tags'), bound by
+;;  default to `C-x p t + a', prompts you for a set of tags and a file
+;;  location, and creates or sets the corresponding autofile bookmark.
+;;  Command `bmkp-untag-a-file' (aka `bmkp-autofile-remove-tags'),
+;;  bound by default to `C-x p t - a', similarly lets you remove
+;;  specified tags from a file.
+;;
+;;  If you also use library Icicles, then you can act on multiple
+;;  files during the same command (a "multi-command").  You can thus
+;;  all at once tag a set of files the same way, or act on a set of
+;;  files that are tagged similarly.
+;;
+;;  If you also use library Dired+ (`dired+.el') then you can use
+;;  `C-+' to add tags to the marked files and `C--' to remove tags
+;;  from them.  You can use `C-M-+' and `C-M--' to do the same thing
+;;  for the current file.  You can also use items from the Dired menus
+;;  to do these things.
+;;
+;;  Bookmark+ provides two kinds of command for visiting files
+;;  associated with bookmarks that have tags.
+;;
+;;  The first kind uses bookmarks directly: you choose a bookmark
+;;  name, not a file name, but the candidates are only file and
+;;  directory bookmarks.  These commands have the prefix `bmkp-file-'.
+;;
+;;  As a special case, commands with the prefix `bmkp-file-this-dir-'
+;;  limit the choices to bookmarks for files and subdirectories of the
+;;  current directory.  By default, the commands across all
+;;  directories are on prefix key `C-x 4 j t f' and those for the
+;;  current directory only are on prefix key `C-x j t C-f'.  See
+;;  (@> "Different Types of Jump Commands") for more about these
+;;  commands.
+;;
+;;  The second kind of command is for visiting tagged files, that is,
+;;  autofile bookmarks.  These commands are available only for Emacs
+;;  21 and later (because they use `read-file-name' with a PREDICATE
+;;  argument, not available for Emacs 20).  The candidates are file
+;;  names, not bookmark names.  These commands have the prefix
+;;  `bmkp-find-file-', and by default they are on the prefix key `C-x
+;;  j t a'.  (In general, the keys `f' and `a' are used in key
+;;  sequences for file and autofile bookmarks, respectively.)
+;;
+;;  For example:
+;;
+;;    `C-x j t f % +'   is `bmkp-file-some-tags-regexp-jump'
+;;    `C-x j t C-f % +' is `bmkp-file-this-dir-some-tags-regexp-jump'
+;;    `C-x j t a % +'   is `bmkp-find-file-some-tags-regexp'
+;;
+;;  * The first of these visits any file bookmark that has at least
+;;    one tag among the tags you specify, and you choose among
+;;    bookmark names.  The files can be in any directories.
+;;
+;;  * The second is similar to the first, but only bookmarks for files
+;;    in the current directory are candidates.
+;;
+;;  * The third is similar regarding tags, but it uses
+;;    `read-file-name', so you can browse among all files, up and down
+;;    the file hierarchy.  The candidates are file names, not bookmark
+;;    names.
+;;
+;;  If you use Icicles, there are similar sets of commands, but they
+;;  all let you act on multiple files at the same time
+;;  (multi-commands).  For example, you can delete (or byte-compile
+;;  or...) a set of files according to their tags.
+;;
+;;  Remember that you can create multiple bookmarks for the same file,
+;;  providing them with different sets of tags.  (Only one of the
+;;  bookmarks is the autofile bookmark.)
+;;
+;;  You can also use multiple bookmark files (the files that record
+;;  bookmarks).  Different projects can thus have different tags for
+;;  the same sets of files, even using just autofile bookmarks.  See
+;;  (@> "Using Multiple Bookmark Files").
+;;
+;;  A file bookmark can have any number of tags, and multiple file
+;;  bookmarks can have the same tag.  You can sort, show/hide, or mark
+;;  files based on their tags.
+ 
 ;;(@* "Using Multiple Bookmark Files")
 ;;  ** Using Multiple Bookmark Files **
 ;;
@@ -1091,10 +1377,11 @@
 ;;
 ;;  As a shortcut, in Dired (if you use library Dired+), `C-M-b'
 ;;  creates a bookmark-file bookmark.  The bookmark file that it
-;;  records contains bookmarks to each of the files that was marked in
-;;  Dired at the time it was created.  Jumping to that bookmark-file
-;;  bookmark makes those (marked) files available as bookmarks.  See
-;;  also (@> "Use Dired to Bookmark Files without Visiting Them").
+;;  records contains autofile bookmarks to each of the files that was
+;;  marked in Dired at the time it was created.  Jumping to that
+;;  bookmark-file bookmark makes those (marked) files available as
+;;  bookmarks.  See also
+;;  (@> "Use Dired to Bookmark Files without Visiting Them").
 ;;
 ;;  Note that the bookmark file in which a bookmark-file bookmark is
 ;;  recorded is not the same as the bookmark file recorded in that
@@ -1106,8 +1393,7 @@
 ;;  bookmark file for the marked files is `/foo/bar/.emacs.bmk'.  But
 ;;  the new bookmark-file bookmark created is recorded in the current
 ;;  bookmark file, whatever that might be (e.g. `~/.emacs.bmk').
-;;
-;;
+ 
 ;;(@* "The Bookmark List (Display)")
 ;;  ** The Bookmark List (Display) **
 ;;
@@ -1134,12 +1420,18 @@
 ;;(@* "Tag Commands and Keys")
 ;;  *** Tag Commands and Keys ***
 ;;
-;;  There are lots of tag-related bookmark commands, and they are all
-;;  bound to keys in buffer `*Bookmark List*'.  How can you keep them
-;;  straight or remember the keys?
+;;  There are lots of tag-related bookmark commands, and most are
+;;  bound to keys in buffer `*Bookmark List*' as well as to other keys
+;;  outside it.  How can you keep the commands straight or remember
+;;  their keys?
 ;;
-;;  `C-h m' (or `?') is your friend, of course.  Beyond that, the
-;;  tag-related keys are organized as follows:
+;;  In the bookmark list display, tags-command keys begin with prefix
+;;  key `T'.  Elsewhere, they begin with prefix key `C-x p t' (or `C-x
+;;  j t', for jump commands - see (@> "Different Types of Jump Commands")).
+;;
+;;  `C-h m' (or `?') is your friend, of course.  Likewise `T C-h' and
+;;  `C-x p t C-h'.  Beyond that, the tag-related keys that are more
+;;  than two keystrokes are organized as follows:
 ;;
 ;;    They all have the prefix key `T'.
 ;;
@@ -1175,9 +1467,9 @@
 ;;  is the last (i.e., the only) one.
 ;;
 ;;  If you just hit `RET' immediately, specifying an empty set of
-;;  tags, then each of the commands does something different, but
-;;  reasonable.  For `T m *', for instance, an empty list of tags
-;;  means to mark (only) the bookmarks that have any tags at all.
+;;  tags, then each of the commands does something appropriate.  For
+;;  `T m *', for instance, an empty list of tags means to mark (only)
+;;  the bookmarks that have any tags at all.
 ;;
 ;;  Finally, for the marking/unmarking tags commands, a prefix
 ;;  argument flips the sense of the command, in this way:
@@ -1194,12 +1486,26 @@
 ;;
 ;;  You'll figure it out ;-).
 ;;
-;;  Remember that `C-h RET' shows you the tags that belong to the
-;;  current bookmark (under the cursor).  And `C-u C-h RET' shows you
-;;  the full internal form of the tags, that is, the name+value pairs.
+;;  Other important keys pertaining to tags (the keys in parentheses
+;;  work in any buffer, not just buffer `*Bookmark List*'):
 ;;
-;;  You can also sort bookmarks according to how they are tagged, even
-;;  in complex ways.  See (@> "Sorting Bookmarks").
+;;  * `C-h RET' (`C-x p ?') shows you the tags that belong to a
+;;    bookmark.  With a prefix argument it shows you the full internal
+;;    form of the tags, that is, the name+value pairs.
+;;
+;;  * `T e' (`C-x p t e') lets you edit a bookmark's tags.
+;;
+;;  * `T l' (`C-x p t l') lists all tags currently known to Emacs
+;;     (across all bookmarks).
+;;
+;;  * `T +' (`C-x p t + b') adds some tags to a bookmark.
+;;    `T -' (`C-x p t - b') removes some tags from a bookmark.
+;;    `T 0' (`C-x p t 0) removes all tags from a bookmark.
+;;    `T d' (`C-x p t d) removes a set of tags from all bookmarks.
+;;
+;;  In the bookmark list display you can also sort bookmarks according
+;;  to how they are tagged, even in complex ways.  See
+;;  (@> "Sorting Bookmarks").
 ;;
 ;;
 ;;(@* "Tags: Sets of Bookmarks")
@@ -1512,8 +1818,7 @@
 ;;
 ;;  See also (@> "Use Bookmark+ with Icicles") - the same technique is
 ;;  used in Icicles for sorting bookmarks as completion candidates.
-;;
-;;
+ 
 ;;(@* "Bookmarks for Specific Files or Buffers")
 ;;  ** Bookmarks for Specific Files or Buffers **
 ;;
@@ -1551,8 +1856,7 @@
 ;;  Finally, because the bookmarks in the current buffer can be of
 ;;  particular interest, `C-x p .' opens the bookmark-list display for
 ;;  only those bookmarks.
-;;
-;;
+ 
 ;;(@* "Cycling, Navigation List, Autonaming")
 ;;  ** "Cycling, Navigation List, Autonaming" **
 ;;
@@ -1883,8 +2187,7 @@
 ;;              'bmkp-delete-autonamed-this-buffer-no-confirm)
 ;;    (add-hook 'kill-emacs-hook
 ;;              'bmkp-delete-autonamed-no-confirm)
-;;
-;;
+ 
 ;;(@* "Highlighting Bookmark Locations")
 ;;  ** Highlighting Bookmark Locations **
 ;;
@@ -1897,8 +2200,7 @@
 ;;  might fall somewhere between.  It depends on what kind of
 ;;  bookmarks you have and how you use them.  Bookmark+ lets you
 ;;  choose.  By default, no bookmarks are highlighted.
-;;
-;;
+ 
 ;;(@* "Defining How to Highlight")
 ;;  ** Defining How to Highlight **
 ;;
@@ -2035,8 +2337,7 @@
 ;;
 ;;  The first three values highlight only the bookmark being set or
 ;;  jumped to.
-;;
-;;
+ 
 ;;(@* "Using Highlighted Bookmarks")
 ;;  ** Using Highlighted Bookmarks **
 ;;
@@ -2068,8 +2369,7 @@
 ;;
 ;;  * `C-x p C-down', `C-x p C-up' - Cycle to the next and previous
 ;;                                   highlighted bookmark.
-;;
-;;
+ 
 ;;(@* "Use Bookmark+ with Icicles")
 ;;  ** Use Bookmark+ with Icicles **
 ;;
@@ -2161,8 +2461,59 @@
 ;;
 ;;  * You can define Icicles sets of bookmarks, persistent or not, and
 ;;    act on their members in various ways.
+ 
+;;(@* "If you use Emacs 20 and Also a More Recent Version")
+;;  ** If you use Emacs 20 and Also a More Recent Version **
 ;;
+;;  This section pertains to you *ONLY* in the rare case that you use
+;;  both Emacs 20 and a later version, and you share the same bookmark
+;;  file or bookmark-list display state file between the versions.
 ;;
+;;  By default starting with Emacs 21, Bookmark+ uses bookmark names
+;;  that are propertized with the full bookmark information, in order
+;;  to let you use multiple bookmarks with the same bookmark name.  An
+;;  example of this is having two autofile bookmarks for files with
+;;  the same name in different directories.
+;;
+;;  When you save the bookmark list (`bookmark-alist') or a full
+;;  snapshot of the bookmark-list display state (e.g., using command
+;;  `bmkp-bmenu-define-full-snapshot-command'), these propertized
+;;  names are saved.
+;;
+;;  However, Emacs 20 cannot read a serialized version of the bookmark
+;;  list if it has such propertized names (the property value is a
+;;  list that contains the propertized string, hence circular) - it
+;;  will raise a read error.  To avoid this, when Bookmark+ in Emacs
+;;  20 saves bookmarks or a full snapshot of the bookmark-list display
+;;  state, it unpropertizes the bookmark names.  You can read the
+;;  resulting files in any Emacs version.
+;;
+;;  But if you happen to save bookmark information using a later
+;;  version of Emacs (e.g. Emacs 23) and you then read that recorded
+;;  state using Emacs 20, the read will fail.  If this happens then
+;;  you will need to re-save the affected file(s) using a later Emacs
+;;  version. In the later Emacs version:
+;;
+;;  1. `M-x set-variable bmkp-propertize-bookmark-names-flag nil',
+;;     to stop using propertized bookmark names.
+;;  2. `C-x r l' to display the bookmark list.
+;;  3. `g', to refresh the display.
+;;  4. `S' to save the bookmark list.
+;;  5. `M-x bmkp-save-menu-list-state', to save the display state.
+;;
+;;  You will now be able to use your bookmarks in Emacs 20 again.
+;;
+;;  If you will often be going back and forth between Emacs 20 and a
+;;  later version, then you may prefer to simply turn off the use of
+;;  propertized bookmark names, to avoid the hassle mentioned above.
+;;  You can do that by customizing user option
+;;  `bmkp-propertize-bookmark-names-flag' to nil.
+;;
+;;  Be aware, however, that if you do that you will not be able to
+;;  take full advantage of Bookmark+ features such as autofile
+;;  bookmarks, which require the ability to have multiple bookmarks
+;;  with the same name.  See (@> "Autofile Bookmarks").
+ 
 ;;(@* "Bookmark Compatibility with Vanilla Emacs (`bookmark.el')")
 ;;  ** Bookmark Compatibility with Vanilla Emacs (`bookmark.el') **
 ;;
@@ -2202,8 +2553,7 @@
 ;;
 ;;  Bottom line: Use `bookmark+.el' to access bookmarks created using
 ;;  `bookmark+.el'.
-;;
-;;
+ 
 ;;(@* "New Bookmark Structure")
 ;;  ** New Bookmark Structure **
 ;;
