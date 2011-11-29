@@ -22,9 +22,6 @@
 [submodule "vendor/70rubyonrails/rhtml"]
 	path = vendor/70rubyonrails/rhtml
 	url = git://github.com/crazycode/rhtml.git
-[submodule "vendor/90yasnippet/snippets"]
-	path = vendor/90yasnippet/snippets
-	url = git://github.com/crazycode/snippets.git
 [submodule "vendor/70rubyonrails/emacs-rails"]
 	path = vendor/70rubyonrails/emacs-rails
 	url = git://github.com/crazycode/emacs-rails.git
@@ -49,3 +46,9 @@
 [submodule "vendor/70rubyonrails/util/test/espuds"]
 	path = vendor/70rubyonrails/util/test/espuds
 	url = git://github.com/rejeep/espuds.git
+[submodule "vendor/70rubyonrails/rspec-mode"]
+	path = vendor/70rubyonrails/rspec-mode
+	url = https://github.com/pezra/rspec-mode.git
+[submodule "vendor/01base/yasnippet"]
+	path = vendor/01base/yasnippet
+	url = git://github.com/capitaomorte/yasnippet.git
