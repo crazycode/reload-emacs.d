@@ -40,3 +40,12 @@
 [submodule "vendor/85authoring/showoff-mode"]
 	path = vendor/85authoring/showoff-mode
 	url = git://github.com/crazycode/showoff-mode.git
+[submodule "vendor/70rubyonrails/inf-ruby"]
+	path = vendor/70rubyonrails/inf-ruby
+	url = https://github.com/nonsequitur/inf-ruby.git
+[submodule "vendor/70rubyonrails/util/test/ecukes"]
+	path = vendor/70rubyonrails/util/test/ecukes
+	url = git://github.com/rejeep/ecukes.git
+[submodule "vendor/70rubyonrails/util/test/espuds"]
+	path = vendor/70rubyonrails/util/test/espuds
+	url = git://github.com/rejeep/espuds.git
