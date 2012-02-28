@@ -1,17 +1,17 @@
 (require 'rvm)
 (rvm-use-default) ;; use rvm’s default ruby for the current Emacs session
 
-(defun crazycode/indent-and-complete ()
-  "Indent line and Complete if point is at end of left a leave word."
-  (interactive)
-  (cond
-   ;; hippie-expand
-   ((looking-at "\\_>")
-    ;; skip message output
-    (flet ((message (format-string &rest args) nil))
-      (hippie-expand nil))))
-  ;; always indent line
-  (indent-for-tab-command))
+;; (defun crazycode/indent-and-complete ()
+;;   "Indent line and Complete if point is at end of left a leave word."
+;;   (interactive)
+;;   (cond
+;;    ;; hippie-expand
+;;    ((looking-at "\\_>")
+;;     ;; skip message output
+;;     (flet ((message (format-string &rest args) nil))
+;;       (hippie-expand nil))))
+;;   ;; always indent line
+;;   (indent-for-tab-command))
 
 (setq hippie-expand-try-functions-list
       '(
@@ -45,7 +45,7 @@
             (require 'ruby-electric)
             (ruby-electric-mode t)
             (textmate-mode t)
-            (local-set-key (kbd "TAB") 'crazycode/indent-and-complete)
+;;            (local-set-key (kbd "TAB") 'crazycode/indent-and-complete)
             (local-set-key (kbd "<return>") 'ruby-reindent-then-newline-and-indent)
             (local-set-key (kbd "RET") 'ruby-reindent-then-newline-and-indent)
             ;;(local-set-key "\C-h" 'ri)
