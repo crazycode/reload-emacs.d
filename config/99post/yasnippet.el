@@ -7,7 +7,7 @@
 ;; try out snippets in ~/Downloads/interesting-snippets
 ;;(setq yas/root-directory '("~/.emacs.d/vendor/90snippets/my-snippets"
 ;;                           "~/.emacs.d/vendor/01base/yasnippet/snippets"))
-(setq yas/snippet-dirs "~/.emacs.d/vendor/90snippets/my-snippets")
+(setq yas/snippet-dirs '("~/.emacs.d/vendor/90snippets/my-snippets"))
 
 ;; Map `yas/load-directory' to every element
 ;;(mapc 'yas/load-directory yas/root-directory)
@@ -22,5 +22,4 @@
 
 ;;(add-hook 'ruby-mode-hook 'yas/minor-mode-on)
 (setq yas/prompt-functions '(yas/dropdown-prompt yas/x-prompt))
-
 
