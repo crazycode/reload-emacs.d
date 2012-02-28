@@ -35,3 +35,5 @@
 (setq calendar-longitude 121.48)
 (setq calendar-location-name "Shanghai")
 
+(custom-set-variables
+ '(eclim-eclipse-dirs '("/opt/eclipse/eclipse-3.7")))
