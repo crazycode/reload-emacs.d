@@ -11,3 +11,5 @@
 (setq help-at-pt-display-when-idle t)
 (setq help-at-pt-timer-delay 0.1)
 (help-at-pt-set-timer)
+
+(global-set-key "\C-c\C-epp" 'eclim-manage-projects)
