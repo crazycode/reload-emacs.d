@@ -134,6 +134,7 @@
 (global-set-key (quote [M-up]) (quote move-region-up))
 (global-set-key (quote [M-down]) (quote move-region-down))
 (global-set-key "\C-c\C-c2" 'circle-windows)
+(global-set-key "\C-c\C-x2" 'circle-windows)
 
 (add-hook 'shell-mode-hook 'my-shell-mode-hook-func)
 (defun my-shell-mode-hook-func ()
