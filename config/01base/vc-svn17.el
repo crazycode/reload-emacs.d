@@ -1,0 +1,1 @@
+(require 'vc-svn17)

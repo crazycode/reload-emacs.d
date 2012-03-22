@@ -5,6 +5,10 @@
          :root-contains-files ("t" "lib")
          :filename-regex ,(regexify-ext-list '(pl pm))
          :on-hit (lambda (p) (message (car p))))
+        ("Reeb project"
+         :root-contains-files ("Gemfile" "Rakefile")
+         :filename-regex ,(regexify-ext-list '(rb html txt md rdoc css js cucumber yml))
+         :exclude-paths ("logs" "tmp"))
         ("Ror project"
          :root-contains-files ("Gemfile" "app" "db" "public")
          :filename-regex ,(regexify-ext-list '(rb html css js cucumber yml))
@@ -49,4 +53,4 @@
        ((file-exists-p ".git")
         (git-status root))
        (t
-        (svn-status root)))))))
+        (vc-dir root nil)))))))
