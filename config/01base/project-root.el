@@ -38,8 +38,7 @@
 (global-set-key (kbd "C-c p s")
                 (lambda () (interactive)
                   (with-project-root
-                      (ansi-term (getenv "SHELL")
-                                 (concat (car project-details) "-shell")))))
+                      (eshell))))
 
 (global-set-key
  (kbd "C-c p v")
