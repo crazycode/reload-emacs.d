@@ -6,9 +6,9 @@
          :filename-regex ,(regexify-ext-list '(pl pm))
          :on-hit (lambda (p) (message (car p))))
         ("Reeb project"
-         :root-contains-files ("Gemfile" "Rakefile")
-         :filename-regex ,(regexify-ext-list '(rb html txt md rdoc css js cucumber yml))
-         :exclude-paths ("logs" "tmp"))
+         :root-contains-files ("Gemfile" "website" "Guardfile" "module")
+         :filename-regex ,(regexify-ext-list '(java html css js yml xml conf rb))
+         :exclude-paths ("modules" "lib" "logs" "test-result" "precompiled" "eclipse"))
         ("Ror project"
          :root-contains-files ("Gemfile" "app" "db" "public")
          :filename-regex ,(regexify-ext-list '(rb html css js cucumber yml))
