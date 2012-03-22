@@ -5,13 +5,21 @@
          :root-contains-files ("t" "lib")
          :filename-regex ,(regexify-ext-list '(pl pm))
          :on-hit (lambda (p) (message (car p))))
-        ("Django project"
-         :root-contains-files ("manage.py")
-         :filename-regex ,(regexify-ext-list '(py html css js))
-         :exclude-paths ("media" "contrib"))
+        ("Ror project"
+         :root-contains-files ("Gemfile" "app" "db" "public")
+         :filename-regex ,(regexify-ext-list '(rb html css js cucumber yml))
+         :exclude-paths ("logs" "tmp"))
+        ("Ruby project"
+         :root-contains-files ("Gemfile" "Rakefile")
+         :filename-regex ,(regexify-ext-list '(rb html txt md rdoc css js cucumber yml))
+         :exclude-paths ("logs" "tmp"))
+        ("Emacs dotfile"
+         :root-contains-files ("init.el")
+         :filename-regex ,(regexify-ext-list '(el yasnippet))
+         :exclude-paths ("auto-save-list" "backup" "snippets" "tmp"))
         ("Web Project"
          :root-contains-files ("app" "test" "conf")
-         :filename-regex ,(regexify-ext-list '(java html css js yml xml conf))
+         :filename-regex ,(regexify-ext-list '(java html css js yml xml conf rb))
          :exclude-paths ("modules" "lib" "logs" "test-result" "precompiled" "eclipse"))
         ))
 
@@ -41,4 +49,4 @@
        ((file-exists-p ".git")
         (git-status root))
        (t
-        (vc-directory root nil)))))))
+        (svn-status root)))))))
