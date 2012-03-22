@@ -1,13 +1,17 @@
 ;; Function keys
 (global-set-key [f1] 'manual-entry)
 (global-set-key [f2] 'info)
-(global-set-key [f3] 'repeat-complex-command)
-(global-set-key [f4] 'advertised-undo)
+;; F3 Macro begin record
+;; F4 Macro end record or Run Macro
 (global-set-key [f5] 'eval-current-buffer)
 (global-set-key [f6] 'buffer-menu)
 (global-set-key [f7] 'other-window)
 (global-set-key [f8] 'find-file)
 
+(global-set-key [f9] 'repeat-complex-command)
+;; F10 (menu-bar-open &optional FRAME)
+(global-set-key [f11] 'advertised-undo)
+;; F11 (org-remember &optional GOTO ORG-FORCE-REMEMBER-TEMPLATE-CHAR)
 
 (defun my-switch-to-last-buffer ()
       (interactive)

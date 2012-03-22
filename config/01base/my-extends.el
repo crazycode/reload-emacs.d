@@ -139,7 +139,7 @@
 (add-hook 'shell-mode-hook 'my-shell-mode-hook-func)
 (defun my-shell-mode-hook-func ()
   (set-process-sentinel (get-buffer-process (current-buffer))
-         #'my-shell-mode-kill-buffer-on-exit)
+         'my-shell-mode-kill-buffer-on-exit)
      )
 (defun my-shell-mode-kill-buffer-on-exit (process state)
      (message "%s" state)
