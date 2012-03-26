@@ -6,9 +6,11 @@
 (global-set-key [f5] 'eval-current-buffer)
 (global-set-key [f6] 'buffer-menu)
 (global-set-key [f7] 'other-window)
-(global-set-key [f8] 'find-file)
 
-(global-set-key [f9] 'repeat-complex-command)
+;; F8 F9 used by org-mode
+;; (global-set-key [f8] 'find-file)
+;;(global-set-key [f9] 'repeat-complex-command)
+
 ;; F10 (menu-bar-open &optional FRAME)
 (global-set-key [f11] 'advertised-undo)
 ;; F11 (org-remember &optional GOTO ORG-FORCE-REMEMBER-TEMPLATE-CHAR)
