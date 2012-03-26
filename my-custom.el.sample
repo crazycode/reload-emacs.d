@@ -37,3 +37,6 @@
 
 (custom-set-variables
  '(eclim-eclipse-dirs '("/opt/eclipse/eclipse-3.7")))
+
+;; see my-font.el
+(setq my-default-font-size ":pixelsize=14")
