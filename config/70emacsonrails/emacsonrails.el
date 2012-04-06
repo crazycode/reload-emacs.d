@@ -4,9 +4,9 @@
 (setq ri-ruby-script "~/.emacs.d/vendor/20language/ri-emacs/ri-emacs.rb")
 (autoload 'ri "ri-ruby" nil t)
 
-(add-hook 'nxml-mode-hook
-          (lambda ()
-            (setq local-abbrev-table nxml-mode-abbrev-table)))
+;; (add-hook 'nxml-mode-hook
+;;          (lambda ()
+;;            (setq local-abbrev-table nxml-mode-abbrev-table)))
 
 ;;(defun try-complete-abbrev (old)
 ;;  (if (expand-abbrev) t nil))
