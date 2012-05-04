@@ -171,3 +171,5 @@ scroll-conservatively 10000)
 
 ;;Winner Mode is a global minor mode. When activated, it allows to “undo” (and “redo”) changes in the window configuration with the key commands ‘C-x left’ and ‘C-x right’. In Emacs 22, these keybindings have been changed to ‘C-c left’ and ‘C-c right’.
 (winner-mode 1)
+
+(setq vc-follow-symlinks nil)
