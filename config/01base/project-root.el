@@ -24,7 +24,7 @@
         ("Web Project"
          :root-contains-files ("app" "test" "conf")
          :filename-regex ,(regexify-ext-list '(java html css js yml xml conf rb))
-         :exclude-paths ("modules" "lib" "logs" "test-result" "precompiled" "eclipse"))
+         :exclude-paths ("lib" "logs" "test-result" "precompiled" "eclipse"))
         ))
 
 (global-set-key (kbd "C-c p f") 'project-root-find-file)
