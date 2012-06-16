@@ -1,5 +1,8 @@
 ;;启用部分补全功能，如输入M-x q r r相当于M-x query-replace-regexp
-(partial-completion-mode 1)
+;; (partial-completion-mode t)
+(setq completion-styles '(partial-completion initials))
+(setq completion-pcm-complete-word-inserts-delimiters t)
+
 ;;在minibuffer里启用自动补全函数和变量
 (icomplete-mode 1)
 ;;所有的问题用y/n方式，不用yes/no方式。有点懒，只想输入一个字母
@@ -69,7 +72,7 @@ scroll-conservatively 10000)
 (desktop-save-mode 1)
 
 ;;去掉工具栏
-(tool-bar-mode nil)
+(tool-bar-mode -1)
 
 ;;备份设置
 ;;emacs还有一个自动保存功能，默认在~/.emacs.d/auto-save-list里，这个非常有用，我这里没有改动，具体可以参见Sams teach yourself emacs in 24hours(我简称为sams24)
