@@ -61,3 +61,6 @@
 [submodule "vendor/70rubyonrails/rvm"]
 	path = vendor/70rubyonrails/rvm
 	url = https://github.com/senny/rvm.el.git
+[submodule "vendor/01base/ace-jump-mode"]
+	path = vendor/01base/ace-jump-mode
+	url = git://github.com/winterTTr/ace-jump-mode.git
