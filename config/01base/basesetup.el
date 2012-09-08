@@ -160,7 +160,7 @@ scroll-conservatively 10000)
 ;; ;; make #! scripts executable after saving them
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
-(menu-bar-mode 0)  ;; 默认不打开菜单条，通过C-F10来切换打开
+(menu-bar-mode 1)  ;; 默认不打开菜单条，通过C-F10来切换打开； Mac下打开菜单，不会占用屏幕空间
 
 ;; 保存时自动把TAB换成空格，同时清除掉尾部空格（除Makefile之类的文件外，见untabify-file.el)
 (require 'untabify-file)

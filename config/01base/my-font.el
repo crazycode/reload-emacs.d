@@ -38,16 +38,14 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
                         charset
                         zh-font))))
 
-
 ;; set my default font on emacs23 gui, auto select font.
 (defun setup-emacs23-default-font (frame)
   ;;(interactive)
   (if (and (window-system frame) (>= emacs-major-version 23))
       (progn
         (my-set-font
-         '("Monaco" "DejaVu Sans Mono" "Monospace" "Courier New") my-default-font-size
-         '("Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体"))
-
+         '("DejaVu Sans Mono" "Inconsolata" "Droid Sans Mono" "Monaco" "Monospace" "Courier New") my-default-font-size
+         '("YaHei Consolas Hybrid" "Microsoft YaHei Mono" "Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体"))
         ;;(set-default-font "Yahei Consolas Hybrid-10")
         ;;(set-fontset-font (frame-parameter nil 'font)
         ;;                 'han '("Yahei Consolas Hybrid"."unicode-bmp"))
