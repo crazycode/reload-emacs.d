@@ -889,7 +889,7 @@ See also `zencoding-expand-line'."
           (delete-region (second expr) (third expr))
           (insert filled)
           (indent-region (second expr) (point))
-          (yas/expand-snippet
+          (yas-expand-snippet
            (buffer-substring (second expr) (point))
            (second expr) (point))))))
 

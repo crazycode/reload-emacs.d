@@ -2,6 +2,6 @@
 
 (add-hook 'scala-mode-hook
             '(lambda ()
-               (yas/minor-mode-on)
+               (yas-minor-mode-on)
                ))
 

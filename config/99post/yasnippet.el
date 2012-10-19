@@ -1,25 +1,39 @@
 (require 'yasnippet)
-;;(add-to-list 'yas/extra-mode-hooks
-;;             'ruby-mode-hook)
-(yas/initialize)
 
-;; Develop in ~/emacs.d/mysnippets, but also
-;; try out snippets in ~/Downloads/interesting-snippets
-;;(setq yas/root-directory '("~/.emacs.d/vendor/90snippets/my-snippets"
-;;                           "~/.emacs.d/vendor/01base/yasnippet/snippets"))
-(setq yas/snippet-dirs "~/.emacs.d/vendor/90snippets/my-snippets")
+(setq yas-snippet-dirs
+      '("~/.emacs.d/vendor/90snippets/my-snippets"            ;; personal snippets
+        ))
 
-;; Map `yas/load-directory' to every element
-;;(mapc 'yas/load-directory yas/root-directory)
-(yas/load-directory yas/snippet-dirs)
+(yas-global-mode 1)
 
-(setq yas/global-mode t)
-(setq yas/indent-line 'auto)
-;; (add-hook 'ruby-mode-hook
-;;           '(lambda ()
-;;              (make-variable-buffer-local 'yas/trigger-key)
-;;              (setq yas/trigger-key [tab])))
+;;; use popup menu for yas-choose-value
+(require 'popup)
 
-;;(add-hook 'ruby-mode-hook 'yas/minor-mode-on)
-(setq yas/prompt-functions '(yas/dropdown-prompt yas/x-prompt))
+;; add some shotcuts in popup menu mode
+(define-key popup-menu-keymap (kbd "M-n") 'popup-next)
+(define-key popup-menu-keymap (kbd "TAB") 'popup-next)
+(define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
+(define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
+(define-key popup-menu-keymap (kbd "M-p") 'popup-previous)
+
+(defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
+  (when (featurep 'popup)
+    (popup-menu*
+     (mapcar
+      (lambda (choice)
+        (popup-make-item
+         (or (and display-fn (funcall display-fn choice))
+             choice)
+         :value choice))
+      choices)
+     :prompt prompt
+     ;; start isearch mode immediately
+     :isearch t
+     )))
+
+;; (setq yas-prompt-functions '(yas-popup-isearch-prompt yas-ido-prompt yas-no-prompt))
+(setq yas-prompt-functions '(yas-dropdown-prompt yas-ido-prompt yas-no-prompt))
+
+
+(setq yas-indent-line 'auto)
 
