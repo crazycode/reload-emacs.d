@@ -1,7 +1,7 @@
 (require 'yasnippet)
 
 (setq yas-snippet-dirs
-      '("~/.emacs.d/vendor/90snippets/my-snippets"            ;; personal snippets
+      '("~/.emacs.d/snippets" "~/.emacs.d/snippets2"           ;; personal snippets
         ))
 
 (yas-global-mode 1)

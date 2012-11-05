@@ -54,7 +54,7 @@
 	url = git://github.com/capitaomorte/yasnippet.git
 [submodule "vendor/25java/eclim"]
 	path = vendor/25java/eclim
-	url = git://github.com/senny/emacs-eclim.git
+	url = git://github.com/crazycode/emacs-eclim.git
 [submodule "vendor/01base/company-mode"]
 	path = vendor/01base/company-mode
 	url = git://github.com/nschum/company.git
