@@ -1,11 +1,14 @@
 ;;; slim-mode.el --- Major mode for editing Slim files
 
 ;; Copyright (c) 2007, 2008 Nathan Weizenbaum
-;; Modified slightly for Slim by Daniel Mendler
+;; Copyright (c) 2009 - 2012 Daniel Mendler
+;; Copyright (c) 2012 Bozhidar Batsov
 
 ;; Author: Nathan Weizenbaum
-;; URL: http://github.com/stonean/slim
-;; Version: 1.0
+;; Author: Daniel Mendler
+;; Author: Bozhidar Batsov
+;; URL: http://github.com/minad/emacs-slim
+;; Version: 1.1
 ;; Keywords: markup, language
 
 ;;; Commentary:
@@ -25,7 +28,8 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (require 'cl))
 
 ;; User definable variables
 
@@ -51,19 +55,12 @@ line itself."
   :type 'boolean
   :group 'slim)
 
-(defface slim-tab-face
-  '((((class color)) (:background "hotpink"))
-    (t (:reverse-video t)))
-  "Face to use for highlighting tabs in Slim files."
-  :group 'faces
-  :group 'slim)
-
 (defvar slim-indent-function 'slim-indent-p
   "This function should look at the current line and return true
 if the next line could be nested within this line.")
 
 (defvar slim-block-openers
-  `("^ *\\([\\.#a-z][^ \t]*\\)\\(\\[.*\\]\\)?[ \t]*$"
+  `("^ *\\([\\.#a-z][^ \t]*\\)\\(\\[.*\\]\\)?"
     "^ *[-=].*do[ \t]*\\(|.*|[ \t]*\\)?$"
     ,(concat "^ *-[ \t]*\\("
              (regexp-opt '("if" "unless" "while" "until" "else"
@@ -81,32 +78,80 @@ text nested beneath them.")
 (defun slim-nested-re (re)
   (concat "^\\( *\\)" re "\n\\(?:\\(?:\\1 .*\\)\n\\)*"))
 
-(defconst slim-font-lock-keywords
-  `((,(slim-nested-re "/.*")              0 font-lock-comment-face)                 ;; Comment block
-    (,(slim-nested-re "[a-z0-9_]+:")      0 font-lock-string-face)                  ;; Embedded block
-    (,(slim-nested-re "[\|'`].*")         0 font-lock-string-face)                  ;; Text block
-    ("^!.*"                               0 font-lock-constant-face)                ;; Directive
-    ("^ *\\(\t\\)"                        1 'slim-tab-face)
-    ("\\('[^']*'\\)"                      1 font-lock-string-face append)           ;; Single quote string TODO
-    ("\\(\"[^\"]*\"\\)"                   1 font-lock-string-face append)           ;; Double quoted string TODO
-    ("@[a-z0-9_]+"                        0 font-lock-variable-name-face append)    ;; Class variable TODO
-    ("^ *\\(#[a-z0-9_]+\/?\\)"            1 font-lock-keyword-face)                 ;; #id
-    ("^ *\\(\\.[a-z0-9_]+\/?\\)"          1 font-lock-type-face)                    ;; .class
-    ("^ *\\([a-z0-9_]+\/?\\)"             1 font-lock-function-name-face)           ;; div
-    ("^ *\\(#[a-z0-9_]+\/?\\)"            (1 font-lock-keyword-face)                ;; #id.class
-     ("\\.[a-z0-9_]+" nil nil             (0 font-lock-type-face)))
-    ("^ *\\(\\.[a-z0-9_]+\/?\\)"          (1 font-lock-type-face)                   ;; .class.class
-     ("\\.[a-z0-9_]+" nil nil             (0 font-lock-type-face)))
-    ("^ *\\(\\.[a-z0-9_]+\/?\\)"          (1 font-lock-type-face)                   ;; .class#id
-     ("\\#[a-z0-9_]+" nil nil             (0 font-lock-keyword-face)))
-    ("^ *\\([a-z0-9_]+\/?\\)"             (1 font-lock-function-name-face)          ;; div.class
-     ("\\.[a-z0-9_]+" nil nil             (0 font-lock-type-face)))
-    ("^ *\\([a-z0-9_]+\/?\\)"             (1 font-lock-function-name-face)          ;; div#id
-     ("\\#[a-z0-9_]+" nil nil             (0 font-lock-keyword-face)))
-    ("^ *\\(\\(==?|-\\) .*\\)"            1 font-lock-preprocessor-face prepend)    ;; ==, =, -
-    ("^ *[\\.#a-z0-9_]+\\(==? .*\\)"      1 font-lock-preprocessor-face prepend)))  ;; tag ==, tag =
+(defvar html-tags
+  '("a" "abbr" "acronym" "address" "applet" "area" "article" "aside"
+    "audio" "b" "base" "basefont" "bdo" "big" "blockquote" "body"
+    "br" "button" "canvas" "caption" "center" "cite" "code" "col"
+    "colgroup" "command" "datalist" "dd" "del" "details" "dialog" "dfn"
+    "dir" "div" "dl" "dt" "em" "embed" "fieldset" "figure" "font" "footer"
+    "form" "frame" "frameset" "h1" "h2" "h3" "h4" "h5" "h6"
+    "head" "header" "hgroup" "hr" "html" "i"
+    "iframe" "img" "input" "ins" "keygen" "kbd" "label" "legend" "li" "link"
+    "map" "mark" "menu" "meta" "meter" "nav" "noframes" "noscript" "object"
+    "ol" "optgroup" "option" "output" "p" "param" "pre" "progress" "q" "rp"
+    "rt" "ruby" "s" "samp" "script" "section" "select" "small" "source" "span"
+    "strike" "strong" "style" "sub" "sup" "table" "tbody" "td" "textarea" "tfoot"
+    "th" "thead" "time" "title" "tr" "tt" "u" "ul" "var" "video" "xmp")
+  "A list of all valid HTML4/5 tag names.")
 
-(defconst slim-embedded-re "^ *[a-z0-9_]+:")
+(defvar html-tags-re (concat "^ *\\(" (regexp-opt html-tags 'words) "\/?\\)"))
+
+(defconst slim-font-lock-keywords
+  `(;; comment block
+    (,(slim-nested-re "/.*")
+     0 font-lock-comment-face)
+    ;; embedded block
+    (,(slim-nested-re "\\([a-z0-9_]+:\\)")
+     0 font-lock-preprocessor-face)
+    ;; text block
+    (,(slim-nested-re "[\|'`].*")
+     0 font-lock-string-face)
+    ;; directive
+    ("^!.*"
+     0 font-lock-constant-face)
+    ;; Single quote string TODO
+    ("[^=]\\('[^'\n]*'\\)"
+     1 font-lock-string-face append)
+    ;; Double quoted string TODO
+    ("\\(\"[^\"]*\"\\)"
+     1 font-lock-string-face append)
+    ;; Class variable TODO
+    ("@[a-z0-9_]+"
+     0 font-lock-variable-name-face append)
+    ;; @var.method
+    ("@[a-z0-9_]+"
+     (0 font-lock-variable-name-face)
+     ("\\.[a-z0-9_-]+" nil nil
+      (0 font-lock-variable-name-face)))
+    ;; ruby symbol
+    (":\\w+" . font-lock-constant-face)
+    ;; ruby symbol (1.9)
+    ("\\w+:" . font-lock-constant-face)
+    ;; #id
+    ("^ *[a-z0-9_.-]*\\(#[a-z0-9_-]+\/?\\)"
+     1 font-lock-keyword-face)
+    ;; .class
+    ("^ *[a-z0-9_#-]*\\(\\(\\.[a-z0-9_-]+\/?\\)+\\)"
+     1 font-lock-type-face)
+    ;; tag
+    (,html-tags-re
+     1 font-lock-function-name-face)
+    ;; doctype
+    ("^\\(doctype .*$\\)"
+     1 font-lock-preprocessor-face)
+    ;; ==', =', -
+    ("^ *\\(==?'?\\|-\\)"
+      (1 font-lock-preprocessor-face)
+      (,(regexp-opt
+         '("if" "else" "elsif" "for" "in" "do" "unless"
+           "while" "yield" "not" "and" "or")
+         'words) nil nil
+           (0 font-lock-keyword-face)))
+    ;; tag ==, tag =
+    ("^ *[\\.#a-z0-9_-]+.*[^<>!]\\(==?'?\\) +"
+     1 font-lock-preprocessor-face)))
+
+(defconst slim-embedded-re "^ *[a-z0-9_-]+:")
 (defconst slim-comment-re  "^ */")
 
 (defun* slim-extend-region ()
@@ -402,7 +447,7 @@ the current line."
   (mapconcat 'identity (make-list slim-indent-offset " ") ""))
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.slim$" . slim-mode))
+(add-to-list 'auto-mode-alist '("\\.slim\\'" . slim-mode))
 
 ;; Setup/Activation
 (provide 'slim-mode)
