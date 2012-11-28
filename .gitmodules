@@ -55,3 +55,6 @@
 [submodule "vendor/01base/ace-jump-mode"]
 	path = vendor/01base/ace-jump-mode
 	url = git://github.com/winterTTr/ace-jump-mode.git
+[submodule "vendor/70rubyonrails/rinari"]
+	path = vendor/70rubyonrails/rinari
+	url = git@github.com:eschulte/rinari.git
