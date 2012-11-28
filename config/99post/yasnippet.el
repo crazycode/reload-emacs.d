@@ -36,3 +36,11 @@
 
 
 (setq yas-indent-line 'auto)
+
+;; use auto-complete
+(require 'yas-auto-complete)
+
+(add-to-list 'ac-sources `ac-new-yas-source)
+(define-key ac-complete-mode-map "\t" 'ac-complete)
+(define-key ac-complete-mode-map "\r" nil)
+(setq yas/trigger-key "TAB")

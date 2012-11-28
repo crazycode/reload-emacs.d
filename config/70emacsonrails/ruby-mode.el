@@ -56,3 +56,21 @@
             (local-set-key (kbd "<return>") 'ruby-reindent-then-newline-and-indent)
             (local-set-key (kbd "RET") 'ruby-reindent-then-newline-and-indent)
             ))
+
+
+;; Rsense
+(setq rsense-home (expand-file-name "~/opt/rsense-0.3"))
+(require 'rsense)
+
+;; Rsense + Autocomplete
+(add-hook 'ruby-mode-hook
+          (lambda ()
+            (add-to-list 'ac-sources 'ac-source-rsense-method)
+            (add-to-list 'ac-sources 'ac-source-rsense-constant)))
+
+;; Complete by C-c .
+(add-hook 'ruby-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-c .") 'rsense-complete)))
+
+;;
