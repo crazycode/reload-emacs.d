@@ -46,9 +46,6 @@
 [submodule "vendor/01base/yasnippet"]
 	path = vendor/01base/yasnippet
 	url = git://github.com/capitaomorte/yasnippet.git
-[submodule "vendor/01base/company-mode"]
-	path = vendor/01base/company-mode
-	url = git://github.com/nschum/company.git
 [submodule "vendor/70rubyonrails/rvm"]
 	path = vendor/70rubyonrails/rvm
 	url = https://github.com/senny/rvm.el.git
