@@ -22,9 +22,6 @@
 [submodule "vendor/70rubyonrails/rhtml"]
 	path = vendor/70rubyonrails/rhtml
 	url = git://github.com/crazycode/rhtml.git
-[submodule "vendor/70rubyonrails/emacs-rails"]
-	path = vendor/70rubyonrails/emacs-rails
-	url = git://github.com/crazycode/emacs-rails.git
 [submodule "vendor/70rubyonrails/cucumber"]
 	path = vendor/70rubyonrails/cucumber
 	url = git://github.com/crazycode/cucumber.el.git
