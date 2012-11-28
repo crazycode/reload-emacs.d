@@ -72,7 +72,7 @@ scroll-conservatively 10000)
 (desktop-save-mode 1)
 
 ;;去掉工具栏
-;; (tool-bar-mode -1)
+(tool-bar-mode -1)
 
 ;;备份设置
 ;;emacs还有一个自动保存功能，默认在~/.emacs.d/auto-save-list里，这个非常有用，我这里没有改动，具体可以参见Sams teach yourself emacs in 24hours(我简称为sams24)

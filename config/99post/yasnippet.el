@@ -31,9 +31,8 @@
      :isearch t
      )))
 
-;; (setq yas-prompt-functions '(yas-popup-isearch-prompt yas-ido-prompt yas-no-prompt))
-(setq yas-prompt-functions '(yas-dropdown-prompt yas-ido-prompt yas-no-prompt))
+(setq yas-prompt-functions '(yas-popup-isearch-prompt yas-ido-prompt yas-no-prompt))
+;;(setq yas-prompt-functions '(yas-dropdown-prompt yas-ido-prompt yas-no-prompt))
 
 
 (setq yas-indent-line 'auto)
-
