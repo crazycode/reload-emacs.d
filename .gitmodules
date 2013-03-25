@@ -55,3 +55,12 @@
 [submodule "vendor/70rubyonrails/rinari"]
 	path = vendor/70rubyonrails/rinari
 	url = git@github.com:eschulte/rinari.git
+[submodule "vendor/02advedit/multiple-cursors"]
+	path = vendor/02advedit/multiple-cursors
+	url = git://github.com/emacsmirror/multiple-cursors.git
+[submodule "vendor/02advedit/expend-region"]
+	path = vendor/02advedit/expend-region
+	url = git://github.com/magnars/expand-region.el.git
+[submodule "vendor/02advedit/smart-forward"]
+	path = vendor/02advedit/smart-forward
+	url = git://github.com/magnars/smart-forward.el.git

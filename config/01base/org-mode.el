@@ -64,7 +64,9 @@
 ;; birthday.org
 ;;   记录生日或者是纪念日等信息。这个文件也是一个我的预定计划文件。
 (setq org-agenda-files
-      (list "~/Dropbox/org/newgtd.org"
+      (list "~/Dropbox/org/journal.org"
+            "~/Dropbox/org/work-journal.org"
+            "~/Dropbox/org/newgtd.org"
             "~/Dropbox/org/birthday.org"
             ))
 (setq org-refile-targets (quote (("newgtd.org" :maxlevel . 1) ("someday.org" :level . 2))))
@@ -108,7 +110,7 @@
 (setq remember-handler-functions '(org-remember-handler))
 (add-hook 'remember-mode-hook 'org-remember-apply-template)
 (define-key global-map "\C-cr" 'org-remember)
-(define-key global-map [f12] 'org-remember)
+;;(define-key global-map [f12] 'org-remember)
 
 ;; 任何任务都应该用明确的动词来表征「Next Action」的行为，并记述该动词的目的和行为的目标。这样一来你不需要再次思考任务的形式，从而简单地执行。比如，与其写「周报告」不如以「总结这一周的来表述任务的内容更加能够容易理解该做什么。
 ;; 我用以下的词汇来表征任务表：
@@ -197,4 +199,3 @@
                                         ("" "verbatim" t)
                                         ("" "color" t)
                                         ("" "tikz" t)))
-

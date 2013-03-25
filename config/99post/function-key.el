@@ -22,3 +22,9 @@
 (global-set-key (kbd "C-`") 'other-window)
 (global-set-key (kbd "C-M-;") 'ido-switch-buffer)
 (global-set-key "\M-`" 'my-switch-to-last-buffer)
+
+;; replace mac key
+(global-set-key [(hyper x)] 'smex)
+(global-set-key [(hyper l)] 'my-switch-to-last-buffer)
+(global-set-key [(hyper w)]
+                (lambda () (interactive) (kill-buffer (current-buffer))))

@@ -1,0 +1,18 @@
+;;;; Emacs Bookmark Format Version 1 ;;;;
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(#1=(#("org-remember-last-stored" 0 24
+      (bmkp-full-record #1#))
+    (filename . "~/Dropbox/org/idea.org")
+    (buffer-name . "idea.org")
+    (front-context-string . "** IDEA 如何进行记录日志")
+    (rear-context-string)
+    (front-context-region-string)
+    (rear-context-region-string)
+    (visits . 0)
+    (time . #2=(20805 11382 736169))
+    (created . #2#)
+    (position . 8)
+    (end-position . 8))
+)

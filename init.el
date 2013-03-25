@@ -22,6 +22,7 @@
 ;; 机器相关的设置放在my-custom.el
 (load "~/.emacs.d/my-custom.el")
 (mapc 'load (directory-files "~/.emacs.d/config/01base" t "\.el$"))
+(mapc 'load (directory-files "~/.emacs.d/config/02advedit" t "\.el$"))
 (mapc 'load (directory-files "~/.emacs.d/config/20languages" t "\.el$"))
 (mapc 'load (directory-files "~/.emacs.d/config/50webdev" t "\.el$"))
 (mapc 'load (directory-files "~/.emacs.d/config/70emacsonrails" t "\.el$"))
