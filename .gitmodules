@@ -64,3 +64,6 @@
 [submodule "vendor/02advedit/smart-forward"]
 	path = vendor/02advedit/smart-forward
 	url = git://github.com/magnars/smart-forward.el.git
+[submodule "vendor/50webdev/coffee-mode"]
+	path = vendor/50webdev/coffee-mode
+	url = git://github.com/defunkt/coffee-mode.git
