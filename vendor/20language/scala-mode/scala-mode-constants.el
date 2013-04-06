@@ -1,16 +1,15 @@
 ;;; -*-Emacs-Lisp-*-
 ;;; scala-mode-constants.el - 
 
-;; Copyright (C) 2009 Scala Dev Team at EPFL
+;; Copyright (C) 2009-2011 Scala Dev Team at EPFL
 ;; Authors: See AUTHORS file
 ;; Keywords: scala languages oop
-;; $Id: scala-mode-constants.el 17069 2009-02-10 08:30:51Z nielsen $
 
 ;;; License
 
 ;; SCALA LICENSE
 ;;  
-;; Copyright (c) 2002-2009 EPFL, Lausanne, unless otherwise specified.
+;; Copyright (c) 2002-2011 EPFL, Lausanne, unless otherwise specified.
 ;; All rights reserved.
 ;;  
 ;; This software was developed by the Programming Methods Laboratory of the
@@ -82,14 +81,18 @@
     (map-char-table
      (lambda (c v)
        (when v
-	 (if (listp c) (setq start (car c) end (cdr c)) 
-	   (if (= (1- c) end) (setq end c)
+         (let ((c-start) (c-end))
+           (if (listp c) 
+	       (setq c-start (car c) c-end (cdr c))
+	     (setq c-start c c-end c))
+	   (unless (= (1- c-start) end) 
 	     (if (> end (+ start 2))
 		 (setq charset (format "%s%c-%c" charset start end))
-              (while (>= end start)
-                (setq charset (format "%s%c" charset start))
-                (incf start)))
-	     (setq start c end c)))))
+	       (while (>= end start)
+		 (setq charset (format "%s%c" charset start))
+		 (incf start)))
+	     (setq start c-start))
+	   (setq end c-end))))
      charmap)
     (when (>= end start)
       (if (> end (+ start 2))
@@ -180,26 +183,49 @@ reserved keywords when used alone.")
 (defconst scala-capitalized-ident-re
   (concat "\\(\\)\\([[:upper:]]" scala-ident-re "\\)"))
 
-(defconst scala-expr-start-re
-  (concat
-   (regexp-opt '("if" "else" "for" "do" "yield") 'words) "\\|"
-   (regexp-opt '("=" "=>") t)))
+(defconst scala-if-re 
+  (regexp-opt '("if") 'words))
+
+(defconst scala-else-if-re 
+  "\\<else\\s +if\\>")
+
+(defconst scala-for-re 
+  (regexp-opt '("for") 'words))
+
+(defconst scala-case-re
+  (regexp-opt '("case") 'words))
+
+(defconst scala-class-re
+  (regexp-opt '("class") 'words))
+
+(defconst scala-value-expr-cont-re
+  (regexp-opt '("else" "yield") 'words))
+
+(defconst scala-declr-expr-start-re 
+  "[^=]=")
+
+(defconst scala-double-arrow-re 
+  "=>\\($\\|[ _({[:alpha:]]\\)")
+
+(defconst scala-class-middle-re 
+  (regexp-opt '("extends" "with") 'words))
+
+(defconst scala-class-head-re
+  (regexp-opt '("class" "object" "new") 'words))
 
 (defconst scala-expr-starter
   (mapcar (lambda (pair) (cons (car pair) (concat "\\<" (cdr pair) "\\>")))
           '(("else" . "if")
             ("yield" . "for")
-            ("do" . "for")
-            ("extends" . "class")
-            ("with" . "class")
-            ("=>" . "case"))))
+            ("while" . "do")
+            ("extends" . "class\\|object")
+            ("with" . "extends\\|new"))))
 
 (defconst scala-expr-middle-re
   (regexp-opt (mapcar #'car scala-expr-starter) 'words))
 
-(defconst scala-compound-expr-re
-  "\\<else\\s +if\\>")
-
 (defconst scala-comment-begin-or-end-re
   (concat "\\(" "^/\\*.*" "\\|" "^//.*" "\\|" ".*\\*/$" "\\)"))
+
+(defconst scala-empty-line-re  "^\\s *$")
 

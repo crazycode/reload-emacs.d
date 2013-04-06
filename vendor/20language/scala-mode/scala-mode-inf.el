@@ -1,16 +1,15 @@
 ;;; -*-Emacs-Lisp-*-
 ;;; scala-mode-inf.el - Interaction with a Scala interpreter.
 
-;; Copyright (C) 2009 Scala Dev Team at EPFL
+;; Copyright (C) 2009-2011 Scala Dev Team at EPFL
 ;; Authors: See AUTHORS file
 ;; Keywords: scala languages oop
-;; $Id: scala-mode-inf.el 17069 2009-02-10 08:30:51Z nielsen $
 
 ;;; License
 
 ;; SCALA LICENSE
 ;;  
-;; Copyright (c) 2002-2009 EPFL, Lausanne, unless otherwise specified.
+;; Copyright (c) 2002-2011 EPFL, Lausanne, unless otherwise specified.
 ;; All rights reserved.
 ;;  
 ;; This software was developed by the Programming Methods Laboratory of the
