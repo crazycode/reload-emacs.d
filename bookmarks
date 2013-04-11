@@ -2,17 +2,30 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(#1=(#("org-remember-last-stored" 0 24
+(#1=(#("org-refile-last-stored" 0 22
       (bmkp-full-record #1#))
-    (filename . "~/Dropbox/org/idea.org")
-    (buffer-name . "idea.org")
-    (front-context-string . "** IDEA 如何进行记录日志")
-    (rear-context-string)
+    (filename . "~/Dropbox/org/newgtd.org")
+    (buffer-name . "newgtd.org")
+    (front-context-string . "** TODO 学习Scala编")
+    (rear-context-string . "2013-04-14 Sun>\n")
     (front-context-region-string)
     (rear-context-region-string)
     (visits . 0)
-    (time . #2=(20805 11382 736169))
+    (time . #2=(20838 53314 621973))
     (created . #2#)
-    (position . 8)
-    (end-position . 8))
+    (position . 420)
+    (end-position . 420))
+#1=(#("org-remember-last-stored" 0 24
+      (bmkp-full-record #1#))
+    (filename . "~/Dropbox/org/journal.org")
+    (buffer-name . "journal.org")
+    (front-context-string . "** hello, world ")
+    (rear-context-string . "** 关键在于如何标识一个会话\n")
+    (front-context-region-string)
+    (rear-context-region-string)
+    (visits . 0)
+    (time . #2=(20838 35939 914718))
+    (created . #2#)
+    (position . 4187)
+    (end-position . 4187))
 )

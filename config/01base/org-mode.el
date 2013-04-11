@@ -25,6 +25,7 @@
 (setq org-agenda-todo-ignore-with-date t)
 (setq org-agenda-window-setup (quote other-window))
 (setq org-fast-tag-selection-single-key nil)
+(setq org-use-fast-todo-selection t)
 (setq org-log-done (quote (done)))
 (setq org-reverse-note-order nil)
 (setq org-tags-column -78)
@@ -32,6 +33,7 @@
 (setq org-time-stamp-rounding-minutes 5)
 (setq org-use-fast-todo-selection t)
 (setq org-use-tag-inheritance nil)
+(setq org-columns-default-format "%38ITEM(Details) %TAGS(Context) %7TODO(To Do) %5Effort(Time){:} %6CLOCKSUM{Total}")
 
 (add-to-list 'auto-mode-alist '("\.\(org\|org_archive\|txt\)$" . org-mode))
 
@@ -39,7 +41,8 @@
 (define-key global-map "\C-ca" 'org-agenda)
 (setq org-hide-leading-stars t)
 
-(setq org-log-done nil)
+
+(setq org-log-done 'time)
 (setq org-agenda-include-diary nil)
 (setq org-deadline-warning-days 7)
 (setq org-timeline-show-empty-dates t)
@@ -50,8 +53,9 @@
 (autoload 'remember "remember" nil t)
 (autoload 'remember-region "remember" nil t)
 
+;; #+SEQ_TODO: TODO(t) STARTED(s) WAITING(w) APPT(a) | DONE(d) CANCELLED(c) DEFERRED(f)
 (setq org-todo-keywords-for-agenda
-      (list "TODO(t)" "STARTED(s!)" "WAITING(w@)" "|" "CANCELED(c)" "DONE(d)"))
+      (list "TODO(t)" "STARTED(s!)" "WAITING(w@)" "APPT(a)" "|" "CANCELED(c)" "DONE(d)" "DEFERRED(f)" ))
 
 ;; newgtd.org
 ;;   最主要的文件。包括TODO，项目，预定等，到了时间需要想到的东西都被记录在内。
@@ -65,8 +69,9 @@
 ;;   记录生日或者是纪念日等信息。这个文件也是一个我的预定计划文件。
 (setq org-agenda-files
       (list "~/Dropbox/org/journal.org"
-            "~/Dropbox/org/work-journal.org"
             "~/Dropbox/org/newgtd.org"
+            "~/Dropbox/org/work-journal.org"
+            "~/Dropbox/org/someday.org"
             "~/Dropbox/org/birthday.org"
             ))
 (setq org-refile-targets (quote (("newgtd.org" :maxlevel . 1) ("someday.org" :level . 2))))
@@ -74,20 +79,24 @@
 ;; 通过C-c a调出当天的场景计划: 如H为办公室及家列表
 (setq org-agenda-custom-commands
       '(
+        ;; 当前关注的项目
         ("P" "Projects"
-         ((tags "PROJECT")))
+         ((tags "PRJECT")
+          (tags-todo "YABO")
+          (tags-todo "CWDS")
+          (tags-todo "17BOOKS")
+          ))
 
         ("H" "Office and Home Lists"
          ((agenda)
           (tags-todo "OFFICE")
           (tags-todo "HOME")
           (tags-todo "COMPUTER")
-          (tags-todo "DVD")
           (tags-todo "READING")))
 
         ("D" "Daily Action List"
          (
-          (agenda "" ((org-agenda-ndays 3)
+          (agenda "" ((org-agenda-ndays 5)
                       (org-agenda-sorting-strategy
                        (quote ((agenda time-up priority-down tag-up) )))
                       (org-deadline-warning-days 0)
@@ -99,7 +108,6 @@
   (interactive)
   (find-file "~/Dropbox/org/newgtd.org")
   )
-(global-set-key (kbd "C-c g") 'gtd)
 
 ;; setup org-mode remember
 (setq org-directory "~/Dropbox/org/")
@@ -109,7 +117,7 @@
 (setq remember-annotation-functions '(org-remember-annotation))
 (setq remember-handler-functions '(org-remember-handler))
 (add-hook 'remember-mode-hook 'org-remember-apply-template)
-(define-key global-map "\C-cr" 'org-remember)
+
 ;;(define-key global-map [f12] 'org-remember)
 
 ;; 任何任务都应该用明确的动词来表征「Next Action」的行为，并记述该动词的目的和行为的目标。这样一来你不需要再次思考任务的形式，从而简单地执行。比如，与其写「周报告」不如以「总结这一周的来表述任务的内容更加能够容易理解该做什么。
@@ -120,7 +128,7 @@
         ("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/newgtd.org" "Tasks")
         ("Private" ?p "\n* %^{topic} %T \n%i%?\n" "~/Dropbox/org/privnotes.org")
         ("Journal" ?j "\n* %^{topic} %T \n%i%?\n" "~/Dropbox/org/journal.org")
-        ("WordofDay" ?w "\n* %^{topic} \n%i%?\n" "~/Dropbox/org/wotd.org")
+        ("WorkJournal" ?w "\n* %^{topic} %T \n%i%?\n" "~/Dropbox/org/work-journal.org")
         ("IDEA" ?i "* IDEA %^{Idea description} ?\n %x\n %a" "~/Dropbox/org/idea.org" "Idea")
         ))
 
@@ -140,6 +148,8 @@
 
 (define-key global-map [f8] 'remember)
 (define-key global-map [f9] 'remember-region)
+(define-key global-map "\C-cr" 'org-remember)
+(global-set-key (kbd "C-c g") 'gtd)
 
 (add-hook 'org-mode-hook
           (lambda()
@@ -159,11 +169,13 @@
 (setq org-deadline-string "截止期限:")
 (setq org-quote-string "引用")
 (setq org-scheduled-string "日程安排:")
-;; (list "TODO(t)" "STARTED(s!)" "WAITING(w@)" "|" "CANCELED(c)" "DONE(d)"))
-(setq org-todo-keywords (quote ((sequence "计划" "进行中" "等待" "|" "取消" "完成"))))
+;; #+SEQ_TODO: TODO(t) STARTED(s) WAITING(w) APPT(a) | DONE(d) CANCELLED(c) DEFERRED(f)
+(setq org-todo-keywords (quote ((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "APPT(a)" "|" "CANCELED(c)" "DONE(d)" "DEFERRED(f)"))))
+
 ;;export
 (setq org-export-default-language "zh")
 ;; (add-to-list 'org-export-language-setup  '("zh" "作者" "日期" "目录" "脚注"))
+
 ;; html
 (setq org-export-html-coding-system 'utf-8)
 (setq org-export-html-style-include-default nil)

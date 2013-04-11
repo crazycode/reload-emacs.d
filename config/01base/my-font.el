@@ -44,7 +44,7 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
   (if (and (window-system frame) (>= emacs-major-version 23))
       (progn
         (my-set-font
-         '("DejaVu Sans Mono" "Inconsolata" "Droid Sans Mono" "Monaco" "Monospace" "Courier New") my-default-font-size
+         '("Inconsolata" "DejaVu Sans Mono" "Droid Sans Mono" "Monaco" "Monospace" "Courier New") my-default-font-size
          '("YaHei Consolas Hybrid" "Microsoft YaHei Mono" "Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体"))
         ;;(set-default-font "Yahei Consolas Hybrid-10")
         ;;(set-fontset-font (frame-parameter nil 'font)
