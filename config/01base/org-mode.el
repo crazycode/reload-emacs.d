@@ -166,9 +166,9 @@
 (setq org-clock-string "记时:")
 (setq org-closed-string "结束:")
 (setq org-comment-string "评注")
-(setq org-deadline-string "截止期限:")
+;;(setq org-deadline-string "截止期限:")
 (setq org-quote-string "引用")
-(setq org-scheduled-string "日程安排:")
+;; (setq org-scheduled-string "日程安排:")
 ;; #+SEQ_TODO: TODO(t) STARTED(s) WAITING(w) APPT(a) | DONE(d) CANCELLED(c) DEFERRED(f)
 (setq org-todo-keywords (quote ((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "APPT(a)" "|" "CANCELED(c)" "DONE(d)" "DEFERRED(f)"))))
 
