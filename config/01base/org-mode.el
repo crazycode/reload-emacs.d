@@ -113,7 +113,10 @@
 (setq org-directory "~/Dropbox/org/")
 (setq org-default-notes-file "~/Dropbox/org/.notes")
 
-(org-remember-insinuate)
+;; 避免执行org-remember-insinuate，要掌握好eval-after-load的使用方法！
+;;(org-remember-insinuate)
+(eval-after-load "org-remember" '(org-remember-insinuate)) ;必须加'，否则直接执行
+
 (setq remember-annotation-functions '(org-remember-annotation))
 (setq remember-handler-functions '(org-remember-handler))
 (add-hook 'remember-mode-hook 'org-remember-apply-template)
