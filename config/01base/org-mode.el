@@ -70,6 +70,7 @@
 (setq org-agenda-files
       (list "~/Dropbox/org/journal.org"
             "~/Dropbox/org/newgtd.org"
+            "~/Dropbox/org/chinapnr.org"
             "~/Dropbox/org/work-journal.org"
             "~/Dropbox/org/someday.org"
             "~/Dropbox/org/birthday.org"
