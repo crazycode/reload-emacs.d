@@ -68,11 +68,12 @@
 ;; birthday.org
 ;;   记录生日或者是纪念日等信息。这个文件也是一个我的预定计划文件。
 (setq org-agenda-files
-      (list "~/Dropbox/org/journal.org"
-            "~/Dropbox/org/newgtd.org"
-            "~/Dropbox/org/work-journal.org"
-            "~/Dropbox/org/someday.org"
-            "~/Dropbox/org/birthday.org"
+      (list "~/Documents/org/journal.org"
+            "~/Documents/org/newgtd.org"
+            "~/Documents/org/chinapnr.org"
+            "~/Documents/org/work-journal.org"
+            "~/Documents/org/someday.org"
+            "~/Documents/org/birthday.org"
             ))
 (setq org-refile-targets (quote (("newgtd.org" :maxlevel . 1) ("someday.org" :level . 2))))
 
@@ -106,12 +107,12 @@
 
 (defun gtd ()
   (interactive)
-  (find-file "~/Dropbox/org/newgtd.org")
+  (find-file "~/Documents/org/newgtd.org")
   )
 
 ;; setup org-mode remember
-(setq org-directory "~/Dropbox/org/")
-(setq org-default-notes-file "~/Dropbox/org/.notes")
+(setq org-directory "~/Documents/org/")
+(setq org-default-notes-file "~/Documents/org/.notes")
 
 ;; 避免执行org-remember-insinuate，要掌握好eval-after-load的使用方法！
 ;;(org-remember-insinuate)
@@ -128,11 +129,11 @@
 ;; 处理，提问，回避，购买，变更，明确，收集，委托，从事，深思，想象，决定，延期，开发，废弃，重新实现，下载，输入，整理，跟踪，雇佣，改善，增加，报告，寻找，维持，测定，检测，订货，描画，打电话，设置优先级，购入，减少，记忆，修理，回复，调查，回顾，时间安排，卖，送，服务，指定，开始，停止，建议，规划，坐车，更新，升级，写。
 (setq org-remember-templates
       '(
-        ("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U" "~/Dropbox/org/newgtd.org" "Tasks")
-        ("Private" ?p "\n* %^{topic} %T \n%i%?\n" "~/Dropbox/org/privnotes.org")
-        ("Journal" ?j "\n* %^{topic} %T \n%i%?\n" "~/Dropbox/org/journal.org")
-        ("WorkJournal" ?w "\n* %^{topic} %T \n%i%?\n" "~/Dropbox/org/work-journal.org")
-        ("IDEA" ?i "* IDEA %^{Idea description} ?\n %x\n %a" "~/Dropbox/org/idea.org" "Idea")
+        ("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U" "~/Documents/org/newgtd.org" "Tasks")
+        ("Private" ?p "\n* %^{topic} %T \n%i%?\n" "~/Documents/org/privnotes.org")
+        ("Journal" ?j "\n* %^{topic} %T \n%i%?\n" "~/Documents/org/journal.org")
+        ("WorkJournal" ?w "\n* %^{topic} %T \n%i%?\n" "~/Documents/org/work-journal.org")
+        ("IDEA" ?i "* IDEA %^{Idea description} ?\n %x\n %a" "~/Documents/org/idea.org" "Idea")
         ))
 
 ;; 模板设置，可以分别设置不同的格式。非常灵活.
@@ -140,13 +141,13 @@
 ;; (setq org-remember-templates
 ;;       '(
 ;;         ;; 定义一些环境(context)模板
-;;         ("学校" ?s "* TODO %?\n  %i %u" "~/Dropbox/org/newgtd.org" "在学校要做的事情")
-;;         ("家里" ?h "* TODO %?\n  %i %u" "~/Dropbox/org/newgtd.org" "在家里要做的事情")
-;;         ("电话" ?t "* TODO %?\n  %i %u" "~/Dropbox/org/newgtd.org" "需要打电话")
-;;         ("书签" ?b "*  %?\n  %i %a" "~/Dropbox/org/bookmark.org" "程序源代码书签")
-;;         ("网址" ?u "*  %?\n  %i" "~/Dropbox/org/url.org" "常用网址")
-;;         ("信息" ?i "*  %?\n  %i" "~/Dropbox/org/information.org" "有用的信息")
-;;         ("提醒" ?r "*  %?\n  %^T %i " "~/Dropbox/org/remember.org" "记住在特定时间要做的事，到时提醒我")
+;;         ("学校" ?s "* TODO %?\n  %i %u" "~/Documents/org/newgtd.org" "在学校要做的事情")
+;;         ("家里" ?h "* TODO %?\n  %i %u" "~/Documents/org/newgtd.org" "在家里要做的事情")
+;;         ("电话" ?t "* TODO %?\n  %i %u" "~/Documents/org/newgtd.org" "需要打电话")
+;;         ("书签" ?b "*  %?\n  %i %a" "~/Documents/org/bookmark.org" "程序源代码书签")
+;;         ("网址" ?u "*  %?\n  %i" "~/Documents/org/url.org" "常用网址")
+;;         ("信息" ?i "*  %?\n  %i" "~/Documents/org/information.org" "有用的信息")
+;;         ("提醒" ?r "*  %?\n  %^T %i " "~/Documents/org/remember.org" "记住在特定时间要做的事，到时提醒我")
 ;;         ))
 
 (define-key global-map [f8] 'remember)
