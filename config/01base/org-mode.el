@@ -68,12 +68,12 @@
 ;; birthday.org
 ;;   记录生日或者是纪念日等信息。这个文件也是一个我的预定计划文件。
 (setq org-agenda-files
-      (list "~/Documents/org/journal.org"
-            "~/Documents/org/newgtd.org"
-            "~/Documents/org/chinapnr.org"
-            "~/Documents/org/work-journal.org"
-            "~/Documents/org/someday.org"
-            "~/Documents/org/birthday.org"
+      (list "~/Dropbox/org/journal.org"
+            "~/Dropbox/org/newgtd.org"
+            "~/Dropbox/org/chinapnr.org"
+            "~/Dropbox/org/work-journal.org"
+            "~/Dropbox/org/someday.org"
+            "~/Dropbox/org/birthday.org"
             ))
 (setq org-refile-targets (quote (("newgtd.org" :maxlevel . 1) ("someday.org" :level . 2))))
 
